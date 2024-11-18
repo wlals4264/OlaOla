@@ -1,7 +1,7 @@
 function App() {
   return (
     <>
-      <div>초기 설정중</div>
+      <div className="text-lg text-blue-800">초기 설정중</div>
     </>
   );
 }
