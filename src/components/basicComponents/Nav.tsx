@@ -3,7 +3,7 @@ import React from 'react';
 const Nav: React.FC = () => {
   return (
     <>
-      <div className="flex gap-4 items-center p-4 w-auto">
+      <div className="font-noto flex gap-4 items-center p-2 w-auto">
         <div className="flex items-center gap-4">
           <svg width="45" height="45" viewBox="0 0 45 45" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="22.5" cy="22.5" r="22.5" fill="#A5E1FF" />
@@ -12,7 +12,7 @@ const Nav: React.FC = () => {
               fill="white"
             />
           </svg>
-          <h1 className="text-3xl">OlaOla</h1>
+          <h1 className="text-3xl font-itim">OlaOla</h1>
         </div>
         <div className="flex flex-1 justify-between items-center">
           <div className="flex gap-4">
