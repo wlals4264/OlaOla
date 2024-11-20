@@ -14,14 +14,18 @@ const Nav: React.FC = () => {
           </svg>
           <h1 className="text-3xl font-itim">OlaOla</h1>
         </div>
-        <div className="flex flex-1 justify-between items-center">
-          <div className="flex gap-4">
-            <button className="text-xl">암장 정보</button>
-            <button className="text-xl">피드 둘러보기</button>
+        <div className="flex flex-1  justify-between items-center">
+          <div className="flex gap-4 ">
+            <button className="text-xl m-auto shrink-0">암장 정보</button>
+            <button className="text-xl shrink-0">피드 둘러보기</button>
           </div>
           <div className="flex gap-4">
-            <button className="text-l w-86px px-3 py-1 rounded-xl bg-gray-200">로그인</button>
-            <button className="text-l text-white w-110px px-3 py-1 rounded-xl bg-black">가입하기</button>
+            <button className="shrink-0 text-l w-86px px-3 py-1 rounded-xl bg-gray-200 flex items-center justify-center">
+              로그인
+            </button>
+            <button className="shrink-0 text-l w-110px px-3 py-1 rounded-xl bg-black text-white flex items-center justify-center">
+              가입하기
+            </button>
           </div>
         </div>
       </div>
