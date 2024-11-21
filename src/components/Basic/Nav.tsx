@@ -10,8 +10,15 @@ const Nav: React.FC = () => {
 
   const handleOpenLoginModal = () => setLoginModalOpen(true);
   const handleOpenJoinModal = () => setJoinModalOpen(true);
-  const handleCloseLoginModal = () => setLoginModalOpen(false);
-  const handleCloseJoinModal = () => setJoinModalOpen(false);
+
+  // 공통된 함수로 리팩토링
+  const handleCloseModal = (modalType: 'login' | 'join') => {
+    if (modalType === 'login') {
+      setLoginModalOpen(false);
+    } else if (modalType === 'join') {
+      setJoinModalOpen(false);
+    }
+  };
 
   return (
     <>
@@ -41,7 +48,7 @@ const Nav: React.FC = () => {
             {/* createPortal을 사용하여 모달을 body 또는 특정 위치에 렌더링 */}
             {isLoginModalOpen &&
               createPortal(
-                <Modal isOpen={isLoginModalOpen} onClose={handleCloseLoginModal}>
+                <Modal isOpen={isLoginModalOpen} onClose={() => handleCloseModal('login')}>
                   <LoginForm />
                 </Modal>,
                 document.body
@@ -54,7 +61,7 @@ const Nav: React.FC = () => {
             </button>
             {isJoinModalOpen &&
               createPortal(
-                <Modal isOpen={isJoinModalOpen} onClose={handleCloseJoinModal}>
+                <Modal isOpen={isJoinModalOpen} onClose={() => handleCloseModal('join')}>
                   <JoinForm />
                 </Modal>,
                 document.body
