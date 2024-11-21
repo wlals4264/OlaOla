@@ -1,5 +1,10 @@
 import React from 'react';
+import LoginNav from '../components/Basic/LoginNav';
 
 export const MyFeed: React.FC = () => {
-  return <div className="text-3xl">MyFeed</div>;
+  return (
+    <>
+      <LoginNav />
+    </>
+  );
 };

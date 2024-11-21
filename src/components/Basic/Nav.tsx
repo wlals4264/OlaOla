@@ -38,6 +38,7 @@ const Nav: React.FC = () => {
             <button className="text-l m-auto shrink-0 font-semibold">암장 정보</button>
             <button className="text-l shrink-0 font-semibold">피드 둘러보기</button>
           </div>
+
           <div className="flex gap-4">
             <button
               className="shrink-0 text-l font-semibold w-86px px-3 py-1 rounded-xl bg-gray-200 flex items-center justify-center"
