@@ -1,6 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
+import LoginModal from '../Modal/LoginModal';
+import { createPortal } from 'react-dom';
 
 const Nav: React.FC = () => {
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  const handleOpenModal = () => setModalOpen(true);
+  const handleCloseModal = () => setModalOpen(false);
+
   return (
     <>
       <div className="font-noto flex gap-4 items-center p-2 w-auto">
@@ -14,16 +21,20 @@ const Nav: React.FC = () => {
           </svg>
           <h1 className="text-3xl font-itim">OlaOla</h1>
         </div>
-        <div className="flex flex-1  justify-between items-center">
+        <div className="flex flex-1 justify-between items-center">
           <div className="flex gap-4 ">
-            <button className="text-xl m-auto shrink-0">암장 정보</button>
-            <button className="text-xl shrink-0">피드 둘러보기</button>
+            <button className="text-l m-auto shrink-0 font-semibold">암장 정보</button>
+            <button className="text-l shrink-0 font-semibold">피드 둘러보기</button>
           </div>
           <div className="flex gap-4">
-            <button className="shrink-0 text-l w-86px px-3 py-1 rounded-xl bg-gray-200 flex items-center justify-center">
+            <button
+              className="shrink-0 text-l font-semibold w-86px px-3 py-1 rounded-xl bg-gray-200 flex items-center justify-center"
+              onClick={handleOpenModal}>
               로그인
             </button>
-            <button className="shrink-0 text-l w-110px px-3 py-1 rounded-xl bg-black text-white flex items-center justify-center">
+            {/* createPortal을 사용하여 모달을 body 또는 특정 위치에 렌더링 */}
+            {isModalOpen && createPortal(<LoginModal isOpen={isModalOpen} onClose={handleCloseModal} />, document.body)}
+            <button className="shrink-0 text-l font-semibold w-110px px-3 py-1 rounded-xl bg-black text-white flex items-center justify-center">
               가입하기
             </button>
           </div>

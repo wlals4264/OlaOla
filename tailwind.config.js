@@ -6,6 +6,9 @@ export default {
         itim: ['Itim'],
         noto: ['Noto'],
       },
+      colors: {
+        primary: '#A5E1FF',
+      },
     },
   },
   plugins: [],

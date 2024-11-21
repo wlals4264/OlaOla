@@ -1,6 +1,6 @@
 import React from 'react';
-import Nav from '../components/basicComponents/Nav';
-import Carousel from '../components/basicComponents/Carousel';
+import Nav from '../components/Basic/Nav';
+import Carousel from '../components/Basic/Carousel';
 
 const StartPage: React.FC = () => {
   return (
