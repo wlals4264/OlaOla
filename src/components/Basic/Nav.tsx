@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
-import LoginModal from '../Modal/LoginModal';
-import JoinModal from '../Modal/JoinModal';
+import Modal from '../Modal/Modal';
+import LoginForm from '../LoginForm/LoginForm';
+import JoinForm from '../LoginForm/JoinForm';
 
 const Nav: React.FC = () => {
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
@@ -36,16 +37,28 @@ const Nav: React.FC = () => {
               onClick={handleOpenLoginModal}>
               로그인
             </button>
+
             {/* createPortal을 사용하여 모달을 body 또는 특정 위치에 렌더링 */}
             {isLoginModalOpen &&
-              createPortal(<LoginModal isOpen={isLoginModalOpen} onClose={handleCloseLoginModal} />, document.body)}
+              createPortal(
+                <Modal isOpen={isLoginModalOpen} onClose={handleCloseLoginModal}>
+                  <LoginForm />
+                </Modal>,
+                document.body
+              )}
+
             <button
               className="shrink-0 text-l font-semibold w-110px px-3 py-1 rounded-xl bg-black text-white flex items-center justify-center"
               onClick={handleOpenJoinModal}>
               가입하기
             </button>
             {isJoinModalOpen &&
-              createPortal(<JoinModal isOpen={isJoinModalOpen} onClose={handleCloseJoinModal} />, document.body)}
+              createPortal(
+                <Modal isOpen={isJoinModalOpen} onClose={handleCloseJoinModal}>
+                  <JoinForm />
+                </Modal>,
+                document.body
+              )}
           </div>
         </div>
       </div>
