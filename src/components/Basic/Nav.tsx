@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
-import LoginModal from '../Modal/LoginModal';
 import { createPortal } from 'react-dom';
+import LoginModal from '../Modal/LoginModal';
+import JoinModal from '../Modal/Join.Modal';
 
 const Nav: React.FC = () => {
-  const [isModalOpen, setModalOpen] = useState(false);
+  const [isLoginModalOpen, setLoginModalOpen] = useState(false);
+  const [isJoinModalOpen, setJoinModalOpen] = useState(false);
 
-  const handleOpenModal = () => setModalOpen(true);
-  const handleCloseModal = () => setModalOpen(false);
+  const handleOpenLoginModal = () => setLoginModalOpen(true);
+  const handleOpenJoinModal = () => setJoinModalOpen(true);
+  const handleCloseLoginModal = () => setLoginModalOpen(false);
+  const handleCloseJoinModal = () => setJoinModalOpen(false);
 
   return (
     <>
@@ -29,14 +33,19 @@ const Nav: React.FC = () => {
           <div className="flex gap-4">
             <button
               className="shrink-0 text-l font-semibold w-86px px-3 py-1 rounded-xl bg-gray-200 flex items-center justify-center"
-              onClick={handleOpenModal}>
+              onClick={handleOpenLoginModal}>
               로그인
             </button>
             {/* createPortal을 사용하여 모달을 body 또는 특정 위치에 렌더링 */}
-            {isModalOpen && createPortal(<LoginModal isOpen={isModalOpen} onClose={handleCloseModal} />, document.body)}
-            <button className="shrink-0 text-l font-semibold w-110px px-3 py-1 rounded-xl bg-black text-white flex items-center justify-center">
+            {isLoginModalOpen &&
+              createPortal(<LoginModal isOpen={isLoginModalOpen} onClose={handleCloseLoginModal} />, document.body)}
+            <button
+              className="shrink-0 text-l font-semibold w-110px px-3 py-1 rounded-xl bg-black text-white flex items-center justify-center"
+              onClick={handleOpenJoinModal}>
               가입하기
             </button>
+            {isJoinModalOpen &&
+              createPortal(<JoinModal isOpen={isJoinModalOpen} onClose={handleCloseJoinModal} />, document.body)}
           </div>
         </div>
       </div>

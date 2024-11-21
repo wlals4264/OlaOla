@@ -4,7 +4,7 @@ interface LoginModalProps {
   isOpen: boolean; // 모달 열림/닫힘 상태
   onClose: () => void; // 모달을 닫는 함수
 }
-const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
+const JoinModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null; // 모달이 열리지 않으면 아무 것도 렌더링하지 않음
 
   return (
@@ -50,7 +50,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
               className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
-          <div className="mb-6">
+          <div className="mb-3">
             <label htmlFor="password" className="text-xs text-gray-400">
               비밀번호
             </label>
@@ -61,17 +61,40 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
               className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
+          <div className="mb-3">
+            <label htmlFor="passwordConfirm" className="text-xs text-gray-400">
+              비밀번호 확인
+            </label>
+            <input
+              id="passwordConfirm"
+              type="password"
+              placeholder="Password Confirm"
+              className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary"
+            />
+          </div>
+          <div className="mb-8">
+            <label htmlFor="Nickname" className="text-xs text-gray-400">
+              닉네임
+            </label>
+            <input
+              id="Nickname"
+              type="password"
+              placeholder="Nickname"
+              className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary"
+            />
+          </div>
 
-          <div className="mb-4">
+          <div className="mb-3">
             <button
               type="submit"
               className="w-full py-2 bg-gray-200 text-black font-semibold rounded-2xl hover:bg-primary focus:outline-none focus:ring-2 focus:ring-primary">
-              로그인
+              계속하기
             </button>
           </div>
 
-          <p className="mb-4 font-semibold text-center">또는</p>
-          <div className="mb-4">
+          <p className="mb-3 font-semibold text-center">또는</p>
+
+          <div className="mb-3">
             <button
               type="button"
               className="w-full py-2 bg-gray-200 text-black font-semibold rounded-2xl hover:bg-primary focus:outline-none focus:ring-2 focus:ring-primary">
@@ -89,15 +112,8 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                     </clipPath>
                   </defs>
                 </svg>
-                Google로 로그인 하기
+                Google로 가입하기
               </div>
-            </button>
-          </div>
-          <div className="mb-4">
-            <button
-              type="button"
-              className="w-full py-2 bg-gray-200 text-black font-semibold rounded-2xl hover:bg-primary focus:outline-none focus:ring-2 focus:ring-primary">
-              회원가입 하기
             </button>
           </div>
         </form>
@@ -106,4 +122,4 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
   );
 };
 
-export default LoginModal;
+export default JoinModal;
