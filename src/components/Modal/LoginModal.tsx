@@ -1,20 +1,40 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../../Firebase/firebase';
 
 interface LoginModalProps {
-  isOpen: boolean; // 모달 열림/닫힘 상태
-  onClose: () => void; // 모달을 닫는 함수
+  isOpen: boolean;
+  onClose: () => void;
 }
+
 const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
-  if (!isOpen) return null; // 모달이 열리지 않으면 아무 것도 렌더링하지 않음
+  if (!isOpen) return null;
+
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+
+  const signIn = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const result = await signInWithEmailAndPassword(auth, email, password);
+      console.log(result);
+      setError(null);
+      setSuccess('로그인 성공!');
+    } catch (error) {
+      setSuccess(null);
+      setError('로그인에 실패하였습니다. 다시 시도해주세요.');
+      console.log(error);
+    }
+  };
 
   return (
     <div
       className="fixed font-noto inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
       onClick={onClose}>
-      <div
-        className="bg-white py-10 px-2 rounded-3xl w-full max-w-md relative"
-        onClick={(e) => e.stopPropagation()} // 모달 클릭 시, 모달이 닫히지 않도록 함
-      >
+      <div className="bg-white py-10 px-2 rounded-3xl w-full max-w-md relative" onClick={(e) => e.stopPropagation()}>
         {/* 닫힘 버튼 */}
         <button className="absolute top-4 right-4" onClick={onClose}>
           <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -38,7 +58,8 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
         </div>
 
         {/* form */}
-        <form className="m-6 p-6">
+        <form className="m-6 p-6" onSubmit={signIn}>
+          {/* 이메일 */}
           <div className="mb-4">
             <label htmlFor="email" className="text-xs text-gray-400">
               이메일
@@ -46,10 +67,13 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
             <input
               id="email"
               type="text"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="Email"
               className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
+          {/* 비밀번호 */}
           <div className="mb-6">
             <label htmlFor="password" className="text-xs text-gray-400">
               비밀번호
@@ -57,20 +81,30 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
             <input
               id="password"
               type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
               className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
 
+          {/* 에러 메시지 */}
+          {error && <p className="text-red-500 text-xs mb-4">{error}</p>}
+          {/* 성공 메시지 추가 */}
+          {success && <p className="text-primary text-xs mb-4">{success}</p>}
+
+          {/* 로그인 버튼 */}
           <div className="mb-4">
             <button
               type="submit"
-              className="w-full py-2 bg-gray-200 text-black font-semibold rounded-2xl hover:bg-primary focus:outline-none focus:ring-2 focus:ring-primary">
+              className="w-full py-2 bg-gray-200 text-black font-semibold rounded-2xl hover:bg-primary focus:outline-none focus:bg-primary">
               로그인
             </button>
           </div>
 
           <p className="mb-4 font-semibold text-center">또는</p>
+
+          {/* google 로그인 버튼 */}
           <div className="mb-4">
             <button
               type="button"
@@ -91,13 +125,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                 </svg>
                 Google로 로그인 하기
               </div>
-            </button>
-          </div>
-          <div className="mb-4">
-            <button
-              type="button"
-              className="w-full py-2 bg-gray-200 text-black font-semibold rounded-2xl hover:bg-primary focus:outline-none focus:ring-2 focus:ring-primary">
-              회원가입 하기
             </button>
           </div>
         </form>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import LoginModal from '../Modal/LoginModal';
-import JoinModal from '../Modal/Join.Modal';
+import JoinModal from '../Modal/JoinModal';
 
 const Nav: React.FC = () => {
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
