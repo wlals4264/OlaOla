@@ -9,7 +9,7 @@ const SuccessForm: React.FC<SuccessFormProps> = ({ displayName }) => {
   const navigate = useNavigate(); // navigate 훅 사용
 
   const goToHome = () => {
-    navigate('/src/pages/MyFeed.tsx');
+    navigate('/myfeed');
   };
 
   return (
