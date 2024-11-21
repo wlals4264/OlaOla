@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth } from '../../Firebase/firebase';
 import { createPortal } from 'react-dom';
-import Modal from '../Modal/Modal'; // Modal 컴포넌트 import
-import { SuccessForm } from './SuccessForm'; // SuccessForm import
+import Modal from '../Modal/Modal';
+import SuccessForm from './SuccessForm';
 
 const JoinForm: React.FC = () => {
   const [email, setEmail] = useState('');

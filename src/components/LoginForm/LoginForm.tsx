@@ -2,26 +2,27 @@ import React, { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../Firebase/firebase';
 import JoinForm from './JoinForm';
+import { useNavigate } from 'react-router-dom';
 
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
+  // const [success, setSuccess] = useState<string | null>(null);
   const [isJoinModalOpen, setJoinModalOpen] = useState<boolean>(false);
+
+  const navigate = useNavigate();
 
   const signIn = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      const result = await signInWithEmailAndPassword(auth, email, password);
-      console.log(result);
+      await signInWithEmailAndPassword(auth, email, password);
       setError(null);
-      setSuccess('로그인 성공!');
+      navigate('/myfeed');
     } catch (error) {
-      setSuccess(null);
       setError('로그인에 실패하였습니다. 다시 시도해주세요.');
-      console.log(error);
+      // console.log(error);
     }
   };
 
@@ -67,8 +68,6 @@ const LoginForm: React.FC = () => {
 
           {/* 에러 메시지 */}
           {error && <p className="text-red-500 text-xs mb-4">{error}</p>}
-          {/* 성공 메시지 */}
-          {success && <p className="text-primary text-xs mb-4">{success}</p>}
 
           {/* 로그인 버튼 */}
           <div className="mb-4">
