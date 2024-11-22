@@ -3,10 +3,12 @@ import { createPortal } from 'react-dom';
 import Modal from '../Modal/Modal';
 import LoginForm from '../LoginForm/LoginForm';
 import JoinForm from '../LoginForm/JoinForm';
+import { useRecoilState } from 'recoil';
+import { isJoinModalOpenState, isLoginModalOpenState } from '../../datas/recoilData';
 
 const Nav: React.FC = () => {
-  const [isLoginModalOpen, setLoginModalOpen] = useState(false);
-  const [isJoinModalOpen, setJoinModalOpen] = useState(false);
+  const [isLoginModalOpen, setLoginModalOpen] = useRecoilState(isLoginModalOpenState);
+  const [isJoinModalOpen, setJoinModalOpen] = useRecoilState(isJoinModalOpenState);
 
   const handleOpenLoginModal = () => setLoginModalOpen(true);
   const handleOpenJoinModal = () => setJoinModalOpen(true);

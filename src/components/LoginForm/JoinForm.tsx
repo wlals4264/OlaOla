@@ -4,15 +4,22 @@ import { auth } from '../../Firebase/firebase';
 import { createPortal } from 'react-dom';
 import Modal from '../Modal/Modal';
 import SuccessForm from './SuccessForm';
+import { useRecoilState } from 'recoil';
+import {
+  isJoinModalOpenState,
+  userEmailState,
+  userNicknameState,
+  isSuccessModalOpenState,
+} from '../../datas/recoilData';
 
 const JoinForm: React.FC = () => {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useRecoilState(userEmailState);
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
-  const [nickname, setNickname] = useState('');
+  const [nickname, setNickname] = useRecoilState(userNicknameState);
   const [error, setError] = useState<string | null>(null);
-  const [isJoinModalOpen, setIsJoinModalOpen] = useState(true);
-  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const [isJoinModalOpen, setIsJoinModalOpen] = useRecoilState(isJoinModalOpenState);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useRecoilState(isSuccessModalOpenState);
 
   const signUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,9 +43,11 @@ const JoinForm: React.FC = () => {
         });
       }
 
-      // 회원가입 성공 시, 모달을 순차적으로 닫고 성공 모달을 여는 처리
-      setIsJoinModalOpen(false); // 회원가입 모달 닫기
-      setIsSuccessModalOpen(true); // 성공 모달 열기
+      console.log(nickname);
+      console.log(email);
+
+      setIsJoinModalOpen(false);
+      setIsSuccessModalOpen(true);
     } catch (error) {
       setError('회원가입에 실패했습니다. 다시 시도해주세요.');
       console.log(error);

@@ -3,12 +3,15 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../Firebase/firebase';
 import JoinForm from './JoinForm';
 import { useNavigate } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
+import { isJoinModalOpenState, isLoginModalOpenState, userEmailState } from '../../datas/recoilData';
 
 const LoginForm: React.FC = () => {
-  const [email, setEmail] = useState<string>('');
+  const [email, setEmail] = useRecoilState(userEmailState);
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
-  const [isJoinModalOpen, setJoinModalOpen] = useState<boolean>(false);
+  const [isJoinModalOpen, setJoinModalOpen] = useRecoilState(isJoinModalOpenState);
+  const [isLoginModalOpen, setLoginModalOpen] = useRecoilState(isLoginModalOpenState);
 
   const navigate = useNavigate();
 
@@ -17,23 +20,24 @@ const LoginForm: React.FC = () => {
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
+
       setError(null);
       navigate('/myfeed');
+
+      console.log(auth);
     } catch (error) {
       setError('로그인에 실패하였습니다. 다시 시도해주세요.');
-      // console.log(error);
     }
   };
 
   const handleOpenJoinModal = () => {
     setJoinModalOpen(true);
+    setLoginModalOpen(false);
   };
 
   return (
     <>
-      {isJoinModalOpen ? (
-        <JoinForm />
-      ) : (
+      {isLoginModalOpen && (
         <form className="m-6 p-6" onSubmit={signIn}>
           {/* 이메일 */}
           <div className="mb-4">
@@ -114,6 +118,7 @@ const LoginForm: React.FC = () => {
           </div>
         </form>
       )}
+      {isJoinModalOpen && <JoinForm />} {/* 회원가입 폼 */}
     </>
   );
 };
