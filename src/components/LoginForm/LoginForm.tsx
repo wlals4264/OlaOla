@@ -4,11 +4,12 @@ import { auth } from '../../Firebase/firebase';
 import JoinForm from './JoinForm';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
-import { isJoinModalOpenState, isLoginModalOpenState, userEmailState } from '../../datas/recoilData';
+import { isJoinModalOpenState, isLoginModalOpenState, userEmailState, userNicknameState } from '../../datas/recoilData';
 
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useRecoilState(userEmailState);
   const [password, setPassword] = useState<string>('');
+  const [nickname, setNickname] = useRecoilState(userNicknameState);
   const [error, setError] = useState<string | null>(null);
   const [isJoinModalOpen, setJoinModalOpen] = useRecoilState(isJoinModalOpenState);
   const [isLoginModalOpen, setLoginModalOpen] = useRecoilState(isLoginModalOpenState);
@@ -20,6 +21,12 @@ const LoginForm: React.FC = () => {
     signInWithPopup(auth, provider).then(async (result) => {
       navigate('/myfeed');
       console.log(result);
+      if (result.user.displayName) {
+        setNickname(result.user.displayName);
+        console.log(result.user.displayName);
+      } else {
+        console.log('닉네임 없음');
+      }
     });
   }
 
@@ -27,12 +34,17 @@ const LoginForm: React.FC = () => {
     e.preventDefault();
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      await signInWithEmailAndPassword(auth, email, password).then(async (result) => {
+        if (result.user.displayName) {
+          setNickname(result.user.displayName);
+          console.log(result.user.displayName);
+        } else {
+          console.log('닉네임 없음');
+        }
+      });
 
       setError(null);
       navigate('/myfeed');
-
-      console.log(auth);
     } catch (error) {
       setError('로그인에 실패하였습니다. 다시 시도해주세요.');
     }
