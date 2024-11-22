@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { createPortal } from 'react-dom';
 import Modal from '../Modal/Modal';
 import LoginForm from '../LoginForm/LoginForm';
@@ -16,11 +16,13 @@ const Nav: React.FC = () => {
   const handleOpenJoinModal = () => setJoinModalOpen(true);
 
   // 공통된 함수로 리팩토링
-  const handleCloseModal = (modalType: 'login' | 'join') => {
+  const handleCloseModal = (modalType: 'login' | 'join' | 'success') => {
     if (modalType === 'login') {
       setLoginModalOpen(false);
     } else if (modalType === 'join') {
       setJoinModalOpen(false);
+    } else if (modalType === 'success') {
+      setSuccessModalOpen(false);
     }
   };
 
@@ -78,7 +80,7 @@ const Nav: React.FC = () => {
       {/* SuccessForm 모달 */}
       {isSuccessModalOpen &&
         createPortal(
-          <Modal isOpen={isSuccessModalOpen} onClose={() => handleCloseModal('join')}>
+          <Modal isOpen={isSuccessModalOpen} onClose={() => handleCloseModal('success')}>
             <SuccessForm />
           </Modal>,
           document.body

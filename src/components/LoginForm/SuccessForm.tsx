@@ -25,7 +25,7 @@ const SuccessForm: React.FC = () => {
         <button
           onClick={goToHome}
           className="w-1/2 py-2 mt-4 bg-gray-200 text-black font-semibold rounded-2xl hover:bg-primary focus:outline-none focus:ring-2 focus:ring-primary">
-          홈으로 가기
+          내 피드로 가기
         </button>
       </div>
     </>
