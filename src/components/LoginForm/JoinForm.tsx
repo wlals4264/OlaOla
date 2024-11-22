@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth } from '../../Firebase/firebase';
-import { createPortal } from 'react-dom';
-import SuccessForm from './SuccessForm';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import {
   isJoinModalOpenState,
@@ -127,9 +125,9 @@ const JoinForm: React.FC = () => {
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
-                validateEmail(e.target.value); // 실시간 유효성 검사
+                validateEmail(e.target.value);
               }}
-              onBlur={() => validateEmail(email)} // onBlur에서 유효성 검사 실행
+              onBlur={() => validateEmail(email)}
               placeholder="Email"
               required
               className={`w-full mt-1 px-4 py-2 border ${
@@ -150,9 +148,9 @@ const JoinForm: React.FC = () => {
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value);
-                validatePassword(e.target.value); // 실시간 유효성 검사
+                validatePassword(e.target.value);
               }}
-              onBlur={() => validatePassword(password)} // onBlur에서 유효성 검사 실행
+              onBlur={() => validatePassword(password)}
               placeholder="Password"
               minLength={8}
               required
@@ -174,9 +172,9 @@ const JoinForm: React.FC = () => {
               value={passwordConfirm}
               onChange={(e) => {
                 setPasswordConfirm(e.target.value);
-                validatePasswordConfirm(password, e.target.value); // 실시간 유효성 검사
+                validatePasswordConfirm(password, e.target.value);
               }}
-              onBlur={() => validatePasswordConfirm(password, passwordConfirm)} // onBlur에서 유효성 검사 실행
+              onBlur={() => validatePasswordConfirm(password, passwordConfirm)}
               placeholder="Password Confirm"
               required
               className={`w-full mt-1 px-4 py-2 border ${
@@ -197,9 +195,9 @@ const JoinForm: React.FC = () => {
               value={nickname}
               onChange={(e) => {
                 setNickname(e.target.value);
-                validateNickname(e.target.value); // 실시간 유효성 검사
+                validateNickname(e.target.value);
               }}
-              onBlur={() => validateNickname(nickname)} // onBlur에서 유효성 검사 실행
+              onBlur={() => validateNickname(nickname)}
               placeholder="Nickname"
               className={`w-full mt-1 px-4 py-2 border ${
                 nicknameError ? 'border-red-500 focus:ring-1 focus:ring-red-500' : 'border-gray-300'
