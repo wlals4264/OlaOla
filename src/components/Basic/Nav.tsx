@@ -4,11 +4,13 @@ import Modal from '../Modal/Modal';
 import LoginForm from '../LoginForm/LoginForm';
 import JoinForm from '../LoginForm/JoinForm';
 import { useRecoilState } from 'recoil';
-import { isJoinModalOpenState, isLoginModalOpenState } from '../../datas/recoilData';
+import { isJoinModalOpenState, isLoginModalOpenState, isSuccessModalOpenState } from '../../datas/recoilData';
+import SuccessForm from '../LoginForm/SuccessForm';
 
 const Nav: React.FC = () => {
   const [isLoginModalOpen, setLoginModalOpen] = useRecoilState(isLoginModalOpenState);
   const [isJoinModalOpen, setJoinModalOpen] = useRecoilState(isJoinModalOpenState);
+  const [isSuccessModalOpen, setSuccessModalOpen] = useRecoilState(isSuccessModalOpenState);
 
   const handleOpenLoginModal = () => setLoginModalOpen(true);
   const handleOpenJoinModal = () => setJoinModalOpen(true);
@@ -72,6 +74,15 @@ const Nav: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* SuccessForm 모달 */}
+      {isSuccessModalOpen &&
+        createPortal(
+          <Modal isOpen={isSuccessModalOpen} onClose={() => handleCloseModal('join')}>
+            <SuccessForm />
+          </Modal>,
+          document.body
+        )}
     </>
   );
 };

@@ -1,16 +1,17 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom'; // useNavigate import
+import { useNavigate } from 'react-router-dom';
+import { userNicknameState } from '../../datas/recoilData';
+import { useRecoilValue } from 'recoil';
 
-interface SuccessFormProps {
-  displayName: string;
-}
-
-const SuccessForm: React.FC<SuccessFormProps> = ({ displayName }) => {
-  const navigate = useNavigate(); // navigate 훅 사용
+const SuccessForm: React.FC = () => {
+  const navigate = useNavigate();
+  const nickname = useRecoilValue(userNicknameState);
 
   const goToHome = () => {
     navigate('/myfeed');
   };
+
+  console.log('렌더링됨 석세스폼');
 
   return (
     <>
@@ -18,7 +19,7 @@ const SuccessForm: React.FC<SuccessFormProps> = ({ displayName }) => {
         <h2 className="mt-6">회원가입 성공!</h2>
         <p className="text-[8rem]">🥳</p>
         <p>
-          환영합니다, <span className="text-primary">{displayName}</span>님!
+          환영합니다, <span className="text-primary">{nickname}</span>님!
         </p>
 
         <button
