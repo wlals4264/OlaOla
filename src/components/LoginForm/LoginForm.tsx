@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '../../Firebase/firebase';
 import JoinForm from './JoinForm';
 import { useNavigate } from 'react-router-dom';
@@ -14,6 +14,14 @@ const LoginForm: React.FC = () => {
   const [isLoginModalOpen, setLoginModalOpen] = useRecoilState(isLoginModalOpenState);
 
   const navigate = useNavigate();
+
+  function googleLogin() {
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider).then(async (result) => {
+      navigate('/myfeed');
+      console.log(result);
+    });
+  }
 
   const signIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -85,7 +93,9 @@ const LoginForm: React.FC = () => {
 
           {/* google 로그인 버튼 */}
           <div className="mb-4">
-            <button className="w-full py-2 bg-gray-200 text-black font-semibold rounded-2xl hover:bg-primary focus:outline-none focus:ring-2 focus:ring-primary">
+            <button
+              className="w-full py-2 bg-gray-200 text-black font-semibold rounded-2xl hover:bg-primary focus:outline-none focus:ring-2 focus:ring-primary"
+              onClick={googleLogin}>
               <div className="flex items-center justify-center gap-2">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <g clipPath="url(#clip0_8_947)">
