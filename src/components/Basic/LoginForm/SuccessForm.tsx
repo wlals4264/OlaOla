@@ -9,7 +9,7 @@ const SuccessForm: React.FC = () => {
   const setIsSuccessModalOpen = useSetRecoilState(isSuccessModalOpenState);
 
   const goToMyFeed = () => {
-    navigate('/myfeed');
+    navigate('/my-feed');
     setIsSuccessModalOpen(false);
   };
 

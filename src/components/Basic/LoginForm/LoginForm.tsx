@@ -24,7 +24,7 @@ const LoginForm: React.FC = () => {
   function googleLogin() {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider).then(async (result) => {
-      navigate('/myfeed');
+      navigate('/my-feed');
       console.log(result);
       if (result.user.displayName) {
         setNickname(result.user.displayName);
@@ -49,7 +49,7 @@ const LoginForm: React.FC = () => {
       });
 
       setError(null);
-      navigate('/myfeed');
+      navigate('/my-feed');
     } catch (error) {
       setError('로그인에 실패하였습니다. 다시 시도해주세요.');
     }

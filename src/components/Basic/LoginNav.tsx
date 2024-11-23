@@ -1,5 +1,5 @@
 import React from 'react';
-import { useRecoilValue, useSetRecoilState, useRecoilState } from 'recoil';
+import { useSetRecoilState, useRecoilState } from 'recoil';
 import {
   isLoginUserState,
   userNicknameState,
@@ -12,12 +12,14 @@ import { createPortal } from 'react-dom';
 import Modal from '../Modal/Modal';
 import SuccessForm from './LoginForm/SuccessForm';
 import { Link } from 'react-router-dom';
-
+import useAuthState from '../../utils/useAuthState';
 const LoginNav: React.FC = () => {
+  useAuthState();
+
   const setIsLoginUser = useSetRecoilState(isLoginUserState);
   const setLoginModalOpen = useSetRecoilState(isLoginModalOpenState);
   const [isSuccessModalOpen, setSuccessModalOpen] = useRecoilState(isSuccessModalOpenState);
-  const nickname = useRecoilValue(userNicknameState);
+  const [nickname, setNickname] = useRecoilState(userNicknameState);
 
   const navigate = useNavigate();
 
@@ -34,6 +36,7 @@ const LoginNav: React.FC = () => {
       const auth = getAuth();
       await signOut(auth);
       console.log('로그아웃 되었습니다.');
+      setNickname('');
       setIsLoginUser(false);
       setLoginModalOpen(false);
       navigate('/');
@@ -61,13 +64,13 @@ const LoginNav: React.FC = () => {
         </div>
         <div className="flex flex-1 justify-between items-center">
           <div className="flex gap-4 ">
-            <Link to="/browsingfeed">
+            <Link to="/browsing-feed">
               <button className="text-l m-auto shrink-0 font-semibold">암장 정보</button>
             </Link>
-            <Link to="/centerinfo">
+            <Link to="/center-info">
               <button className="text-l shrink-0 font-semibold">피드 둘러보기</button>
             </Link>
-            <Link to="/myfeed">
+            <Link to="/my-feed">
               <button className="text-l shrink-0 font-semibold">내 피드</button>
             </Link>
           </div>

@@ -4,6 +4,7 @@ import { auth } from '../../../Firebase/firebase';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import {
   isJoinModalOpenState,
+  isLoginUserState,
   isSuccessModalOpenState,
   userEmailState,
   userNicknameState,
@@ -17,6 +18,7 @@ const JoinForm: React.FC = () => {
 
   const [isJoinModalOpen, setIsJoinModalOpen] = useRecoilState(isJoinModalOpenState);
   const setIsSuccessModalOpen = useSetRecoilState(isSuccessModalOpenState);
+  const setIsLoginUser = useSetRecoilState(isLoginUserState);
 
   const [emailError, setEmailError] = useState<string | null>(null);
   const [passwordError, setPasswordError] = useState<string | null>(null);
@@ -103,6 +105,7 @@ const JoinForm: React.FC = () => {
       setIsJoinModalOpen(false);
       setIsSuccessModalOpen(true);
       setNickname(nickname);
+      setIsLoginUser(true);
     } catch (error) {
       console.log(error);
     }

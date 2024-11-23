@@ -4,8 +4,7 @@ import Modal from '../Modal/Modal';
 import LoginForm from '../Basic/LoginForm/LoginForm';
 import JoinForm from '../Basic/LoginForm/JoinForm';
 import { useRecoilState } from 'recoil';
-import { isJoinModalOpenState, isLoginModalOpenState, isSuccessModalOpenState } from '../../datas/recoilData';
-import SuccessForm from '../Basic/LoginForm/SuccessForm';
+import { isJoinModalOpenState, isLoginModalOpenState } from '../../datas/recoilData';
 import { useNavigate } from 'react-router-dom';
 
 const Nav: React.FC = () => {
