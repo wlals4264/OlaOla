@@ -11,3 +11,7 @@
   font-family: 'Noto';
   src: url('./assets/fonts/NotoSansKR-VariableFont_wght.ttf') format('truetype');
 }
+
+.placeholder-start::placeholder {
+  @apply text-start;
+}
