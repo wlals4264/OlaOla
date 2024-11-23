@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { auth } from '../../Firebase/firebase';
+import { auth } from '../../../Firebase/firebase';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import {
   isJoinModalOpenState,
   isSuccessModalOpenState,
   userEmailState,
   userNicknameState,
-} from '../../datas/recoilData';
+} from '../../../datas/recoilData';
 
 const JoinForm: React.FC = () => {
   const [email, setEmail] = useRecoilState(userEmailState);
