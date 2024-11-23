@@ -11,19 +11,16 @@ import { useNavigate } from 'react-router-dom';
 const Nav: React.FC = () => {
   const [isLoginModalOpen, setLoginModalOpen] = useRecoilState(isLoginModalOpenState);
   const [isJoinModalOpen, setJoinModalOpen] = useRecoilState(isJoinModalOpenState);
-  const [isSuccessModalOpen, setSuccessModalOpen] = useRecoilState(isSuccessModalOpenState);
 
   const handleOpenLoginModal = () => setLoginModalOpen(true);
   const handleOpenJoinModal = () => setJoinModalOpen(true);
 
   // 공통된 함수로 리팩토링
-  const handleCloseModal = (modalType: 'login' | 'join' | 'success') => {
+  const handleCloseModal = (modalType: 'login' | 'join') => {
     if (modalType === 'login') {
       setLoginModalOpen(false);
     } else if (modalType === 'join') {
       setJoinModalOpen(false);
-    } else if (modalType === 'success') {
-      setSuccessModalOpen(false);
     }
   };
 
@@ -84,15 +81,6 @@ const Nav: React.FC = () => {
           </div>
         </div>
       </div>
-
-      {/* SuccessForm 모달 */}
-      {isSuccessModalOpen &&
-        createPortal(
-          <Modal isOpen={isSuccessModalOpen} onClose={() => handleCloseModal('success')}>
-            <SuccessForm />
-          </Modal>,
-          document.body
-        )}
     </>
   );
 };

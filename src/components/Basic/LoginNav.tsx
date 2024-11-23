@@ -1,18 +1,31 @@
 import React from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { isLoginUserState, userNicknameState, isLoginModalOpenState } from '../../datas/recoilData';
+import { useRecoilValue, useSetRecoilState, useRecoilState } from 'recoil';
+import {
+  isLoginUserState,
+  userNicknameState,
+  isLoginModalOpenState,
+  isSuccessModalOpenState,
+} from '../../datas/recoilData';
 import { useNavigate } from 'react-router-dom';
 import { getAuth, signOut } from 'firebase/auth';
+import { createPortal } from 'react-dom';
+import Modal from '../Modal/Modal';
+import SuccessForm from './LoginForm/SuccessForm';
 
 const LoginNav: React.FC = () => {
   const setIsLoginUser = useSetRecoilState(isLoginUserState);
   const setLoginModalOpen = useSetRecoilState(isLoginModalOpenState);
+  const [isSuccessModalOpen, setSuccessModalOpen] = useRecoilState(isSuccessModalOpenState);
   const nickname = useRecoilValue(userNicknameState);
 
   const navigate = useNavigate();
 
   const goToHome = () => {
     navigate('/');
+  };
+
+  const handleCloseSuccessModal = () => {
+    setSuccessModalOpen(false);
   };
 
   const onSignOut = async () => {
@@ -64,6 +77,15 @@ const LoginNav: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* SuccessForm 모달 */}
+      {isSuccessModalOpen &&
+        createPortal(
+          <Modal isOpen={isSuccessModalOpen} onClose={handleCloseSuccessModal}>
+            <SuccessForm />
+          </Modal>,
+          document.body
+        )}
     </>
   );
 };

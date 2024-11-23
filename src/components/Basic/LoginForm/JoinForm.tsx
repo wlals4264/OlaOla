@@ -102,6 +102,7 @@ const JoinForm: React.FC = () => {
 
       setIsJoinModalOpen(false);
       setIsSuccessModalOpen(true);
+      setNickname(nickname);
     } catch (error) {
       console.log(error);
     }

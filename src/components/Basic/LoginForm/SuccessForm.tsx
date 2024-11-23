@@ -1,14 +1,16 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { userNicknameState } from '../../../datas/recoilData';
-import { useRecoilValue } from 'recoil';
+import { isSuccessModalOpenState, userNicknameState } from '../../../datas/recoilData';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 const SuccessForm: React.FC = () => {
   const navigate = useNavigate();
   const nickname = useRecoilValue(userNicknameState);
+  const setIsSuccessModalOpen = useSetRecoilState(isSuccessModalOpenState);
 
   const goToMyFeed = () => {
     navigate('/myfeed');
+    setIsSuccessModalOpen(false);
   };
 
   console.log('렌더링됨 석세스폼');
