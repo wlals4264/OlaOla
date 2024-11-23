@@ -9,19 +9,21 @@ import {
   isLoginModalOpenState,
   userEmailState,
   userNicknameState,
+  userImgState,
 } from '../../../datas/recoilData';
 
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useRecoilState(userEmailState);
   const [password, setPassword] = useState<string>('');
   const setNickname = useSetRecoilState(userNicknameState);
+  const setUserImg = useSetRecoilState(userImgState);
   const [error, setError] = useState<string | null>(null);
   const [isJoinModalOpen, setJoinModalOpen] = useRecoilState(isJoinModalOpenState);
   const [isLoginModalOpen, setLoginModalOpen] = useRecoilState(isLoginModalOpenState);
 
   const navigate = useNavigate();
 
-  function googleLogin(e) {
+  function googleLogin(e: React.FormEvent) {
     e.preventDefault();
 
     const provider = new GoogleAuthProvider();
@@ -32,6 +34,8 @@ const LoginForm: React.FC = () => {
       if (result.user.displayName) {
         setNickname(result.user.displayName);
         console.log(result.user.displayName);
+        setUserImg(result.user.photoURL);
+        console.log(result.user.photoURL);
       } else {
         console.log('닉네임 없음');
       }
@@ -43,9 +47,12 @@ const LoginForm: React.FC = () => {
 
     try {
       await signInWithEmailAndPassword(auth, email, password).then(async (result) => {
+        console.log(result);
         if (result.user.displayName) {
           setNickname(result.user.displayName);
           console.log(result.user.displayName);
+          setUserImg(result.user.photoURL);
+          console.log(result.user.photoURL);
         } else {
           console.log('닉네임 없음');
         }

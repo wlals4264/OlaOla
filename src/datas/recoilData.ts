@@ -12,6 +12,13 @@ export const userNicknameState = atom<string>({
   default: '',
 });
 
+// userImg
+
+export const userImgState = atom<string | null>({
+  key: 'userImgState',
+  default: null,
+});
+
 // LoginModalOpenState
 export const isLoginModalOpenState = atom<boolean>({
   key: 'isLoginModalOpenState',
