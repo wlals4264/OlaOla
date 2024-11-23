@@ -20,9 +20,9 @@ const AddFeed: React.FC = () => {
   return (
     <>
       <LoginNav />
-      <div className="flex justify-center gap-12 max-w-2xl m-auto mt-16">
+      <div className="flex justify-center gap-12 min-w-2xl m-auto mt-16">
         <div
-          className="w-[300px] h-[500px] bg-gray-300 rounded-3xl flex flex-col gap-3 items-center justify-center cursor-pointer"
+          className="min-w-[300px] h-[500px] bg-gray-300 rounded-3xl flex flex-col gap-3 items-center justify-center cursor-pointer"
           onClick={triggerFileInput} // div를 클릭하면 파일 입력 트리거
         >
           <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">

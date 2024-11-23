@@ -50,6 +50,7 @@ const LoginNav: React.FC = () => {
   return (
     <>
       <div className="font-noto flex gap-4 items-center p-2 w-auto">
+        {/* logo & title */}
         <div className="flex items-center gap-4">
           <button className="flex items-center justify-center gap-4" onClick={goToHome}>
             <svg width="45" height="45" viewBox="0 0 45 45" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -62,25 +63,35 @@ const LoginNav: React.FC = () => {
             <h1 className="text-3xl font-itim">OlaOla</h1>
           </button>
         </div>
+
+        {/* nav Buttons & welcome message & logout Button */}
         <div className="flex flex-1 justify-between items-center">
-          <div className="flex gap-4 ">
+          {/* nav Buttons */}
+          <div className="flex gap-4 flex-shrink-0 mr-40">
             <Link to="/browsing-feed">
-              <button className="text-l shrink-0 font-semibold">암장 정보</button>
+              <button className="flex">
+                <span className="text-l flex-shrink-0 font-semibold">암장 정보</span>
+              </button>
             </Link>
             <Link to="/center-info">
-              <button className="text-l shrink-0 font-semibold">피드 둘러보기</button>
+              <button className="flex">
+                <span className="text-l flex-shrink-0 font-semibold">피드 둘러보기</span>
+              </button>
             </Link>
             <Link to="/my-feed">
-              <button className="text-l shrink-0 font-semibold">내 피드</button>
+              <button className="flex">
+                <span className="text-l flex-shrink-0 font-semibold">내 피드</span>
+              </button>
             </Link>
           </div>
 
-          <div className="flex gap-4 items-center justify-center mr-2">
-            <p>
+          {/* welcome message & logout Button */}
+          <div className="flex gap-4 items-center justify-center mr-2 flex-shrink-0">
+            <p className="flex-shrink-0 ">
               <span className="hover:text-primary text-lg font-semibold">{nickname}</span>님 환영합니다!
             </p>
             <button
-              className="shrink-0 text-l font-semibold w-86px px-3 py-1 rounded-xl bg-gray-200 flex items-center justify-center hover:bg-primary hover:text-whi"
+              className="flex-shrink-0 text-l font-semibold w-86px px-3 py-1 rounded-xl bg-gray-200 flex items-center justify-center hover:bg-primary hover:text-whi"
               onClick={onSignOut}>
               로그아웃
             </button>

@@ -10,7 +10,7 @@ const UserStateView: React.FC = () => {
   const userProfileImg = userImg || profileDefaultImg;
 
   return (
-    <div className="max-w-2xl m-auto">
+    <div className="min-w-2xl m-auto">
       <div className="mt-24 flex shrink-0 justify-center items-center">
         <img className="w-[120px] h-[120px] rounded-full" src={userProfileImg} alt="UserProfileImg" />
       </div>
