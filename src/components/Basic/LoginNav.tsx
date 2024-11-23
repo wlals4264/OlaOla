@@ -1,15 +1,33 @@
 import React from 'react';
-import { useRecoilValue } from 'recoil';
-import { userNicknameState } from '../../datas/recoilData';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { isLoginUserState, userNicknameState, isLoginModalOpenState } from '../../datas/recoilData';
 import { useNavigate } from 'react-router-dom';
+import { getAuth, signOut } from 'firebase/auth';
 
 const LoginNav: React.FC = () => {
+  const setIsLoginUser = useSetRecoilState(isLoginUserState);
+  const setLoginModalOpen = useSetRecoilState(isLoginModalOpenState);
   const nickname = useRecoilValue(userNicknameState);
 
   const navigate = useNavigate();
 
   const goToHome = () => {
     navigate('/');
+  };
+
+  const onSignOut = async () => {
+    try {
+      const auth = getAuth();
+      await signOut(auth);
+      console.log('로그아웃 되었습니다.');
+      setIsLoginUser(false);
+      setLoginModalOpen(false);
+      navigate('/');
+    } catch (error: any) {
+      console.log(error);
+      console.log(error?.code);
+      setIsLoginUser(true);
+    }
   };
 
   return (
@@ -38,7 +56,9 @@ const LoginNav: React.FC = () => {
             <p>
               <span className="hover:text-primary text-lg font-semibold">{nickname}</span>님 환영합니다!
             </p>
-            <button className="shrink-0 text-l font-semibold w-86px px-3 py-1 rounded-xl bg-gray-200 flex items-center justify-center hover:bg-primary hover:text-whi">
+            <button
+              className="shrink-0 text-l font-semibold w-86px px-3 py-1 rounded-xl bg-gray-200 flex items-center justify-center hover:bg-primary hover:text-whi"
+              onClick={onSignOut}>
               로그아웃
             </button>
           </div>

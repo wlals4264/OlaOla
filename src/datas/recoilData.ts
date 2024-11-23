@@ -29,3 +29,9 @@ export const isSuccessModalOpenState = atom<boolean>({
   key: 'isSuccessModalOpenState',
   default: false,
 });
+
+// LoginUser
+export const isLoginUserState = atom<boolean>({
+  key: 'isLoginUserState',
+  default: false,
+});

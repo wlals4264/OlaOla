@@ -3,7 +3,7 @@ import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 
 import { auth } from '../../../Firebase/firebase';
 import JoinForm from './JoinForm';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import {
   isJoinModalOpenState,
   isLoginModalOpenState,
@@ -14,7 +14,7 @@ import {
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useRecoilState(userEmailState);
   const [password, setPassword] = useState<string>('');
-  const [nickname, setNickname] = useRecoilState(userNicknameState);
+  const setNickname = useSetRecoilState(userNicknameState);
   const [error, setError] = useState<string | null>(null);
   const [isJoinModalOpen, setJoinModalOpen] = useRecoilState(isJoinModalOpenState);
   const [isLoginModalOpen, setLoginModalOpen] = useRecoilState(isLoginModalOpenState);
