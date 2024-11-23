@@ -11,6 +11,7 @@ import { getAuth, signOut } from 'firebase/auth';
 import { createPortal } from 'react-dom';
 import Modal from '../Modal/Modal';
 import SuccessForm from './LoginForm/SuccessForm';
+import { Link } from 'react-router-dom';
 
 const LoginNav: React.FC = () => {
   const setIsLoginUser = useSetRecoilState(isLoginUserState);
@@ -60,9 +61,15 @@ const LoginNav: React.FC = () => {
         </div>
         <div className="flex flex-1 justify-between items-center">
           <div className="flex gap-4 ">
-            <button className="text-l m-auto shrink-0 font-semibold">암장 정보</button>
-            <button className="text-l shrink-0 font-semibold">피드 둘러보기</button>
-            <button className="text-l shrink-0 font-semibold">내 피드</button>
+            <Link to="/browsingfeed">
+              <button className="text-l m-auto shrink-0 font-semibold">암장 정보</button>
+            </Link>
+            <Link to="/centerinfo">
+              <button className="text-l shrink-0 font-semibold">피드 둘러보기</button>
+            </Link>
+            <Link to="/myfeed">
+              <button className="text-l shrink-0 font-semibold">내 피드</button>
+            </Link>
           </div>
 
           <div className="flex gap-4 items-center justify-center mr-2">
