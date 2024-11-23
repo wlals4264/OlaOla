@@ -21,9 +21,12 @@ const LoginForm: React.FC = () => {
 
   const navigate = useNavigate();
 
-  function googleLogin() {
+  function googleLogin(e) {
+    e.preventDefault();
+
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider).then(async (result) => {
+      setError(null);
       navigate('/my-feed');
       console.log(result);
       if (result.user.displayName) {
@@ -63,7 +66,7 @@ const LoginForm: React.FC = () => {
   return (
     <>
       {isLoginModalOpen && (
-        <form className="m-6 p-6" onSubmit={signIn}>
+        <form className="m-6 p-6">
           {/* 이메일 */}
           <div className="mb-4">
             <label htmlFor="email" className="text-xs text-gray-400">
@@ -101,7 +104,8 @@ const LoginForm: React.FC = () => {
           <div className="mb-4">
             <button
               type="submit"
-              className="w-full py-2 bg-gray-200 text-black font-semibold rounded-2xl hover:bg-primary focus:outline-none focus:bg-primary">
+              className="w-full py-2 bg-gray-200 text-black font-semibold rounded-2xl hover:bg-primary focus:outline-none focus:bg-primary"
+              onClick={signIn}>
               로그인
             </button>
           </div>
@@ -137,7 +141,7 @@ const LoginForm: React.FC = () => {
           {/* 회원가입 버튼 */}
           <div className="mb-4">
             <button
-              type="button"
+              type="submit"
               onClick={handleOpenJoinModal}
               className="w-full py-2 bg-gray-200 text-black font-semibold rounded-2xl hover:bg-primary focus:outline-none focus:bg-primary">
               회원가입 하기

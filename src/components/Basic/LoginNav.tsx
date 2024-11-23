@@ -65,7 +65,7 @@ const LoginNav: React.FC = () => {
         <div className="flex flex-1 justify-between items-center">
           <div className="flex gap-4 ">
             <Link to="/browsing-feed">
-              <button className="text-l m-auto shrink-0 font-semibold">암장 정보</button>
+              <button className="text-l shrink-0 font-semibold">암장 정보</button>
             </Link>
             <Link to="/center-info">
               <button className="text-l shrink-0 font-semibold">피드 둘러보기</button>
