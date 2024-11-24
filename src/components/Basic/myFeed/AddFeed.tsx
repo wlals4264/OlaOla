@@ -28,17 +28,28 @@ const AddFeed: React.FC = () => {
       <LoginNav />
       <div className="flex justify-center gap-12 min-w-2xl min-h-dvh m-auto mt-16">
         <div className="flex flex-col gap-4">
-          <div className="min-w-[300px] h-[300px] bg-gray-200 rounded-2xl flex flex-col gap-3 items-center justify-center">
-            {selectedFileUrl ? (
-              fileType === 'image' ? (
-                <img src={selectedFileUrl} alt="업로드 이미지" className="w-full h-full rounded-2xl" />
-              ) : (
-                <video src={selectedFileUrl} controls autoPlay loop className="w-full h-full rounded-2xl" />
-              )
+          {selectedFileUrl ? (
+            fileType === 'image' ? (
+              <div className="w-[300px] h-[300px] bg-gray-200 rounded-2xl flex flex-col gap-3 items-center justify-center">
+                <img src={selectedFileUrl} alt="업로드 이미지" className="w-full h-full object-cover rounded-2xl" />
+              </div>
             ) : (
+              <div className="max-w-[300px] min-h-[300px] bg-gray-200 rounded-2xl flex flex-col gap-3 items-center justify-center">
+                <video
+                  src={selectedFileUrl}
+                  controls
+                  autoPlay
+                  loop
+                  className="aspect-w-16 aspect-h-9 rounded-2xl p-0"
+                />
+              </div>
+            )
+          ) : (
+            <div className="w-[300px] h-[300px] bg-gray-200 rounded-2xl flex flex-col gap-3 items-center justify-center">
               <p className="font-noto text-sm">아래 버튼으로 사진을 업로드해 보세요!</p>
-            )}
-          </div>
+            </div>
+          )}
+
           <label
             htmlFor="fileInput"
             className="w-[50px] h-[50px] bg-gray-100 rounded-xl flex items-center justify-center cursor-pointer hover:ring-black hover:ring-1 hover:bg-white">
