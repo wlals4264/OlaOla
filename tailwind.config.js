@@ -9,7 +9,10 @@ export default {
       colors: {
         primary: '#A5E1FF',
       },
+      corePlugins: {
+        aspectRatio: false,
+      },
     },
   },
-  plugins: [],
+  plugins: [require('@tailwindcss/aspect-ratio')],
 };
