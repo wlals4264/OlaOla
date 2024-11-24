@@ -4,12 +4,13 @@ import LoginNav from '../LoginNav';
 const AddFeed: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [selectedFileUrl, setSelectedFileUrl] = useState<string>('');
+  const [fileType, setFileType] = useState<string>('');
 
   const saveFileImage = (fileBlob: File | null): void => {
     if (fileBlob instanceof Blob) {
       const fileUrl = URL.createObjectURL(fileBlob);
       setSelectedFileUrl(fileUrl);
-      console.log(fileUrl);
+      setFileType(fileBlob.type.startsWith('image') ? 'image' : 'video');
     }
   };
 
@@ -29,7 +30,11 @@ const AddFeed: React.FC = () => {
         <div className="flex flex-col gap-4">
           <div className="min-w-[300px] h-[300px] bg-gray-200 rounded-2xl flex flex-col gap-3 items-center justify-center">
             {selectedFileUrl ? (
-              <img src={selectedFileUrl} alt="업로드 이미지" className="w-full h-full rounded-2xl" />
+              fileType === 'image' ? (
+                <img src={selectedFileUrl} alt="업로드 이미지" className="w-full h-full rounded-2xl" />
+              ) : (
+                <video src={selectedFileUrl} controls autoPlay loop className="w-full h-full rounded-2xl" />
+              )
             ) : (
               <p className="font-noto text-sm">아래 버튼으로 사진을 업로드해 보세요!</p>
             )}
@@ -48,7 +53,13 @@ const AddFeed: React.FC = () => {
           </label>
           {/* 실제 파일 선택 input (숨김 처리) */}
 
-          <input id="fileInput" type="file" style={{ display: 'none' }} onChange={handleFileChange} accept="image/*" />
+          <input
+            id="fileInput"
+            type="file"
+            style={{ display: 'none' }}
+            onChange={handleFileChange}
+            accept="video/*, image/*"
+          />
         </div>
 
         <div className="flex flex-col gap-4 font-noto">
