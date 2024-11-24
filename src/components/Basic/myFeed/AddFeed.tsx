@@ -96,6 +96,14 @@ const AddFeed: React.FC = () => {
             난이도
           </label>
           {/* <input id="level" type="radio" /> */}
+          <div className="flex justify-end gap-4 mt-4">
+            <button className="flex-shrink-0 text-sm text-black w-86px px-3 py-1 rounded-xl bg-white flex items-center justify-center ring-1 ring-gray-200">
+              취소
+            </button>
+            <button className="flex-shrink-0 text-sm text-white w-86px px-3 py-1 rounded-xl bg-primary flex items-center justify-center">
+              개시
+            </button>
+          </div>
         </div>
       </div>
     </>
