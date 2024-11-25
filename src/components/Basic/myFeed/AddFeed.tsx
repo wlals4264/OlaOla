@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import LoginNav from '../LoginNav';
 import ChooseLevel from './ChooseLevel';
 import { useNavigate } from 'react-router-dom';
 
@@ -25,15 +24,20 @@ const AddFeed: React.FC = () => {
   };
 
   const handleCancel = (): void => {
-    navigate('/my-feed');
+    navigate(-1);
   };
+
+  // const handleSubmit = (e: React.FormEvent): void => {
+  //   e.preventDefault();
+  //   console.log('폼 제출 방지됨!');
+  // };
 
   console.log(selectedFile);
 
   return (
     <>
-      {/* <LoginNav /> */}
       <div className="flex justify-center gap-12 min-w-2xl min-h-dvh m-auto mt-16">
+        {/* image & vidoe 업로드 container */}
         <div className="flex flex-col gap-4">
           {selectedFileUrl ? (
             fileType === 'image' ? (
@@ -58,6 +62,7 @@ const AddFeed: React.FC = () => {
             </div>
           )}
 
+          {/* 업로드 아이콘 */}
           <label
             htmlFor="fileInput"
             className="w-[50px] h-[50px] bg-gray-100 rounded-xl flex items-center justify-center cursor-pointer hover:ring-black hover:ring-1 hover:bg-white">
@@ -81,6 +86,7 @@ const AddFeed: React.FC = () => {
           />
         </div>
 
+        {/* form 요소들 */}
         <form className="flex flex-col gap-4 font-noto">
           {/* 내용 */}
           <label htmlFor="describe" className="text-xs">
@@ -108,11 +114,14 @@ const AddFeed: React.FC = () => {
 
           <div className="flex justify-end gap-4 mt-4">
             <button
+              type="button"
               className="flex-shrink-0 text-sm text-black w-86px px-3 py-1 rounded-xl bg-white flex items-center justify-center ring-1 ring-gray-200"
               onClick={handleCancel}>
               취소
             </button>
-            <button className="flex-shrink-0 text-sm text-white w-86px px-3 py-1 rounded-xl bg-primary flex items-center justify-center">
+            <button
+              type="button"
+              className="flex-shrink-0 text-sm text-white w-86px px-3 py-1 rounded-xl bg-primary flex items-center justify-center">
               게시
             </button>
           </div>

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 const ChooseLevel = () => {
-  const [selectedLevel, setSelectedLevel] = useState('');
+  const [selectedLevel, setSelectedLevel] = useState<string>('');
   console.log(selectedLevel);
 
   const handleSelectedLevel = (e: any) => {
