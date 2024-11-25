@@ -26,12 +26,9 @@ const AddFeed: React.FC = () => {
     return () => {
       if (selectedFileUrl) {
         URL.revokeObjectURL(selectedFileUrl);
-        console.log('해제');
       }
     };
   }, [selectedFileUrl]);
-
-  console.log(selectedFile);
 
   return (
     <>
@@ -90,7 +87,8 @@ const AddFeed: React.FC = () => {
 
           {/* 난이도 */}
           <ChooseLevel />
-          <Buttons />
+          {/* Buttons 컴포넌트에 파일 정보 전달 */}
+          <Buttons selectedFile={selectedFile} selectedFileUrl={selectedFileUrl} fileType={fileType} />
         </form>
       </div>
     </>

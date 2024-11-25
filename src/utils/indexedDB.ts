@@ -35,3 +35,33 @@ export function initDB() {
 export function getDB(): IDBDatabase | null {
   return db;
 }
+
+// DB에 파일 추가
+export function addFileToDB(fileUrl: string, fileType: string): void {
+  if (!db) {
+    console.log('DB가 아직 준비되지 않았습니다.');
+    return;
+  }
+
+  const transaction = db.transaction('mediaData', 'readwrite');
+  const store = transaction.objectStore('mediaData');
+
+  const fileData = {
+    url: fileUrl,
+    type: fileType,
+    createdAt: new Date().toISOString(),
+  };
+
+  const addReq = store.add(fileData);
+
+  addReq.addEventListener('success', function () {
+    const target = event.target as IDBRequest;
+    console.log('파일이 DB에 추가되었습니다.');
+    console.log(target.result);
+  });
+
+  addReq.addEventListener('error', function (event) {
+    const target = event.target as IDBRequest;
+    console.error('파일 추가 오류 발생 : ', target?.error);
+  });
+}

@@ -1,10 +1,28 @@
 import { useNavigate } from 'react-router-dom';
+import { addFileToDB } from '../../utils/indexedDB';
 
-const Buttons = () => {
+interface ButtonsProps {
+  selectedFile: File | null;
+  selectedFileUrl: string;
+  fileType: string;
+}
+
+const Buttons: React.FC<ButtonsProps> = ({ selectedFile, selectedFileUrl, fileType }) => {
   const navigate = useNavigate();
 
   const handleCancel = (): void => {
     navigate(-1);
+  };
+
+  const handlePost = (): void => {
+    if (selectedFile && selectedFileUrl) {
+      // 파일 DB에 저장
+      addFileToDB(selectedFileUrl, fileType);
+      // 게시 후 추가 동작
+      navigate('/my-feed'); // 게시 후 페이지 이동
+    } else {
+      alert('파일을 선택해 주세요.');
+    }
   };
 
   return (
@@ -17,7 +35,8 @@ const Buttons = () => {
       </button>
       <button
         type="button"
-        className="flex-shrink-0 text-sm text-white w-86px px-3 py-1 rounded-xl bg-primary flex items-center justify-center">
+        className="flex-shrink-0 text-sm text-white w-86px px-3 py-1 rounded-xl bg-primary flex items-center justify-center"
+        onClick={handlePost}>
         게시
       </button>
     </div>
