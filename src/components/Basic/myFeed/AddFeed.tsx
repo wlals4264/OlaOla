@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import ChooseLevel from './ChooseLevel';
-import { useNavigate } from 'react-router-dom';
 import FileUploadButton from './FileUploadButton';
+import Buttons from './Buttons';
 
 const AddFeed: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [selectedFileUrl, setSelectedFileUrl] = useState<string>('');
   const [fileType, setFileType] = useState<string>('');
-
-  const navigate = useNavigate();
 
   const saveFileImage = (fileBlob: File | null): void => {
     if (fileBlob instanceof Blob) {
@@ -22,10 +20,6 @@ const AddFeed: React.FC = () => {
     const file = e.target.files ? e.target.files[0] : null;
     setSelectedFile(file);
     saveFileImage(file);
-  };
-
-  const handleCancel = (): void => {
-    navigate(-1);
   };
 
   console.log(selectedFile);
@@ -87,20 +81,7 @@ const AddFeed: React.FC = () => {
 
           {/* 난이도 */}
           <ChooseLevel />
-
-          <div className="flex justify-end gap-4 mt-4">
-            <button
-              type="button"
-              className="flex-shrink-0 text-sm text-black w-86px px-3 py-1 rounded-xl bg-white flex items-center justify-center ring-1 ring-gray-200"
-              onClick={handleCancel}>
-              취소
-            </button>
-            <button
-              type="button"
-              className="flex-shrink-0 text-sm text-white w-86px px-3 py-1 rounded-xl bg-primary flex items-center justify-center">
-              게시
-            </button>
-          </div>
+          <Buttons />
         </form>
       </div>
     </>
