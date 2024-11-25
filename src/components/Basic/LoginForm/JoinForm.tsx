@@ -106,9 +106,9 @@ const JoinForm: React.FC = () => {
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
-                // handleValidation(e.target.value, validateEmail, setEmailError);
+                handleValidation(e.target.value, validateEmail, setEmailError);
               }}
-              onBlur={() => handleValidation(email, validateEmail, setEmailError)}
+              // onBlur={() => handleValidation(email, validateEmail, setEmailError)}
               placeholder="Email"
               required
               className={`w-full mt-1 px-4 py-2 border ${
@@ -129,9 +129,9 @@ const JoinForm: React.FC = () => {
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value);
-                // handleValidation(e.target.value, validatePassword, setPasswordError);
+                handleValidation(e.target.value, validatePassword, setPasswordError);
               }}
-              onBlur={() => handleValidation(password, validatePassword, setPasswordError)}
+              // onBlur={() => handleValidation(password, validatePassword, setPasswordError)}
               placeholder="Password"
               minLength={8}
               required
@@ -153,19 +153,19 @@ const JoinForm: React.FC = () => {
               value={passwordConfirm}
               onChange={(e) => {
                 setPasswordConfirm(e.target.value);
-                // handleValidation(
-                //   e.target.value,
-                //   (value) => validatePasswordConfirm(password, value),
-                //   setPasswordConfirmError
-                // );
-              }}
-              onBlur={() =>
                 handleValidation(
-                  passwordConfirm,
+                  e.target.value,
                   (value) => validatePasswordConfirm(password, value),
                   setPasswordConfirmError
-                )
-              }
+                );
+              }}
+              // onBlur={() =>
+              //   handleValidation(
+              //     passwordConfirm,
+              //     (value) => validatePasswordConfirm(password, value),
+              //     setPasswordConfirmError
+              //   )
+              // }
               placeholder="Password Confirm"
               required
               className={`w-full mt-1 px-4 py-2 border ${
