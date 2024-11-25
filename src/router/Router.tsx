@@ -3,7 +3,7 @@ import StartPage from '../pages/StartPage';
 import { MyFeed } from '../pages/MyFeed';
 import BrowsingFeed from '../pages/BrowsingFeed';
 import CenterInfo from '../pages/CenterInfo';
-import AddFeed from '../components/Basic/myFeed/AddFeed';
+import AddFeed from '../components/Basic/MyFeed/AddFeed/AddFeed';
 
 const Router = (): JSX.Element => {
   return (
