@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import LoginNav from '../LoginNav';
+import ChooseLevel from './ChooseLevel';
 
 const AddFeed: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -14,7 +15,6 @@ const AddFeed: React.FC = () => {
     }
   };
 
-  //
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const file = e.target.files ? e.target.files[0] : null;
     setSelectedFile(file);
@@ -38,6 +38,7 @@ const AddFeed: React.FC = () => {
                 <video
                   src={selectedFileUrl}
                   controls
+                  muted
                   autoPlay
                   loop
                   className="aspect-w-16 aspect-h-9 rounded-2xl p-0"
@@ -73,16 +74,18 @@ const AddFeed: React.FC = () => {
           />
         </div>
 
-        <div className="flex flex-col gap-4 font-noto">
+        <form className="flex flex-col gap-4 font-noto">
+          {/* 내용 */}
           <label htmlFor="describe" className="text-xs">
             내용
           </label>
-
           <textarea
             id="describe"
             placeholder="내용을 입력해주세요."
             className="w-[300px] h-[180px] text-xs border border-gray-300 p-2 rounded-xl"
           />
+
+          {/* 암장명 태그 */}
           <label htmlFor="centerName" className="text-xs">
             암장
           </label>
@@ -92,19 +95,19 @@ const AddFeed: React.FC = () => {
             placeholder="암장 이름을 태그해주세요."
             className="w-[300px] h-[35px] text-xs border border-gray-300 px-2 rounded-xl"
           />
-          <label htmlFor="level" className="text-xs">
-            난이도
-          </label>
-          {/* <input id="level" type="radio" /> */}
+
+          {/* 난이도 */}
+
+          <ChooseLevel />
           <div className="flex justify-end gap-4 mt-4">
             <button className="flex-shrink-0 text-sm text-black w-86px px-3 py-1 rounded-xl bg-white flex items-center justify-center ring-1 ring-gray-200">
               취소
             </button>
             <button className="flex-shrink-0 text-sm text-white w-86px px-3 py-1 rounded-xl bg-primary flex items-center justify-center">
-              개시
+              게시
             </button>
           </div>
-        </div>
+        </form>
       </div>
     </>
   );
