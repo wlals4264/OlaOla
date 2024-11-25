@@ -10,6 +10,7 @@ import {
   userEmailState,
   userNicknameState,
   userImgState,
+  userTokenState,
 } from '../../../datas/recoilData';
 
 const LoginForm: React.FC = () => {
@@ -17,45 +18,58 @@ const LoginForm: React.FC = () => {
   const [password, setPassword] = useState<string>('');
   const setNickname = useSetRecoilState(userNicknameState);
   const setUserImg = useSetRecoilState(userImgState);
+  const setUserToken = useSetRecoilState(userTokenState);
   const [error, setError] = useState<string | null>(null);
   const [isJoinModalOpen, setJoinModalOpen] = useRecoilState(isJoinModalOpenState);
   const [isLoginModalOpen, setLoginModalOpen] = useRecoilState(isLoginModalOpenState);
 
   const navigate = useNavigate();
 
+  // 구글 로그인 함수
   function googleLogin(e: React.FormEvent) {
     e.preventDefault();
 
     const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider).then(async (result) => {
-      setError(null);
-      navigate('/my-feed');
-      console.log(result);
-      if (result.user.displayName) {
-        setNickname(result.user.displayName);
-        console.log(result.user.displayName);
-        setUserImg(result.user.photoURL);
-        console.log(result.user.photoURL);
-      } else {
-        console.log('닉네임 없음');
-      }
-    });
+    signInWithPopup(auth, provider)
+      .then(async (result) => {
+        setError(null);
+        navigate('/my-feed');
+        console.log(result);
+        if (result.user.displayName) {
+          setNickname(result.user.displayName);
+          setUserImg(result.user.photoURL);
+        } else {
+          console.log('닉네임 없음');
+        }
+
+        // 구글 로그인 후 토큰 받기
+        const token = await result.user.getIdToken();
+        setUserToken(token);
+        localStorage.setItem('userToken', token);
+      })
+      .catch((error) => {
+        console.log('구글 로그인 오류', error);
+        setError('구글 로그인에 실패하였습니다.');
+      });
   }
 
+  // 이메일 로그인 함수
   const signIn = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
       await signInWithEmailAndPassword(auth, email, password).then(async (result) => {
-        console.log(result);
         if (result.user.displayName) {
           setNickname(result.user.displayName);
-          console.log(result.user.displayName);
           setUserImg(result.user.photoURL);
-          console.log(result.user.photoURL);
         } else {
           console.log('닉네임 없음');
         }
+
+        // 로그인 후 토큰 받기
+        const token = await result.user.getIdToken();
+        setUserToken(token);
+        localStorage.setItem('userToken', token);
       });
 
       setError(null);
