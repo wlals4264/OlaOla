@@ -9,6 +9,13 @@ import {
   userEmailState,
   userNicknameState,
 } from '../../../datas/recoilData';
+import {
+  validateEmail,
+  validatePassword,
+  validatePasswordConfirm,
+  validateNickname,
+  handleValidation,
+} from '../../../utils/validation';
 
 const JoinForm: React.FC = () => {
   const [email, setEmail] = useRecoilState(userEmailState);
@@ -24,47 +31,7 @@ const JoinForm: React.FC = () => {
   const [passwordError, setPasswordError] = useState<string | null>(null);
   const [passwordConfirmError, setPasswordConfirmError] = useState<string | null>(null);
   const [nicknameError, setNicknameError] = useState<string | null>(null);
-
-  // 유효성 검사 함수
-  const validateEmail = (email: string) => {
-    const validEmail = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
-    if (!email) {
-      setEmailError('이메일을 입력해주세요.');
-    } else if (!validEmail.test(email)) {
-      setEmailError('이메일 형식이 올바르지 않습니다.');
-    } else {
-      setEmailError(null);
-    }
-  };
-
-  const validatePassword = (password: string) => {
-    const validPassword = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
-    if (!password) {
-      setPasswordError('비밀번호를 입력해주세요.');
-    } else if (!validPassword.test(password)) {
-      setPasswordError('비밀번호는 8자 이상, 숫자, 특수문자, 영문을 조합하여야 합니다.');
-    } else {
-      setPasswordError(null);
-    }
-  };
-
-  const validatePasswordConfirm = (password: string, passwordConfirm: string) => {
-    if (!passwordConfirm) {
-      setPasswordConfirmError('비밀번호 확인을 입력해주세요.');
-    } else if (password !== passwordConfirm) {
-      setPasswordConfirmError('비밀번호가 일치하지 않습니다.');
-    } else {
-      setPasswordConfirmError(null);
-    }
-  };
-
-  const validateNickname = (nickname: string) => {
-    if (!nickname) {
-      setNicknameError('닉네임을 입력해주세요.');
-    } else {
-      setNicknameError(null);
-    }
-  };
+  const [joinError, setJoinError] = useState<string | null>(null);
 
   const signUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -75,19 +42,23 @@ const JoinForm: React.FC = () => {
     setPasswordConfirmError(null);
     setNicknameError(null);
 
-    // 유효성 검사 코드 실행
-    validateEmail(email);
-    validatePassword(password);
-    validatePasswordConfirm(password, passwordConfirm);
-    validateNickname(nickname);
+    // 유효성 검사 실행
+    const emailValidationError = validateEmail(email);
+    const passwordValidationError = validatePassword(password);
+    const passwordConfirmValidationError = validatePasswordConfirm(password, passwordConfirm);
+    const nicknameValidationError = validateNickname(nickname);
+
+    setEmailError(emailValidationError);
+    setPasswordError(passwordValidationError);
+    setPasswordConfirmError(passwordConfirmValidationError);
+    setNicknameError(nicknameValidationError);
 
     // 유효성 검사를 통과하지 못하면 가입을 진행하지 않음
-    if (emailError || passwordError || passwordConfirmError || nicknameError) {
+    if (emailValidationError || passwordValidationError || passwordConfirmValidationError || nicknameValidationError) {
       // 닉네임이 비어있으면 포커스를 설정
       if (!nickname) {
         document.getElementById('Nickname')?.focus();
       }
-
       return;
     }
 
@@ -95,8 +66,8 @@ const JoinForm: React.FC = () => {
       // Firebase에서 사용자 생성
       await createUserWithEmailAndPassword(auth, email, password);
 
+      // 프로필 업데이트
       if (auth.currentUser) {
-        // 프로필 업데이트
         await updateProfile(auth.currentUser, {
           displayName: nickname,
         });
@@ -106,8 +77,14 @@ const JoinForm: React.FC = () => {
       setIsSuccessModalOpen(true);
       setNickname(nickname);
       setIsLoginUser(true);
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
+      // 에러 처리
+      if (error.code === 'auth/email-already-in-use') {
+        setJoinError('이미 가입된 email입니다.');
+      } else {
+        setJoinError('가입에 실패했습니다. 관계자에게 문의하세요.');
+      }
     }
   };
 
@@ -129,9 +106,9 @@ const JoinForm: React.FC = () => {
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
-                validateEmail(e.target.value);
+                // handleValidation(e.target.value, validateEmail, setEmailError);
               }}
-              onBlur={() => validateEmail(email)}
+              onBlur={() => handleValidation(email, validateEmail, setEmailError)}
               placeholder="Email"
               required
               className={`w-full mt-1 px-4 py-2 border ${
@@ -152,9 +129,9 @@ const JoinForm: React.FC = () => {
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value);
-                validatePassword(e.target.value);
+                // handleValidation(e.target.value, validatePassword, setPasswordError);
               }}
-              onBlur={() => validatePassword(password)}
+              onBlur={() => handleValidation(password, validatePassword, setPasswordError)}
               placeholder="Password"
               minLength={8}
               required
@@ -176,9 +153,19 @@ const JoinForm: React.FC = () => {
               value={passwordConfirm}
               onChange={(e) => {
                 setPasswordConfirm(e.target.value);
-                validatePasswordConfirm(password, e.target.value);
+                // handleValidation(
+                //   e.target.value,
+                //   (value) => validatePasswordConfirm(password, value),
+                //   setPasswordConfirmError
+                // );
               }}
-              onBlur={() => validatePasswordConfirm(password, passwordConfirm)}
+              onBlur={() =>
+                handleValidation(
+                  passwordConfirm,
+                  (value) => validatePasswordConfirm(password, value),
+                  setPasswordConfirmError
+                )
+              }
               placeholder="Password Confirm"
               required
               className={`w-full mt-1 px-4 py-2 border ${
@@ -209,6 +196,8 @@ const JoinForm: React.FC = () => {
             />
             {nicknameError && <p className="text-red-500 text-xs mt-1">{nicknameError}</p>}
           </div>
+
+          {joinError && <p className="text-red-500 text-sm my-6">{joinError}</p>}
 
           {/* 회원가입 버튼 */}
           <button type="submit" className="w-full py-3 bg-primary text-white text-sm rounded-2xl hover:bg-hover">
