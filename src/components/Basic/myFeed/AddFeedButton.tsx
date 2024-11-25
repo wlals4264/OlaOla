@@ -2,10 +2,10 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const AddFeedButton: React.FC = () => {
-  const navigator = useNavigate();
+  const navigate = useNavigate();
   const AddFeedOpen = () => {
     console.log('AddFeedButton');
-    navigator('/add-feed');
+    navigate('add-feed');
   };
 
   return (

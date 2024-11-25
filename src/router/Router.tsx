@@ -9,8 +9,9 @@ const Router = (): JSX.Element => {
   return (
     <Routes>
       <Route path="/" element={<StartPage />}></Route>
-      <Route path="/my-feed" element={<MyFeed />}></Route>
-      <Route path="/add-feed" element={<AddFeed />}></Route>
+      <Route path="/my-feed" element={<MyFeed />}>
+        <Route path="add-feed" element={<AddFeed />} />
+      </Route>
       <Route path="/browsing-feed" element={<BrowsingFeed />}></Route>
       <Route path="/center-info" element={<CenterInfo />}></Route>
     </Routes>

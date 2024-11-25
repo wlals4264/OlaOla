@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import LoginNav from '../LoginNav';
 import ChooseLevel from './ChooseLevel';
+import { useNavigate } from 'react-router-dom';
 
 const AddFeed: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [selectedFileUrl, setSelectedFileUrl] = useState<string>('');
   const [fileType, setFileType] = useState<string>('');
+
+  const navigate = useNavigate();
 
   const saveFileImage = (fileBlob: File | null): void => {
     if (fileBlob instanceof Blob) {
@@ -21,11 +24,15 @@ const AddFeed: React.FC = () => {
     saveFileImage(file);
   };
 
+  const handleCancel = (): void => {
+    navigate('/my-feed');
+  };
+
   console.log(selectedFile);
 
   return (
     <>
-      <LoginNav />
+      {/* <LoginNav /> */}
       <div className="flex justify-center gap-12 min-w-2xl min-h-dvh m-auto mt-16">
         <div className="flex flex-col gap-4">
           {selectedFileUrl ? (
@@ -97,10 +104,12 @@ const AddFeed: React.FC = () => {
           />
 
           {/* 난이도 */}
-
           <ChooseLevel />
+
           <div className="flex justify-end gap-4 mt-4">
-            <button className="flex-shrink-0 text-sm text-black w-86px px-3 py-1 rounded-xl bg-white flex items-center justify-center ring-1 ring-gray-200">
+            <button
+              className="flex-shrink-0 text-sm text-black w-86px px-3 py-1 rounded-xl bg-white flex items-center justify-center ring-1 ring-gray-200"
+              onClick={handleCancel}>
               취소
             </button>
             <button className="flex-shrink-0 text-sm text-white w-86px px-3 py-1 rounded-xl bg-primary flex items-center justify-center">
