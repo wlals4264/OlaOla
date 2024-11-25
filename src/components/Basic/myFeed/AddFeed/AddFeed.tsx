@@ -47,7 +47,7 @@ const AddFeed: React.FC = () => {
               </div>
             )
           ) : (
-            <div className="w-[300px] h-[300px] bg-gray-200 rounded-2xl flex flex-col gap-3 items-center justify-center">
+            <div className="w-[300px] h-[400px] bg-gray-200 rounded-2xl flex flex-col gap-3 items-center justify-center">
               <p className="font-noto text-sm">아래 버튼으로 사진을 업로드해 보세요!</p>
             </div>
           )}
