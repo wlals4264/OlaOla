@@ -36,7 +36,7 @@ const AddFeed: React.FC = () => {
   return (
     <>
       <div className="flex justify-center gap-12 min-w-2xl min-h-dvh m-auto mt-16">
-        {/* image & vidoe 업로드 container */}
+        {/* image & video 업로드 container */}
         <div className="flex flex-col gap-4">
           {selectedFileUrl ? (
             fileType === 'image' ? (

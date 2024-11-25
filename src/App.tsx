@@ -2,8 +2,11 @@ import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import Router from './router/Router';
+import { initDB } from './utils/indexedDB.ts';
 
 const App: React.FC = () => {
+  initDB();
+
   return (
     <>
       <div className="bg-bg-color min-w-full min-h-screen">
