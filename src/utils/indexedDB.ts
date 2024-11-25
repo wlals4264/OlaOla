@@ -37,7 +37,13 @@ export function getDB(): IDBDatabase | null {
 }
 
 // DB에 파일 추가
-export function addFileToDB(fileUrl: string, fileType: string, describe: string, userToken: string | null): void {
+export function addFileToDB(
+  fileUrl: string,
+  fileType: string,
+  describe: string,
+  userToken: string | null,
+  level: string
+): void {
   if (!db) {
     console.log('DB가 아직 준비되지 않았습니다.');
     return;
@@ -51,6 +57,7 @@ export function addFileToDB(fileUrl: string, fileType: string, describe: string,
     type: fileType,
     describe: describe,
     userToken: userToken,
+    level: level,
     createdAt: new Date().toISOString(),
   };
 

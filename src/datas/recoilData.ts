@@ -47,3 +47,9 @@ export const isLoginUserState = atom<boolean>({
   key: 'isLoginUserState',
   default: false,
 });
+
+// level
+export const climbingLevelState = atom<string>({
+  key: 'climbingLevel',
+  default: '',
+});

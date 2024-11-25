@@ -1,11 +1,12 @@
-import { useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { climbingLevelState } from '../../../../datas/recoilData';
 
 const ChooseLevel = () => {
-  const [selectedLevel, setSelectedLevel] = useState<string>('');
+  const [climbingLevel, setClimbingLevel] = useRecoilState<string>(climbingLevelState);
 
   const handleSelectedLevel = (e: any) => {
     const level = e.target.value;
-    setSelectedLevel(level);
+    setClimbingLevel(level);
   };
 
   const levelOptions = [
@@ -20,13 +21,13 @@ const ChooseLevel = () => {
     { value: 'level-gray', label: 'Gray', color: '#8e8e93' },
   ];
 
-  const selectedColor = levelOptions.find((option) => option.value === selectedLevel)?.color;
+  const selectedColor = levelOptions.find((option) => option.value === climbingLevel)?.color;
 
   return (
     <fieldset>
       <div className="flex items-center text-xs cursor-default mb-4 min-h-[40px]">
         난이도{' '}
-        {selectedLevel && selectedColor && (
+        {climbingLevel && selectedColor && (
           <svg
             className="scale-50"
             width="38"
