@@ -8,8 +8,6 @@ interface FileUploadButtonProps {
 const FileUploadButton: React.FC<FileUploadButtonProps> = ({ onFileChange }) => {
   return (
     <div className="flex flex-col gap-4">
-      {/* 업로드된 파일 미리보기 */}
-
       <label
         htmlFor="fileInput"
         className="w-[50px] h-[50px] bg-gray-100 rounded-xl flex items-center justify-center cursor-pointer hover:ring-black hover:ring-1 hover:bg-white">
