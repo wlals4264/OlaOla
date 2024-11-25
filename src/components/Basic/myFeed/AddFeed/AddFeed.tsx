@@ -7,6 +7,7 @@ const AddFeed: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [selectedFileUrl, setSelectedFileUrl] = useState<string>('');
   const [fileType, setFileType] = useState<string>('');
+  const [describe, setDescribe] = useState<string>('');
 
   const saveFileImage = (fileBlob: File | null): void => {
     if (fileBlob instanceof Blob) {
@@ -70,6 +71,7 @@ const AddFeed: React.FC = () => {
           </label>
           <textarea
             id="describe"
+            onChange={(e) => setDescribe(e.target.value)}
             placeholder="내용을 입력해주세요."
             className="w-[300px] h-[180px] text-xs border border-gray-300 p-2 rounded-xl"
           />
@@ -88,7 +90,12 @@ const AddFeed: React.FC = () => {
           {/* 난이도 */}
           <ChooseLevel />
           {/* Buttons 컴포넌트에 파일 정보 전달 */}
-          <Buttons selectedFile={selectedFile} selectedFileUrl={selectedFileUrl} fileType={fileType} />
+          <Buttons
+            selectedFile={selectedFile}
+            selectedFileUrl={selectedFileUrl}
+            fileType={fileType}
+            describe={describe}
+          />
         </form>
       </div>
     </>

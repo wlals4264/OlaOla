@@ -37,7 +37,7 @@ export function getDB(): IDBDatabase | null {
 }
 
 // DB에 파일 추가
-export function addFileToDB(fileUrl: string, fileType: string): void {
+export function addFileToDB(fileUrl: string, fileType: string, describe: string, userToken: string | null): void {
   if (!db) {
     console.log('DB가 아직 준비되지 않았습니다.');
     return;
@@ -49,12 +49,14 @@ export function addFileToDB(fileUrl: string, fileType: string): void {
   const fileData = {
     url: fileUrl,
     type: fileType,
+    describe: describe,
+    userToken: userToken,
     createdAt: new Date().toISOString(),
   };
 
   const addReq = store.add(fileData);
 
-  addReq.addEventListener('success', function () {
+  addReq.addEventListener('success', function (event: Event) {
     const target = event.target as IDBRequest;
     console.log('파일이 DB에 추가되었습니다.');
     console.log(target.result);
