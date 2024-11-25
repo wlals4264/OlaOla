@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ChooseLevel from './ChooseLevel';
 import FileUploadButton from './FileUploadButton';
 import Buttons from '../../Buttons';
@@ -21,6 +21,15 @@ const AddFeed: React.FC = () => {
     setSelectedFile(file);
     saveFileImage(file);
   };
+
+  useEffect(() => {
+    return () => {
+      if (selectedFileUrl) {
+        URL.revokeObjectURL(selectedFileUrl);
+        console.log('해제');
+      }
+    };
+  }, [selectedFileUrl]);
 
   console.log(selectedFile);
 
