@@ -11,6 +11,7 @@ import {
   userNicknameState,
   userImgState,
   userTokenState,
+  isLoginUserState,
 } from '../../../datas/recoilData';
 
 const LoginForm: React.FC = () => {
@@ -22,6 +23,7 @@ const LoginForm: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [isJoinModalOpen, setJoinModalOpen] = useRecoilState(isJoinModalOpenState);
   const [isLoginModalOpen, setLoginModalOpen] = useRecoilState(isLoginModalOpenState);
+  const setIsLoginUser = useSetRecoilState(isLoginUserState);
 
   const navigate = useNavigate();
 
@@ -34,7 +36,8 @@ const LoginForm: React.FC = () => {
       .then(async (result) => {
         setError(null);
         navigate('/my-feed');
-        console.log(result);
+
+        // 프로필 업데이트
         if (result.user.displayName) {
           setNickname(result.user.displayName);
           setUserImg(result.user.photoURL);
@@ -46,6 +49,11 @@ const LoginForm: React.FC = () => {
         const token = await result.user.getIdToken();
         setUserToken(token);
         localStorage.setItem('userToken', token);
+
+        // 로그인 상태 업데이트
+        if (token) {
+          setIsLoginUser(true);
+        }
       })
       .catch((error) => {
         console.log('구글 로그인 오류', error);
@@ -59,6 +67,7 @@ const LoginForm: React.FC = () => {
 
     try {
       await signInWithEmailAndPassword(auth, email, password).then(async (result) => {
+        // 프로필 업데이트
         if (result.user.displayName) {
           setNickname(result.user.displayName);
           setUserImg(result.user.photoURL);
@@ -70,6 +79,11 @@ const LoginForm: React.FC = () => {
         const token = await result.user.getIdToken();
         setUserToken(token);
         localStorage.setItem('userToken', token);
+
+        // 로그인 상태 업데이트
+        if (token) {
+          setIsLoginUser(true);
+        }
       });
 
       setError(null);

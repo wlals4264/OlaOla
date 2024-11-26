@@ -5,6 +5,8 @@ import {
   userNicknameState,
   isLoginModalOpenState,
   isSuccessModalOpenState,
+  userTokenState,
+  userImgState,
 } from '../../datas/recoilData';
 import { useNavigate } from 'react-router-dom';
 import { getAuth, signOut } from 'firebase/auth';
@@ -17,9 +19,11 @@ const LoginNav: React.FC = () => {
   useAuthState();
 
   const setIsLoginUser = useSetRecoilState(isLoginUserState);
+  const setUserImg = useSetRecoilState(userImgState);
   const setLoginModalOpen = useSetRecoilState(isLoginModalOpenState);
   const [isSuccessModalOpen, setSuccessModalOpen] = useRecoilState(isSuccessModalOpenState);
   const [nickname, setNickname] = useRecoilState(userNicknameState);
+  const setUserToken = useSetRecoilState(userTokenState);
 
   const navigate = useNavigate();
 
@@ -31,12 +35,18 @@ const LoginNav: React.FC = () => {
     setSuccessModalOpen(false);
   };
 
+  // 로그아웃 함수
   const onSignOut = async () => {
     try {
       const auth = getAuth();
       await signOut(auth);
       console.log('로그아웃 되었습니다.');
+
+      // 상태 초기화
+      localStorage.clear();
       setNickname('');
+      setUserImg('');
+      setUserToken(null);
       setIsLoginUser(false);
       setLoginModalOpen(false);
       navigate('/');
