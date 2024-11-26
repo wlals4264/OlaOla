@@ -8,7 +8,9 @@ const AddFeed: React.FC = () => {
   const [selectedFileUrl, setSelectedFileUrl] = useState<string>('');
   const [fileType, setFileType] = useState<string>('');
   const [describe, setDescribe] = useState<string>('');
+  const [centerName, setCenterName] = useState<string>('');
 
+  // 업로드된 파일 URL 생성 & 파일 타입(image/video) 설정
   const saveFileImage = (fileBlob: File | null): void => {
     if (fileBlob instanceof Blob) {
       const fileUrl = URL.createObjectURL(fileBlob);
@@ -17,12 +19,7 @@ const AddFeed: React.FC = () => {
     }
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const file = e.target.files ? e.target.files[0] : null;
-    setSelectedFile(file);
-    saveFileImage(file);
-  };
-
+  // 컴포넌트 언마운트 시 생성된 URL 해제
   useEffect(() => {
     return () => {
       if (selectedFileUrl) {
@@ -31,17 +28,26 @@ const AddFeed: React.FC = () => {
     };
   }, [selectedFileUrl]);
 
+  // 파일 변경 이벤트 핸들러
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const file = e.target.files ? e.target.files[0] : null;
+    setSelectedFile(file);
+    saveFileImage(file);
+  };
+
   return (
     <>
       <div className="flex justify-center gap-12 min-w-2xl min-h-dvh m-auto mt-16">
         {/* image & video 업로드 container */}
         <div className="flex flex-col gap-4">
           {selectedFileUrl ? (
+            // 이미지 미리보기
             fileType === 'image' ? (
               <div className="w-[300px] h-[400px] bg-gray-200 rounded-2xl flex flex-col gap-3 items-center justify-center">
                 <img src={selectedFileUrl} alt="업로드 이미지" className="w-full h-full object-cover rounded-2xl" />
               </div>
             ) : (
+              // 비디오 미리보기
               <div className="relative min-w-[300px] min-h-[400px] bg-gray-200 rounded-2xl flex flex-col gap-3 items-center justify-center">
                 <video
                   src={selectedFileUrl}
@@ -83,6 +89,7 @@ const AddFeed: React.FC = () => {
           <input
             id="centerName"
             type="text"
+            onChange={(e) => setCenterName(e.target.value)}
             placeholder="암장 이름을 태그해주세요."
             className="w-[300px] h-[35px] text-xs border border-gray-300 px-2 rounded-xl"
           />
@@ -95,6 +102,7 @@ const AddFeed: React.FC = () => {
             selectedFileUrl={selectedFileUrl}
             fileType={fileType}
             describe={describe}
+            centerName={centerName}
           />
         </form>
       </div>

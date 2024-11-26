@@ -42,7 +42,8 @@ export function addFileToDB(
   fileType: string,
   describe: string,
   userToken: string | null,
-  level: string
+  level: string,
+  centerName: string
 ): void {
   if (!db) {
     console.log('DB가 아직 준비되지 않았습니다.');
@@ -58,6 +59,7 @@ export function addFileToDB(
     describe: describe,
     userToken: userToken,
     level: level,
+    centerName: centerName,
     createdAt: new Date().toISOString(),
   };
 

@@ -8,9 +8,10 @@ interface ButtonsProps {
   selectedFileUrl: string;
   fileType: string;
   describe: string;
+  centerName: string;
 }
 
-const Buttons: React.FC<ButtonsProps> = ({ selectedFile, selectedFileUrl, fileType, describe }) => {
+const Buttons: React.FC<ButtonsProps> = ({ selectedFile, selectedFileUrl, fileType, describe, centerName }) => {
   const navigate = useNavigate();
   const [userToken, setUserToken] = useRecoilState(userTokenState);
   const climbingLevel = useRecoilValue(climbingLevelState);
@@ -24,7 +25,7 @@ const Buttons: React.FC<ButtonsProps> = ({ selectedFile, selectedFileUrl, fileTy
   const handlePost = (): void => {
     if (selectedFile && selectedFileUrl) {
       // 파일 DB에 저장
-      addFileToDB(selectedFileUrl, fileType, describe, userToken, climbingLevel);
+      addFileToDB(selectedFileUrl, fileType, describe, userToken, climbingLevel, centerName);
       // 게시 후 추가 동작
       navigate('/my-feed'); // 게시 후 페이지 이동
     } else {
