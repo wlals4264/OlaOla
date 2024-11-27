@@ -30,15 +30,32 @@ export function initDB() {
     }
   });
 }
+export const getDB = (): Promise<IDBDatabase | null> => {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open('YourDatabaseName', 1);
 
-// 데이터베이스 연결 확인 함수
-export function getDB(): IDBDatabase | null {
-  return db;
-}
+    request.onsuccess = () => {
+      const db = request.result;
+      resolve(db);
+    };
+
+    request.onerror = (event) => {
+      console.error('IndexedDB error:', event);
+      reject(new Error('IndexedDB 연결 실패'));
+    };
+
+    request.onupgradeneeded = () => {
+      const db = request.result;
+      if (!db.objectStoreNames.contains('YourObjectStore')) {
+        db.createObjectStore('YourObjectStore', { keyPath: 'id', autoIncrement: true });
+      }
+    };
+  });
+};
 
 // DB에 파일 추가
 export function addFileToDB(
-  file: File, // File 객체를 인자로 받도록 수정
+  file: File,
   fileType: string,
   describe: string,
   userUID: string | null,
@@ -54,7 +71,7 @@ export function addFileToDB(
   const store = transaction.objectStore('mediaData');
 
   const fileData = {
-    file: file, // 실제 File 객체를 저장
+    file: file,
     type: fileType,
     describe: describe,
     UID: userUID,
@@ -122,12 +139,11 @@ export function getFileListFromDB(): Promise<File[]> {
     try {
       const transaction = db.transaction('mediaData', 'readonly');
       const objectStore = transaction.objectStore('mediaData');
-      const request = objectStore.getAll(); // 모든 파일을 가져옴
+      const request = objectStore.getAll();
 
       request.onsuccess = () => {
         const fileList = request.result;
         if (fileList.length > 0) {
-          // 파일이 존재하면 파일 리스트 반환
           resolve(fileList);
         } else {
           reject('파일이 존재하지 않습니다.');

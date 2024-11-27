@@ -10,8 +10,7 @@ import {
   userEmailState,
   userNicknameState,
   userImgState,
-  userUIDState,
-  isLoginUserState,
+  updateUserUIDState,
   updateLoginUserState,
 } from '../../../datas/recoilData';
 
@@ -20,11 +19,10 @@ const LoginForm: React.FC = () => {
   const [password, setPassword] = useState<string>('');
   const setNickname = useSetRecoilState(userNicknameState);
   const setUserImg = useSetRecoilState(userImgState);
-  const setUserUID = useSetRecoilState(userUIDState);
+  const setUserUID = useSetRecoilState(updateUserUIDState);
   const [error, setError] = useState<string | null>(null);
   const [isJoinModalOpen, setJoinModalOpen] = useRecoilState(isJoinModalOpenState);
   const [isLoginModalOpen, setLoginModalOpen] = useRecoilState(isLoginModalOpenState);
-  // const setIsLoginUser = useSetRecoilState(isLoginUserState);
   const setLoginUser = useSetRecoilState(updateLoginUserState);
 
   const navigate = useNavigate();

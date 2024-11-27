@@ -2,7 +2,24 @@ import { atom, selector, DefaultValue } from 'recoil';
 
 export const userUIDState = atom<string | null>({
   key: 'userUIDState',
-  default: null,
+  default: localStorage.getItem('userUID') || null,
+});
+
+export const updateUserUIDState = selector<string | null>({
+  key: 'updateUserUIDState',
+  get: ({ get }) => get(userUIDState),
+  set: ({ set }, newValue) => {
+    if (newValue instanceof DefaultValue) {
+      return;
+    }
+
+    set(userUIDState, newValue);
+    if (newValue !== null) {
+      localStorage.setItem('userUID', newValue);
+    } else {
+      localStorage.removeItem('userUID');
+    }
+  },
 });
 
 // email
@@ -41,12 +58,6 @@ export const isSuccessModalOpenState = atom<boolean>({
   key: 'isSuccessModalOpenState',
   default: false,
 });
-
-// // LoginUser
-// export const isLoginUserState = atom<boolean>({
-//   key: 'isLoginUserState',
-//   default: false,
-// });
 
 // level
 export const climbingLevelState = atom<string>({

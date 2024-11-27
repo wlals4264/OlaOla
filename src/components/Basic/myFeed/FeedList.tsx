@@ -2,86 +2,91 @@ import React, { useEffect, useState } from 'react';
 import { getDB, getFileListFromDB } from '../../../utils/indexedDB';
 import { useRecoilValue } from 'recoil';
 import { userUIDState } from '../../../datas/recoilData';
+import Spinner from '../../Spinner/Spinner';
 
 const FeedList: React.FC = () => {
   const [feedItems, setFeedItems] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const userUID = useRecoilValue(userUIDState);
-  console.log(userUID);
+
+  const [db, setDb] = useState<IDBDatabase | null>(null);
 
   const fetchData = async () => {
-    try {
-      setLoading(true);
+    setLoading(true);
+    setError(null);
 
-      // DB에서 파일 목록을 가져옴
-      const db = getDB();
+    try {
       if (!db) {
-        setError('DB가 준비되지 않았습니다.');
-        return;
+        const openedDb = await getDB();
+        if (!openedDb) {
+          setError('DB가 준비되지 않았습니다.');
+          console.error('DB 연결 실패');
+          return;
+        }
+        setDb(openedDb);
       }
+
+      // DB 연결 후 파일 목록을 불러옴
+      const files = await getFileListFromDB();
       console.log('DB 연결 성공');
 
-      const files = await getFileListFromDB();
-
+      // UID가 없으면 오류 처리
       if (!userUID) {
         setError('UID가 존재하지 않습니다.');
         return;
       }
 
-      if (files.length > 0) {
-        // userUID와 일치하는 파일만 필터링
-        const filteredFiles = files.filter((fileData) => {
-          return fileData.UID === userUID;
-        });
-        console.log('필터링된 파일들:', filteredFiles);
+      // 사용자 UID에 맞는 파일들만 필터링
+      const filteredFiles = files.filter((fileData) => fileData.UID === userUID);
+      console.log('필터링된 파일들:', filteredFiles);
 
-        if (filteredFiles.length > 0) {
-          const fileUrls = filteredFiles.map((fileData: any) => {
-            const fileUrl = URL.createObjectURL(fileData.file);
-            return { fileUrl, fileType: fileData.type };
-          });
-          setFeedItems(fileUrls);
-        } else {
-          setError('해당 UID에 해당하는 파일이 없습니다.');
-        }
+      // 필터링된 파일이 있다면 URL 생성
+      if (filteredFiles.length > 0) {
+        const fileUrls = filteredFiles.map((fileData: any) => {
+          const fileUrl = URL.createObjectURL(fileData.file);
+          return { fileUrl, fileType: fileData.type };
+        });
+        setFeedItems(fileUrls);
       } else {
-        setError('파일이 존재하지 않습니다.');
+        setError('해당 UID에 해당하는 파일이 없습니다.');
       }
     } catch (error) {
-      setError('파일을 가져오는 데 실패했습니다.');
-      console.error(error);
+      // 오류가 발생하면 에러 메시지 출력
+      if (error instanceof Error) {
+        console.error('파일을 가져오는 도중 오류 발생:', error.message);
+      } else {
+        console.error('알 수 없는 오류 발생:', error);
+      }
+      setError('파일을 가져오는 도중 오류 발생');
     } finally {
       setLoading(false);
     }
   };
 
-  // useEffect를 사용하여 컴포넌트가 마운트될 때 데이터 불러오기
   useEffect(() => {
+    // DB 연결 후 데이터 가져오기
     fetchData();
+  }, [db]); // db가 변경될 때마다 실행
 
-    // cleanup: 컴포넌트가 unmount될 때 한 번만 URL을 해제
-    return () => {
-      feedItems.forEach((item) => {
-        URL.revokeObjectURL(item.fileUrl); // URL 해제
-      });
-    };
-  }, []); // 의존성 배열을 빈 배열로 설정, 한 번만 실행되도록
-
-  // 에러가 있으면 에러 메시지를 렌더링
+  // 에러 발생 시 표시
   if (error) {
     return <div className="min-w-2xl m-auto mt-4 text-center text-red-500">{error}</div>;
   }
 
-  // 로딩 중일 때 로딩 메시지 표시
+  // 로딩 중일 때 표시
   if (loading) {
-    return <div className="min-w-2xl m-auto mt-4 text-center text-gray-500">Loading...</div>;
+    return (
+      <div className="min-w-2xl m-auto mt-4">
+        <Spinner />
+      </div>
+    );
   }
 
   return (
-    <div className="max-w-2xl m-auto mt-4 grid grid-cols-3 gap-4">
+    <div className="max-w-2xl m-auto mt-4 grid grid-cols-3 gap-4 font-noto">
       {feedItems.length === 0 ? (
-        <p>No feeds available</p>
+        <p className="font-bols text-3xl">게시물 없음</p>
       ) : (
         feedItems.map((item, index) => {
           const { fileUrl, fileType } = item;
