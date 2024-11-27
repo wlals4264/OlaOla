@@ -10,7 +10,7 @@ import {
   userEmailState,
   userNicknameState,
   userImgState,
-  userTokenState,
+  userUIDState,
   isLoginUserState,
 } from '../../../datas/recoilData';
 
@@ -19,7 +19,7 @@ const LoginForm: React.FC = () => {
   const [password, setPassword] = useState<string>('');
   const setNickname = useSetRecoilState(userNicknameState);
   const setUserImg = useSetRecoilState(userImgState);
-  const setUserToken = useSetRecoilState(userTokenState);
+  const setUserUID = useSetRecoilState(userUIDState);
   const [error, setError] = useState<string | null>(null);
   const [isJoinModalOpen, setJoinModalOpen] = useRecoilState(isJoinModalOpenState);
   const [isLoginModalOpen, setLoginModalOpen] = useRecoilState(isLoginModalOpenState);
@@ -45,13 +45,13 @@ const LoginForm: React.FC = () => {
           console.log('닉네임 없음');
         }
 
-        // 구글 로그인 후 토큰 받기
-        const token = await result.user.getIdToken();
-        setUserToken(token);
-        localStorage.setItem('userToken', token);
+        // 구글 로그인 후 UID 받기
+        const uid = result.user.uid;
+        setUserUID(uid);
+        console.log('UID:', uid);
 
         // 로그인 상태 업데이트
-        if (token) {
+        if (uid) {
           setIsLoginUser(true);
         }
       })
@@ -75,13 +75,12 @@ const LoginForm: React.FC = () => {
           console.log('닉네임 없음');
         }
 
-        // 로그인 후 토큰 받기
-        const token = await result.user.getIdToken();
-        setUserToken(token);
-        localStorage.setItem('userToken', token);
+        // 로그인 후 UID 받기
+        const uid = result.user.uid;
+        setUserUID(uid);
 
         // 로그인 상태 업데이트
-        if (token) {
+        if (uid) {
           setIsLoginUser(true);
         }
       });

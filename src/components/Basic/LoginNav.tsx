@@ -5,7 +5,7 @@ import {
   userNicknameState,
   isLoginModalOpenState,
   isSuccessModalOpenState,
-  userTokenState,
+  userUIDState,
   userImgState,
 } from '../../datas/recoilData';
 import { useNavigate } from 'react-router-dom';
@@ -23,7 +23,7 @@ const LoginNav: React.FC = () => {
   const setLoginModalOpen = useSetRecoilState(isLoginModalOpenState);
   const [isSuccessModalOpen, setSuccessModalOpen] = useRecoilState(isSuccessModalOpenState);
   const [nickname, setNickname] = useRecoilState(userNicknameState);
-  const setUserToken = useSetRecoilState(userTokenState);
+  const setUserUID = useSetRecoilState(userUIDState);
 
   const navigate = useNavigate();
 
@@ -46,7 +46,7 @@ const LoginNav: React.FC = () => {
       localStorage.clear();
       setNickname('');
       setUserImg('');
-      setUserToken(null);
+      setUserUID(null);
       setIsLoginUser(false);
       setLoginModalOpen(false);
       navigate('/');

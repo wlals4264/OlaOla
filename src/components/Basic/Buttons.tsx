@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { addFileToDB } from '../../utils/indexedDB';
-import { userTokenState, climbingLevelState } from '../../datas/recoilData';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
+import { climbingLevelState, userUIDState } from '../../datas/recoilData';
 
 interface ButtonsProps {
   selectedFile: File | null;
@@ -13,19 +13,17 @@ interface ButtonsProps {
 
 const Buttons: React.FC<ButtonsProps> = ({ selectedFile, selectedFileUrl, fileType, describe, centerName }) => {
   const navigate = useNavigate();
-  const [userToken, setUserToken] = useRecoilState(userTokenState);
   const climbingLevel = useRecoilValue(climbingLevelState);
+  const userUID = useRecoilValue(userUIDState);
 
   const handleCancel = (): void => {
     navigate(-1);
   };
 
-  setUserToken(localStorage.getItem('userToken'));
-
   const handlePost = (): void => {
     if (selectedFile && selectedFileUrl) {
       // 파일 DB에 저장
-      addFileToDB(selectedFile, fileType, describe, userToken, climbingLevel, centerName);
+      addFileToDB(selectedFile, fileType, describe, userUID, climbingLevel, centerName);
       // 게시 후 추가 동작
       navigate('/my-feed'); // 게시 후 페이지 이동
     } else {

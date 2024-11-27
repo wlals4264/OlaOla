@@ -6,61 +6,69 @@ const FeedList: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
+  const fetchData = async () => {
+    const token = localStorage.getItem('userToken');
+    try {
+      setLoading(true);
 
-        // DB에서 파일 목록을 가져옴
-        const db = getDB();
-        if (!db) {
-          setError('DB가 준비되지 않았습니다.');
-          return;
-        }
-        console.log('DB 연결 성공');
-
-        // token 일치되는 item만 filtering
-        const token = localStorage.getItem('userToken');
-        if (!token) {
-          setError('토큰이 존재하지 않습니다.');
-          return;
-        }
-
-        const files = await getFileListFromDB();
-
-        if (files.length > 0) {
-          // token과 일치하는 파일만 필터링
-          const filteredFiles = files.filter((fileData: any) => fileData.userToken === token);
-
-          if (filteredFiles.length > 0) {
-            const fileUrls = filteredFiles.map((fileData: any) => {
-              const fileUrl = URL.createObjectURL(fileData.file);
-              return { fileUrl, fileType: fileData.type };
-            });
-            setFeedItems(fileUrls);
-          } else {
-            setError('해당 토큰에 해당하는 파일이 없습니다.');
-          }
-        } else {
-          setError('파일이 존재하지 않습니다.');
-        }
-      } catch (error) {
-        setError('파일을 가져오는 데 실패했습니다.');
-        console.error(error);
-      } finally {
-        setLoading(false);
+      // DB에서 파일 목록을 가져옴
+      const db = getDB();
+      if (!db) {
+        setError('DB가 준비되지 않았습니다.');
+        return;
       }
-    };
+      console.log('DB 연결 성공');
 
+      const files = await getFileListFromDB();
+      console.log(files);
+
+      if (!token) {
+        setError('토큰이 존재하지 않습니다.');
+        return;
+      }
+
+      console.log('현재 저장된 토큰:', token); // 저장된 토큰 확인
+
+      if (files.length > 0) {
+        // token과 일치하는 파일만 필터링
+        const filteredFiles = files.filter((fileData) => {
+          console.log('파일 데이터:', fileData); // 각 파일 데이터 확인
+          console.log('파일의 userToken:', fileData, '현재 토큰:', token); // userToken과 토큰 비교
+          return fileData.userToken === token;
+        });
+        console.log('필터링된 파일들:', filteredFiles); // 필터링된 파일 출력
+
+        if (filteredFiles.length > 0) {
+          const fileUrls = filteredFiles.map((fileData: any) => {
+            const fileUrl = URL.createObjectURL(fileData.file);
+            return { fileUrl, fileType: fileData.type };
+          });
+          setFeedItems(fileUrls);
+        } else {
+          setError('해당 토큰에 해당하는 파일이 없습니다.');
+        }
+      } else {
+        setError('파일이 존재하지 않습니다.');
+      }
+    } catch (error) {
+      setError('파일을 가져오는 데 실패했습니다.');
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // useEffect를 사용하여 컴포넌트가 마운트될 때 데이터 불러오기
+  useEffect(() => {
     fetchData();
 
-    // cleanup: URL.createObjectURL로 생성한 객체 URL을 메모리 해제
-    // return () => {
-    //   feedItems.forEach((item) => {
-    //     URL.revokeObjectURL(item.fileUrl);
-    //   });
-    // };
-  }, []); // 의존성 배열에서 feedItems를 제거하여 무한 로딩 방지
+    // cleanup: 컴포넌트가 unmount될 때 한 번만 URL을 해제
+    return () => {
+      feedItems.forEach((item) => {
+        URL.revokeObjectURL(item.fileUrl); // URL 해제
+      });
+    };
+  }, []); // 의존성 배열을 빈 배열로 설정, 한 번만 실행되도록
 
   // 에러가 있으면 에러 메시지를 렌더링
   if (error) {

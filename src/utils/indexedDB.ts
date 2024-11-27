@@ -41,7 +41,7 @@ export function addFileToDB(
   file: File, // File 객체를 인자로 받도록 수정
   fileType: string,
   describe: string,
-  userToken: string | null,
+  userUID: string | null,
   level: string,
   centerName: string
 ): void {
@@ -57,7 +57,7 @@ export function addFileToDB(
     file: file, // 실제 File 객체를 저장
     type: fileType,
     describe: describe,
-    userToken: userToken,
+    UID: userUID,
     level: level,
     centerName: centerName,
     createdAt: new Date().toISOString(),
