@@ -88,6 +88,7 @@ const FeedList: React.FC = () => {
                   controls
                   autoPlay
                   muted
+                  loop
                   className="absolute top-[50%] left-[50%] w-full h-full object-cover transition-transform -translate-x-1/2 -translate-y-1/2 rounded-2xl p-0">
                   <source src={fileUrl} />
                   Your browser does not support the video tag.
