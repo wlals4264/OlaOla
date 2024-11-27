@@ -25,7 +25,7 @@ const Buttons: React.FC<ButtonsProps> = ({ selectedFile, selectedFileUrl, fileTy
   const handlePost = (): void => {
     if (selectedFile && selectedFileUrl) {
       // 파일 DB에 저장
-      addFileToDB(selectedFileUrl, fileType, describe, userToken, climbingLevel, centerName);
+      addFileToDB(selectedFile, fileType, describe, userToken, climbingLevel, centerName);
       // 게시 후 추가 동작
       navigate('/my-feed'); // 게시 후 페이지 이동
     } else {

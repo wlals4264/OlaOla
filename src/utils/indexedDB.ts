@@ -38,7 +38,7 @@ export function getDB(): IDBDatabase | null {
 
 // DB에 파일 추가
 export function addFileToDB(
-  fileUrl: string,
+  file: File, // File 객체를 인자로 받도록 수정
   fileType: string,
   describe: string,
   userToken: string | null,
@@ -54,7 +54,7 @@ export function addFileToDB(
   const store = transaction.objectStore('mediaData');
 
   const fileData = {
-    url: fileUrl,
+    file: file, // 실제 File 객체를 저장
     type: fileType,
     describe: describe,
     userToken: userToken,
@@ -74,5 +74,73 @@ export function addFileToDB(
   addReq.addEventListener('error', function (event) {
     const target = event.target as IDBRequest;
     console.error('파일 추가 오류 발생 : ', target?.error);
+  });
+}
+
+// DB에서 파일을 가져오기
+export function getFileFromDB(fileId: number): Promise<File | null> {
+  return new Promise((resolve, reject) => {
+    if (!db) {
+      console.log('DB가 아직 준비되지 않았습니다.');
+      return reject('DB not available');
+    }
+
+    try {
+      const transaction = db.transaction('mediaData', 'readonly');
+      const objectStore = transaction.objectStore('mediaData');
+      const request = objectStore.get(fileId); // 파일 ID로 검색
+
+      request.onsuccess = () => {
+        const fileData = request.result;
+        if (fileData && fileData.file) {
+          const file = fileData.file;
+          resolve(file); // File 객체 반환
+        } else {
+          reject('파일을 찾을 수 없습니다.');
+        }
+      };
+
+      request.onerror = (event) => {
+        console.error('파일 가져오기 오류', event);
+        reject(event);
+      };
+    } catch (error) {
+      console.error('Unexpected error:', error);
+      reject(error);
+    }
+  });
+}
+
+// DB에서 모든 파일 리스트를 가져오기
+export function getFileListFromDB(): Promise<File[]> {
+  return new Promise((resolve, reject) => {
+    if (!db) {
+      console.log('DB가 아직 준비되지 않았습니다.');
+      return reject('DB not available');
+    }
+
+    try {
+      const transaction = db.transaction('mediaData', 'readonly');
+      const objectStore = transaction.objectStore('mediaData');
+      const request = objectStore.getAll(); // 모든 파일을 가져옴
+
+      request.onsuccess = () => {
+        const fileList = request.result;
+        if (fileList.length > 0) {
+          // 파일이 존재하면 파일 리스트 반환
+          resolve(fileList);
+        } else {
+          reject('파일이 존재하지 않습니다.');
+        }
+      };
+
+      request.onerror = (event) => {
+        console.error('파일 가져오기 오류', event);
+        reject(event);
+      };
+    } catch (error) {
+      console.error('Unexpected error:', error);
+      reject(error);
+    }
   });
 }
