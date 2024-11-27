@@ -15,6 +15,8 @@ import Modal from '../Modal/Modal';
 import SuccessForm from './LoginForm/SuccessForm';
 import { Link } from 'react-router-dom';
 import useAuthState from '../../utils/useAuthState';
+import ModalTitle from '../Modal/ModalTitle';
+
 const LoginNav: React.FC = () => {
   useAuthState();
 

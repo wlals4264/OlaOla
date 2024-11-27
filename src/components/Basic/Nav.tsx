@@ -6,6 +6,7 @@ import JoinForm from '../Basic/LoginForm/JoinForm';
 import { useRecoilState } from 'recoil';
 import { isJoinModalOpenState, isLoginModalOpenState } from '../../datas/recoilData';
 import { useNavigate } from 'react-router-dom';
+import ModalTitle from '../Modal/ModalTitle';
 
 const Nav: React.FC = () => {
   const [isLoginModalOpen, setLoginModalOpen] = useRecoilState(isLoginModalOpenState);
@@ -65,6 +66,7 @@ const Nav: React.FC = () => {
             {isLoginModalOpen &&
               createPortal(
                 <Modal isOpen={isLoginModalOpen} onClose={() => handleCloseModal('login')}>
+                  <ModalTitle />
                   <LoginForm />
                 </Modal>,
                 document.body
@@ -78,6 +80,7 @@ const Nav: React.FC = () => {
             {isJoinModalOpen &&
               createPortal(
                 <Modal isOpen={isJoinModalOpen} onClose={() => handleCloseModal('join')}>
+                  <ModalTitle />
                   <JoinForm />
                 </Modal>,
                 document.body

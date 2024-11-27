@@ -1,16 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { getDB, getFileListFromDB } from '../../../utils/indexedDB';
 import { useRecoilValue } from 'recoil';
 import { userUIDState } from '../../../datas/recoilData';
 import Spinner from '../../Spinner/Spinner';
+import Modal from '../../Modal/Modal';
+import FeedItem from './FeedItem'; // FeedItem 컴포넌트가 여기에서 사용된다고 가정
 
 const FeedList: React.FC = () => {
   const [feedItems, setFeedItems] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const userUID = useRecoilValue(userUIDState);
-
   const [db, setDb] = useState<IDBDatabase | null>(null);
+  const [isFeedItemModalOpen, setFeedItemModalOpen] = useState<boolean>(false); // 모달 열기/닫기 상태
+  const [selectedFeedItem, setSelectedFeedItem] = useState<any | null>(null); // 선택된 feed item
 
   const fetchData = async () => {
     setLoading(true);
@@ -27,21 +30,17 @@ const FeedList: React.FC = () => {
         setDb(openedDb);
       }
 
-      // DB 연결 후 파일 목록을 불러옴
       const files = await getFileListFromDB();
       console.log('DB 연결 성공');
 
-      // UID가 없으면 오류 처리
       if (!userUID) {
         setError('UID가 존재하지 않습니다.');
         return;
       }
 
-      // 사용자 UID에 맞는 파일들만 필터링
       const filteredFiles = files.filter((fileData) => fileData.UID === userUID);
       console.log('필터링된 파일들:', filteredFiles);
 
-      // 필터링된 파일이 있다면 URL 생성
       if (filteredFiles.length > 0) {
         const fileUrls = filteredFiles.map((fileData: any) => {
           const fileUrl = URL.createObjectURL(fileData.file);
@@ -49,10 +48,9 @@ const FeedList: React.FC = () => {
         });
         setFeedItems(fileUrls);
       } else {
-        setError('해당 UID에 해당하는 파일이 없습니다.');
+        setError('게시물 없음');
       }
     } catch (error) {
-      // 오류가 발생하면 에러 메시지 출력
       if (error instanceof Error) {
         console.error('파일을 가져오는 도중 오류 발생:', error.message);
       } else {
@@ -64,17 +62,24 @@ const FeedList: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    // DB 연결 후 데이터 가져오기
-    fetchData();
-  }, [db]); // db가 변경될 때마다 실행
+  const openFeedItem = (item: any) => {
+    setSelectedFeedItem(item); // 선택된 Feed Item 설정
+    setFeedItemModalOpen(true); // 모달 열기
+  };
 
-  // 에러 발생 시 표시
+  const handleCloseModal = () => {
+    setFeedItemModalOpen(false); // 모달 닫기
+    setSelectedFeedItem(null); // 선택된 feed item 초기화
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [db]);
+
   if (error) {
-    return <div className="min-w-2xl m-auto mt-4 text-center text-red-500">{error}</div>;
+    return <div className="min-w-2xl m-auto mt-4 text-center font-noto font-bold text-3xl">{error}</div>;
   }
 
-  // 로딩 중일 때 표시
   if (loading) {
     return (
       <div className="min-w-2xl m-auto mt-4">
@@ -86,21 +91,27 @@ const FeedList: React.FC = () => {
   return (
     <div className="max-w-2xl m-auto mt-4 grid grid-cols-3 gap-4 font-noto">
       {feedItems.length === 0 ? (
-        <p className="font-bols text-3xl">게시물 없음</p>
+        <p className="text-center font-bold text-3xl">게시물 없음</p>
       ) : (
         feedItems.map((item, index) => {
           const { fileUrl, fileType } = item;
           return (
             <div key={index} className="relative w-[210px] h-[280px]">
               {fileType.startsWith('image') ? (
-                <img src={fileUrl} alt={`File ${index}`} className="w-full h-full object-cover rounded-2xl m-auto" />
+                <img
+                  src={fileUrl}
+                  alt={`File ${index}`}
+                  onClick={() => openFeedItem(item)} // 클릭 시 해당 item으로 모달 열기
+                  className="w-full h-full object-cover rounded-2xl m-auto cursor-pointer"
+                />
               ) : fileType.startsWith('video') ? (
                 <video
                   controls
                   autoPlay
                   muted
                   loop
-                  className="absolute top-[50%] left-[50%] w-full h-full object-cover transition-transform -translate-x-1/2 -translate-y-1/2 rounded-2xl p-0">
+                  onClick={() => openFeedItem(item)} // 클릭 시 해당 item으로 모달 열기
+                  className="absolute top-[50%] left-[50%] w-full h-full object-cover transition-transform -translate-x-1/2 -translate-y-1/2 rounded-2xl p-0 cursor-pointer">
                   <source src={fileUrl} />
                   Your browser does not support the video tag.
                 </video>
@@ -110,6 +121,12 @@ const FeedList: React.FC = () => {
             </div>
           );
         })
+      )}
+
+      {isFeedItemModalOpen && selectedFeedItem && (
+        <Modal isOpen={isFeedItemModalOpen} onClose={handleCloseModal}>
+          <FeedItem feedItem={selectedFeedItem} /> {/* FeedItem 컴포넌트에 선택된 feedItem 전달 */}
+        </Modal>
       )}
     </div>
   );

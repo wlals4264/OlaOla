@@ -6,6 +6,8 @@ import {
   isJoinModalOpenState,
   isLoginUserState,
   isSuccessModalOpenState,
+  updateLoginUserState,
+  updateUserUIDState,
   userEmailState,
   userNicknameState,
 } from '../../../datas/recoilData';
@@ -25,7 +27,8 @@ const JoinForm: React.FC = () => {
 
   const [isJoinModalOpen, setIsJoinModalOpen] = useRecoilState(isJoinModalOpenState);
   const setIsSuccessModalOpen = useSetRecoilState(isSuccessModalOpenState);
-  const setIsLoginUser = useSetRecoilState(isLoginUserState);
+  const setIsLoginUser = useSetRecoilState(updateLoginUserState);
+  const setUserUID = useSetRecoilState(updateUserUIDState);
 
   const [emailError, setEmailError] = useState<string | null>(null);
   const [passwordError, setPasswordError] = useState<string | null>(null);
@@ -71,6 +74,7 @@ const JoinForm: React.FC = () => {
         await updateProfile(auth.currentUser, {
           displayName: nickname,
         });
+        setUserUID(auth.currentUser.uid);
       }
 
       setIsJoinModalOpen(false);
