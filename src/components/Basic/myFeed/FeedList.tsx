@@ -27,7 +27,6 @@ const FeedList: React.FC = () => {
         }
 
         const files = await getFileListFromDB();
-        console.log(`Fetched Files: ${JSON.stringify(files)}`);
 
         if (files.length > 0) {
           // token과 일치하는 파일만 필터링
@@ -36,7 +35,6 @@ const FeedList: React.FC = () => {
           if (filteredFiles.length > 0) {
             const fileUrls = filteredFiles.map((fileData: any) => {
               const fileUrl = URL.createObjectURL(fileData.file);
-              console.log(`fileType: ${fileData.type}, fileUrl: ${fileUrl}`);
               return { fileUrl, fileType: fileData.type };
             });
             setFeedItems(fileUrls);
@@ -57,11 +55,11 @@ const FeedList: React.FC = () => {
     fetchData();
 
     // cleanup: URL.createObjectURL로 생성한 객체 URL을 메모리 해제
-    return () => {
-      feedItems.forEach((item) => {
-        URL.revokeObjectURL(item.fileUrl);
-      });
-    };
+    // return () => {
+    //   feedItems.forEach((item) => {
+    //     URL.revokeObjectURL(item.fileUrl);
+    //   });
+    // };
   }, []); // 의존성 배열에서 feedItems를 제거하여 무한 로딩 방지
 
   // 에러가 있으면 에러 메시지를 렌더링
@@ -89,8 +87,9 @@ const FeedList: React.FC = () => {
                 <video
                   controls
                   autoPlay
+                  muted
                   className="absolute top-[50%] left-[50%] w-full h-full object-cover transition-transform -translate-x-1/2 -translate-y-1/2 rounded-2xl p-0">
-                  <source src={fileUrl} type={fileType} />
+                  <source src={fileUrl} />
                   Your browser does not support the video tag.
                 </video>
               ) : (
