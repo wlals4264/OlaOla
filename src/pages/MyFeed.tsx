@@ -1,7 +1,7 @@
 import React from 'react';
 import LoginNav from '../components/Basic/LoginNav';
 import UserStateView from '../components/Basic/MyFeed/UserStateView';
-// import FeedList from '../components/Basic/MyFeed/FeedList';
+import FeedList from '../components/Basic/MyFeed/FeedList';
 import AddFeedButton from '../components/Basic/MyFeed/AddFeedButton';
 import { Outlet, useLocation } from 'react-router-dom';
 
@@ -16,7 +16,7 @@ export const MyFeed: React.FC = () => {
         <>
           <UserStateView />
           <AddFeedButton />
-          {/* <FeedList /> */}
+          <FeedList />
         </>
       )}
       <Outlet />

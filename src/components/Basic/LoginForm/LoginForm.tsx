@@ -12,6 +12,7 @@ import {
   userImgState,
   userUIDState,
   isLoginUserState,
+  updateLoginUserState,
 } from '../../../datas/recoilData';
 
 const LoginForm: React.FC = () => {
@@ -23,7 +24,8 @@ const LoginForm: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [isJoinModalOpen, setJoinModalOpen] = useRecoilState(isJoinModalOpenState);
   const [isLoginModalOpen, setLoginModalOpen] = useRecoilState(isLoginModalOpenState);
-  const setIsLoginUser = useSetRecoilState(isLoginUserState);
+  // const setIsLoginUser = useSetRecoilState(isLoginUserState);
+  const setLoginUser = useSetRecoilState(updateLoginUserState);
 
   const navigate = useNavigate();
 
@@ -52,7 +54,7 @@ const LoginForm: React.FC = () => {
 
         // 로그인 상태 업데이트
         if (uid) {
-          setIsLoginUser(true);
+          setLoginUser(true);
         }
       })
       .catch((error) => {
@@ -81,7 +83,7 @@ const LoginForm: React.FC = () => {
 
         // 로그인 상태 업데이트
         if (uid) {
-          setIsLoginUser(true);
+          setLoginUser(true);
         }
       });
 

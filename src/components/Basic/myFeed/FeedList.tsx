@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { getDB, getFileListFromDB } from '../../../utils/indexedDB';
+import { useRecoilValue } from 'recoil';
+import { userUIDState } from '../../../datas/recoilData';
 
 const FeedList: React.FC = () => {
   const [feedItems, setFeedItems] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const userUID = useRecoilValue(userUIDState);
+  console.log(userUID);
 
   const fetchData = async () => {
-    const token = localStorage.getItem('userToken');
     try {
       setLoading(true);
 
@@ -20,23 +23,18 @@ const FeedList: React.FC = () => {
       console.log('DB 연결 성공');
 
       const files = await getFileListFromDB();
-      console.log(files);
 
-      if (!token) {
-        setError('토큰이 존재하지 않습니다.');
+      if (!userUID) {
+        setError('UID가 존재하지 않습니다.');
         return;
       }
 
-      console.log('현재 저장된 토큰:', token); // 저장된 토큰 확인
-
       if (files.length > 0) {
-        // token과 일치하는 파일만 필터링
+        // userUID와 일치하는 파일만 필터링
         const filteredFiles = files.filter((fileData) => {
-          console.log('파일 데이터:', fileData); // 각 파일 데이터 확인
-          console.log('파일의 userToken:', fileData, '현재 토큰:', token); // userToken과 토큰 비교
-          return fileData.userToken === token;
+          return fileData.UID === userUID;
         });
-        console.log('필터링된 파일들:', filteredFiles); // 필터링된 파일 출력
+        console.log('필터링된 파일들:', filteredFiles);
 
         if (filteredFiles.length > 0) {
           const fileUrls = filteredFiles.map((fileData: any) => {
@@ -45,7 +43,7 @@ const FeedList: React.FC = () => {
           });
           setFeedItems(fileUrls);
         } else {
-          setError('해당 토큰에 해당하는 파일이 없습니다.');
+          setError('해당 UID에 해당하는 파일이 없습니다.');
         }
       } else {
         setError('파일이 존재하지 않습니다.');
