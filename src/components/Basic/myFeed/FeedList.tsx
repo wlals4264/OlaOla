@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { getDB, getFileListFromDB } from '../../../utils/indexedDB';
+import { getDB, getFileListFromDB, getFileFromDB } from '../../../utils/indexedDB';
 import { useRecoilValue } from 'recoil';
 import { userUIDState } from '../../../datas/recoilData';
 import Spinner from '../../Spinner/Spinner';
 import Modal from '../../Modal/Modal';
-import FeedItem from './FeedItem'; // FeedItem 컴포넌트가 여기에서 사용된다고 가정
+import FeedItem from './FeedItem';
 
 const FeedList: React.FC = () => {
   const [feedItems, setFeedItems] = useState<any[]>([]);
@@ -44,7 +44,13 @@ const FeedList: React.FC = () => {
       if (filteredFiles.length > 0) {
         const fileUrls = filteredFiles.map((fileData: any) => {
           const fileUrl = URL.createObjectURL(fileData.file);
-          return { fileUrl, fileType: fileData.type, fileID: fileData.id };
+          return {
+            fileUrl,
+            fileType: fileData.type,
+            fileID: fileData.id,
+            level: fileData.level,
+            fileDescribe: fileData.describe,
+          };
         });
         setFeedItems(fileUrls);
       } else {
@@ -62,9 +68,21 @@ const FeedList: React.FC = () => {
     }
   };
 
-  const openFeedItem = (item: any) => {
-    setSelectedFeedItem(item); // 선택된 Feed Item 설정
-    setFeedItemModalOpen(true); // 모달 열기
+  const openFeedItem = async (item: any) => {
+    try {
+      // Fetch the selected file by its fileId using the helper function
+      const file = await getFileFromDB(item.fileID);
+      if (file) {
+        setSelectedFeedItem({ ...item, file });
+        console.log(selectedFeedItem);
+        setFeedItemModalOpen(true);
+      } else {
+        setError('파일을 가져오는 도중 오류 발생');
+      }
+    } catch (error) {
+      console.error('파일을 가져오는 도중 오류 발생:', error);
+      setError('파일을 가져오는 도중 오류 발생');
+    }
   };
 
   const handleCloseModal = () => {
@@ -126,7 +144,7 @@ const FeedList: React.FC = () => {
 
       {isFeedItemModalOpen && selectedFeedItem && (
         <Modal isOpen={isFeedItemModalOpen} onClose={handleCloseModal}>
-          <FeedItem feedItem={selectedFeedItem} /> {/* FeedItem 컴포넌트에 선택된 feedItem 전달 */}
+          <FeedItem feedItem={selectedFeedItem} />
         </Modal>
       )}
     </div>
