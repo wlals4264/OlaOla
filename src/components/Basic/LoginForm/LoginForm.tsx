@@ -100,7 +100,7 @@ const LoginForm: React.FC = () => {
   return (
     <>
       {isLoginModalOpen && (
-        <form className="m-6 p-6">
+        <form className="m-6 p-6 w-[352px]">
           {/* 이메일 */}
           <div className="mb-4">
             <label htmlFor="email" className="text-xs text-gray-400">

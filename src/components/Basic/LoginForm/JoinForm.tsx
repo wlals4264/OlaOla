@@ -98,7 +98,7 @@ const JoinForm: React.FC = () => {
     <>
       {/* 회원가입 모달 */}
       {isJoinModalOpen && (
-        <form className="m-6 p-6" onSubmit={signUp}>
+        <form className="m-6 p-6 w-[350px]" onSubmit={signUp}>
           {/* 이메일 */}
           <div className="mb-4">
             <label htmlFor="email" className="text-xs text-gray-400">

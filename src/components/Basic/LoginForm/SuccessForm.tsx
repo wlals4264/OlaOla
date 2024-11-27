@@ -17,7 +17,7 @@ const SuccessForm: React.FC = () => {
 
   return (
     <>
-      <div className="flex flex-col items-center justify-center gap-6 my-4 font-semibold font-noto">
+      <div className="flex flex-col w-[350px] items-center justify-center gap-6 my-4 font-semibold font-noto">
         <h2 className="mt-6">회원가입 성공!</h2>
         <p className="text-[8rem]">🥳</p>
         <p>

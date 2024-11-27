@@ -44,7 +44,7 @@ const FeedList: React.FC = () => {
       if (filteredFiles.length > 0) {
         const fileUrls = filteredFiles.map((fileData: any) => {
           const fileUrl = URL.createObjectURL(fileData.file);
-          return { fileUrl, fileType: fileData.type };
+          return { fileUrl, fileType: fileData.type, fileID: fileData.id };
         });
         setFeedItems(fileUrls);
       } else {
@@ -94,14 +94,15 @@ const FeedList: React.FC = () => {
         <p className="text-center font-bold text-3xl">게시물 없음</p>
       ) : (
         feedItems.map((item, index) => {
-          const { fileUrl, fileType } = item;
+          const { fileUrl, fileType, fileID } = item;
           return (
             <div key={index} className="relative w-[210px] h-[280px]">
               {fileType.startsWith('image') ? (
                 <img
                   src={fileUrl}
+                  id={fileID}
                   alt={`File ${index}`}
-                  onClick={() => openFeedItem(item)} // 클릭 시 해당 item으로 모달 열기
+                  onClick={() => openFeedItem(item)}
                   className="w-full h-full object-cover rounded-2xl m-auto cursor-pointer"
                 />
               ) : fileType.startsWith('video') ? (
@@ -110,13 +111,13 @@ const FeedList: React.FC = () => {
                   autoPlay
                   muted
                   loop
-                  onClick={() => openFeedItem(item)} // 클릭 시 해당 item으로 모달 열기
+                  onClick={() => openFeedItem(item)}
                   className="absolute top-[50%] left-[50%] w-full h-full object-cover transition-transform -translate-x-1/2 -translate-y-1/2 rounded-2xl p-0 cursor-pointer">
                   <source src={fileUrl} />
-                  Your browser does not support the video tag.
+                  해당 비디오 타입을 지원하지 않습니다.
                 </video>
               ) : (
-                <p>Unsupported file type</p>
+                <p>지원하지 않는 형식입니다.</p>
               )}
             </div>
           );

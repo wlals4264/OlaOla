@@ -14,7 +14,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
     <div
       className="fixed font-noto inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
       onClick={onClose}>
-      <div className="bg-white py-10 px-2 rounded-3xl w-full max-w-md relative" onClick={(e) => e.stopPropagation()}>
+      <div className="bg-white py-10 px-2 rounded-3xl w-fit min-w-md relative" onClick={(e) => e.stopPropagation()}>
         <button className="absolute top-4 right-4" onClick={onClose}>
           <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
