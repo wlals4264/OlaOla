@@ -125,7 +125,6 @@ const FeedList: React.FC = () => {
                 />
               ) : fileType.startsWith('video') ? (
                 <video
-                  controls
                   autoPlay
                   muted
                   loop

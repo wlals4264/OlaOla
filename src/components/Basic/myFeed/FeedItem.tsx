@@ -32,7 +32,6 @@ const FeedItem: React.FC<FeedItemProps> = ({ feedItem }) => {
           <img src={fileUrl} alt={`Feed item ${fileID}`} className="w-full h-full object-cover rounded-2xl m-auto" />
         ) : fileType.startsWith('video') ? (
           <video
-            controls
             autoPlay
             muted
             loop
@@ -50,15 +49,9 @@ const FeedItem: React.FC<FeedItemProps> = ({ feedItem }) => {
           <img className="w-[100px] h-[100px] rounded-full" src={userProfileImg} alt="UserProfileImg" />
           <p className="mt-2 flex gap-4 shrink-0 items-center font-bold font-noto">
             {nickname}
-            <svg
-              width="40"
-              height="40"
-              viewBox="0 0 40 40"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="hover:scale-110 transition-transform ease-in-out cursor-pointer">
+            <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
-                d="M20 28.7834L26.9167 32.9667C28.1833 33.7334 29.7333 32.6001 29.4 31.1667L27.5667 23.3001L33.6833 18.0001C34.8 17.0334 34.2 15.2001 32.7333 15.0834L24.6833 14.4001L21.5333 6.96672C20.9667 5.61672 19.0333 5.61672 18.4667 6.96672L15.3167 14.3834L7.26667 15.0667C5.8 15.1834 5.2 17.0167 6.31667 17.9834L12.4333 23.2834L10.6 31.1501C10.2667 32.5834 11.8167 33.7167 13.0833 32.9501L20 28.7834Z"
+                d="M10.7384 16.9615L15.5883 19.8948C16.4764 20.4324 17.5633 19.6377 17.3295 18.6327L16.044 13.1167L20.3329 9.40045C21.1159 8.72263 20.6952 7.43713 19.6668 7.35533L14.0223 6.87618L11.8136 1.66405C11.4162 0.717452 10.0606 0.717452 9.66325 1.66405L7.45452 6.8645L1.81 7.34364C0.781593 7.42544 0.360883 8.71095 1.14387 9.38876L5.43278 13.105L4.14728 18.621C3.91355 19.626 5.00038 20.4207 5.88855 19.8831L10.7384 16.9615Z"
                 fill={levelColor}
                 stroke={levelColor !== 'white' ? '' : '#8C8C8C'}
               />
