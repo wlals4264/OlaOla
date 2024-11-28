@@ -40,33 +40,27 @@ const FeedList: React.FC = () => {
 
       if (filteredFiles.length > 0) {
         const pageSize = 9;
-
         const startIndex = page * pageSize;
-        console.log(page);
-        console.log(startIndex);
-        if (startIndex < filteredFiles.length) {
-          const pagedFiles = filteredFiles.slice(startIndex, startIndex + pageSize);
+        const pagedFiles = filteredFiles.slice(startIndex, startIndex + pageSize);
+        console.log('pagedFiles', pagedFiles); // 빈배열
 
-          console.log(pagedFiles); // 빈배열
+        if (pagedFiles.length > 0) {
+          const fileUrls = pagedFiles.map((fileData: any) => {
+            const fileUrl = URL.createObjectURL(fileData.file);
+            return {
+              fileUrl,
+              fileType: fileData.type,
+              fileID: fileData.id,
+              level: fileData.level,
+              fileDescribe: fileData.describe,
+              niceCount: fileData.niceCount || 0,
+              centerName: fileData.centerName,
+              userUID: fileData.UID,
+            };
+          });
 
-          if (pagedFiles.length > 0) {
-            const fileUrls = pagedFiles.map((fileData: any) => {
-              const fileUrl = URL.createObjectURL(fileData.file);
-              return {
-                fileUrl,
-                fileType: fileData.type,
-                fileID: fileData.id,
-                level: fileData.level,
-                fileDescribe: fileData.describe,
-                niceCount: fileData.niceCount || 0,
-                centerName: fileData.centerName,
-                userUID: fileData.UID,
-              };
-            });
-
-            setFeedItems((prevItems) => [...prevItems, ...fileUrls]);
-            setHasMore(pagedFiles.length === pageSize);
-          }
+          setFeedItems((prevItems) => [...prevItems, ...fileUrls]);
+          setHasMore(pagedFiles.length === pageSize);
         } else {
           setHasMore(false);
           setError('게시물 없음');

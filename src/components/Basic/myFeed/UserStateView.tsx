@@ -21,9 +21,7 @@ const UserStateView: React.FC = () => {
 
       try {
         const files = await getFileListFromDB();
-        console.log(files);
         if (userUID) {
-          console.log('UID:', userUID);
           const filteredFiles = files.filter((fileData: any) => fileData.UID === userUID);
           setPostCount(filteredFiles.length);
         }
