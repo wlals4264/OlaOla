@@ -63,6 +63,7 @@ const FeedList: React.FC = () => {
               level: fileData.level,
               fileDescribe: fileData.describe,
               niceCount: fileData.niceCount || 0,
+              centerName: fileData.centerName,
             };
           });
 

@@ -3,6 +3,7 @@ import StartPage from '../pages/StartPage';
 import { MyFeed } from '../pages/MyFeed';
 import BrowsingFeed from '../pages/BrowsingFeed';
 import CenterInfo from '../pages/CenterInfo';
+import ModifyFeed from '../components/Basic/MyFeed/ModifyFeed';
 import AddFeed from '../components/Basic/MyFeed/AddFeed/AddFeed';
 import ProtectedRoute from '../components/Basic/ProtectedRoute/ProtectedRoute';
 
@@ -22,6 +23,14 @@ const Router = (): JSX.Element => {
         element={
           <ProtectedRoute>
             <AddFeed />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/my-feed/modify-feed"
+        element={
+          <ProtectedRoute>
+            <ModifyFeed />
           </ProtectedRoute>
         }
       />

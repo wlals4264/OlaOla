@@ -2,21 +2,32 @@ import { useRecoilState } from 'recoil';
 import { climbingLevelState } from '../../../../datas/recoilData';
 import { levelOptions } from '../../../../datas/levelOptions';
 
-const ChooseLevel = () => {
+interface ChooseLevelProps {
+  currentClimbingLevel?: string;
+  onClimbingLevelChange?: (newClimbingLevel: string) => void;
+}
+
+const ChooseLevel: React.FC<ChooseLevelProps> = ({ currentClimbingLevel, onClimbingLevelChange }) => {
   const [climbingLevel, setClimbingLevel] = useRecoilState<string>(climbingLevelState);
+
+  // If `currentClimbingLevel` is passed via props, use it instead of the state
+  const levelToUse = currentClimbingLevel || climbingLevel;
 
   const handleSelectedLevel = (e: any) => {
     const level = e.target.value;
     setClimbingLevel(level);
+    if (onClimbingLevelChange) {
+      onClimbingLevelChange(level);
+    }
   };
 
-  const selectedColor = levelOptions.find((option) => option.value === climbingLevel)?.color;
+  const selectedColor = levelOptions.find((option) => option.value === levelToUse)?.color;
 
   return (
     <fieldset>
       <div className="flex items-center text-xs cursor-default mb-4 min-h-[40px]">
         난이도{' '}
-        {climbingLevel && selectedColor && (
+        {levelToUse && selectedColor && (
           <svg
             className="scale-50"
             width="38"
@@ -43,6 +54,7 @@ const ChooseLevel = () => {
               aria-label={option.label}
               className="hidden"
               onClick={handleSelectedLevel}
+              checked={levelToUse === option.value}
             />
             <label htmlFor={option.value}>
               <svg

@@ -9,6 +9,7 @@ const AddFeed: React.FC = () => {
   const [fileType, setFileType] = useState<string>('');
   const [describe, setDescribe] = useState<string>('');
   const [centerName, setCenterName] = useState<string>('');
+  const [currentClimbingLevel, setCurrentClimbingLevel] = useState<string>(''); // 빈 값으로 초기화
 
   // 업로드된 파일 URL 생성 & 파일 타입(image/video) 설정
   const saveFileImage = (fileBlob: File | null): void => {
@@ -33,6 +34,11 @@ const AddFeed: React.FC = () => {
     const file = e.target.files ? e.target.files[0] : null;
     setSelectedFile(file);
     saveFileImage(file);
+  };
+
+  // ChooseLevel의 onClimbingLevelChange 핸들러
+  const handleClimbingLevelChange = (newClimbingLevel: string): void => {
+    setCurrentClimbingLevel(newClimbingLevel);
   };
 
   return (
@@ -95,7 +101,10 @@ const AddFeed: React.FC = () => {
           />
 
           {/* 난이도 */}
-          <ChooseLevel />
+          <ChooseLevel
+            currentClimbingLevel={currentClimbingLevel} // 빈 값으로 전달
+            onClimbingLevelChange={handleClimbingLevelChange} // 상태 변경 핸들러 전달
+          />
           {/* Buttons 컴포넌트에 파일 정보 전달 */}
           <Buttons
             selectedFile={selectedFile}

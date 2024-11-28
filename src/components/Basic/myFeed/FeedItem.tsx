@@ -4,6 +4,7 @@ import { userImgState, userNicknameState } from '../../../datas/recoilData';
 import profileDefaultImg from '../../../assets/svgs/profileDefaultImg.svg';
 import { levelOptions } from '../../../datas/levelOptions';
 import { updateFileInDB } from '../../../utils/indexedDB';
+import { useNavigate } from 'react-router-dom';
 
 interface FeedItemProps {
   feedItem: {
@@ -14,18 +15,29 @@ interface FeedItemProps {
     fileDescribe: string;
     level: string;
     niceCount: number;
+    centerName: string;
   };
 }
 const FeedItem: React.FC<FeedItemProps> = ({ feedItem }) => {
   console.log(feedItem);
-  const { fileType, fileID, fileUrl, fileDescribe, level, niceCount } = feedItem;
+  const { file, fileType, fileID, fileUrl, fileDescribe, level, niceCount, centerName } = feedItem;
   const userImg = useRecoilValue(userImgState);
   const nickname = useRecoilValue(userNicknameState);
   const [currentNiceCount, setCurrentNiceCount] = useState(niceCount);
+  const [isModifyModalOpen, setIsModifyModalOpen] = useState(false);
 
   const userProfileImg = userImg || profileDefaultImg;
 
   const levelColor = levelOptions.find((option) => option.value === level)?.color || 'white';
+
+  const navigate = useNavigate();
+
+  const handleOpenModifyModal = () => {
+    setIsModifyModalOpen(true);
+    console.log('수정하기 버튼');
+    console.log(isModifyModalOpen);
+    navigate('modify-feed', { state: { feedItem } });
+  };
 
   useEffect(() => {
     setCurrentNiceCount(niceCount);
@@ -74,7 +86,16 @@ const FeedItem: React.FC<FeedItemProps> = ({ feedItem }) => {
             <p className="font-noto font-normal text-sm">{fileDescribe}</p>
           </div>
         </div>
+
+        {/* 암장명 */}
+        <p className="flex justify-center items-center mb-2 text-xs text-white bg-primary max-w-fit px-[8px] py-[2px] rounded-xl cursor-pointer">
+          # {centerName}
+        </p>
+
+        {/* 구분선 */}
         <div className="w-[360px] border-t-[0.5px] border-solid border-gray-500"></div>
+
+        {/* 나이스 정보 & 수정 & 삭제 버튼 */}
         <div className="w-[360px] flex flex-col justify-between">
           <div className="w-[360px] mt-2 flex gap-4 items-center justify-between">
             {/* 나이스 버튼 */}
@@ -99,20 +120,34 @@ const FeedItem: React.FC<FeedItemProps> = ({ feedItem }) => {
                   </clipPath>
                 </defs>
               </svg>
-              <span className="flex items-center gap-2 mt-2 font-noto font-normal text-md">
+              <span className="flex items-center gap-2 font-noto font-normal text-md cursor-default">
                 <p>{currentNiceCount}</p>nice
               </span>
             </div>
             {/* 수정 및 삭제 버튼 */}
             <div className="flex gap-4">
-              <svg width="21" height="21" viewBox="0 0 21 21" fill="#A5E1FF" xmlns="http://www.w3.org/2000/svg">
+              {/* 수정하기 버튼 */}
+              <svg
+                onClick={handleOpenModifyModal}
+                className="cursor-pointer hover:scale-110"
+                width="21"
+                height="21"
+                viewBox="0 0 21 21"
+                fill="#A5E1FF"
+                xmlns="http://www.w3.org/2000/svg">
                 <path
                   d="M11.6856 3.99352L16.6863 8.99438L5.8276 19.8535L1.36912 20.3457C0.772263 20.4118 0.26798 19.9071 0.334384 19.3102L0.830465 14.8484L11.6856 3.99352ZM19.7792 3.24897L17.4312 0.900888C16.6988 0.168454 15.5109 0.168454 14.7785 0.900888L12.5696 3.10991L17.5703 8.11077L19.7792 5.90175C20.5116 5.16893 20.5116 3.98141 19.7792 3.24897Z"
                   fill="#A5E1FF"
                 />
               </svg>
 
-              <svg width="18" height="21" viewBox="0 0 18 21" fill="#A5E1FF" xmlns="http://www.w3.org/2000/svg">
+              <svg
+                className="cursor-pointer hover:scale-110"
+                width="18"
+                height="21"
+                viewBox="0 0 18 21"
+                fill="#A5E1FF"
+                xmlns="http://www.w3.org/2000/svg">
                 <path
                   d="M1.28571 18.6429C1.28571 19.1544 1.4889 19.6449 1.85058 20.0066C2.21226 20.3682 2.7028 20.5714 3.21429 20.5714H14.7857C15.2972 20.5714 15.7877 20.3682 16.1494 20.0066C16.5111 19.6449 16.7143 19.1544 16.7143 18.6429V5.14286H1.28571V18.6429ZM12.2143 8.35715C12.2143 8.18665 12.282 8.02314 12.4026 7.90258C12.5231 7.78202 12.6866 7.71429 12.8571 7.71429C13.0276 7.71429 13.1912 7.78202 13.3117 7.90258C13.4323 8.02314 13.5 8.18665 13.5 8.35715V17.3571C13.5 17.5276 13.4323 17.6912 13.3117 17.8117C13.1912 17.9323 13.0276 18 12.8571 18C12.6866 18 12.5231 17.9323 12.4026 17.8117C12.282 17.6912 12.2143 17.5276 12.2143 17.3571V8.35715ZM8.35714 8.35715C8.35714 8.18665 8.42487 8.02314 8.54543 7.90258C8.66599 7.78202 8.8295 7.71429 9 7.71429C9.1705 7.71429 9.33401 7.78202 9.45457 7.90258C9.57513 8.02314 9.64286 8.18665 9.64286 8.35715V17.3571C9.64286 17.5276 9.57513 17.6912 9.45457 17.8117C9.33401 17.9323 9.1705 18 9 18C8.8295 18 8.66599 17.9323 8.54543 17.8117C8.42487 17.6912 8.35714 17.5276 8.35714 17.3571V8.35715ZM4.5 8.35715C4.5 8.18665 4.56773 8.02314 4.68829 7.90258C4.80885 7.78202 4.97236 7.71429 5.14286 7.71429C5.31335 7.71429 5.47687 7.78202 5.59743 7.90258C5.71798 8.02314 5.78571 8.18665 5.78571 8.35715V17.3571C5.78571 17.5276 5.71798 17.6912 5.59743 17.8117C5.47687 17.9323 5.31335 18 5.14286 18C4.97236 18 4.80885 17.9323 4.68829 17.8117C4.56773 17.6912 4.5 17.5276 4.5 17.3571V8.35715ZM17.3571 1.28572H12.5357L12.158 0.534382C12.078 0.373754 11.9548 0.238637 11.8022 0.144231C11.6496 0.0498262 11.4736 -0.000121659 11.2942 7.0444e-06H6.70179C6.52274 -0.000681236 6.34712 0.0490804 6.19506 0.143591C6.04299 0.238101 5.92062 0.373537 5.84196 0.534382L5.46429 1.28572H0.642857C0.472361 1.28572 0.308848 1.35345 0.188289 1.47401C0.0677294 1.59457 0 1.75808 0 1.92858L0 3.21429C0 3.38479 0.0677294 3.5483 0.188289 3.66886C0.308848 3.78942 0.472361 3.85715 0.642857 3.85715H17.3571C17.5276 3.85715 17.6912 3.78942 17.8117 3.66886C17.9323 3.5483 18 3.38479 18 3.21429V1.92858C18 1.75808 17.9323 1.59457 17.8117 1.47401C17.6912 1.35345 17.5276 1.28572 17.3571 1.28572Z"
                   fill="#A5E1FF"
