@@ -60,7 +60,8 @@ export function addFileToDB(
   describe: string,
   userUID: string | null,
   level: string,
-  centerName: string
+  centerName: string,
+  niceCount: number = 0
 ): void {
   if (!db) {
     console.log('DB가 아직 준비되지 않았습니다.');
@@ -77,6 +78,7 @@ export function addFileToDB(
     UID: userUID,
     level: level,
     centerName: centerName,
+    niceCount: niceCount,
     createdAt: new Date().toISOString(),
   };
 
@@ -147,6 +149,56 @@ export function getFileListFromDB(): Promise<File[]> {
           resolve(fileList);
         } else {
           reject('파일이 존재하지 않습니다.');
+        }
+      };
+
+      request.onerror = (event) => {
+        console.error('파일 가져오기 오류', event);
+        reject(event);
+      };
+    } catch (error) {
+      console.error('Unexpected error:', error);
+      reject(error);
+    }
+  });
+}
+
+// DB 파일 수정 함수
+export function updateFileInDB(
+  fileId: number,
+  updatedData: { niceCount: number; describe?: string; level?: string; centerName?: string }
+): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (!db) {
+      console.log('DB가 아직 준비되지 않았습니다.');
+      return reject('DB not available');
+    }
+
+    try {
+      const transaction = db.transaction('mediaData', 'readwrite');
+      const objectStore = transaction.objectStore('mediaData');
+      const request = objectStore.get(fileId); // 파일 ID로 검색
+
+      request.onsuccess = () => {
+        const fileData = request.result;
+        if (fileData) {
+          // 기존 데이터 업데이트
+          const updatedFileData = { ...fileData, ...updatedData };
+
+          // 파일 데이터를 수정하려면 put() 메서드를 사용
+          const updateReq = objectStore.put(updatedFileData);
+
+          updateReq.onsuccess = () => {
+            console.log('파일이 성공적으로 업데이트되었습니다.');
+            resolve();
+          };
+
+          updateReq.onerror = (event) => {
+            console.error('파일 수정 오류', event);
+            reject(event);
+          };
+        } else {
+          reject('파일을 찾을 수 없습니다.');
         }
       };
 
