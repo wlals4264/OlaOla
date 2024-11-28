@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { getDB, getFileListFromDB, getFileFromDB } from '../../../utils/indexedDB';
-import { useRecoilValue } from 'recoil';
-import { userUIDState } from '../../../datas/recoilData';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { userUIDState, isFeedItemModalOpenState } from '../../../datas/recoilData';
 import Spinner from '../../Spinner/Spinner';
 import Modal from '../../Modal/Modal';
 import FeedItem from './FeedItem';
@@ -11,7 +11,8 @@ const FeedList: React.FC = () => {
 
   const [feedItems, setFeedItems] = useState<any[]>([]);
   const [selectedFeedItem, setSelectedFeedItem] = useState<any | null>(null);
-  const [isFeedItemModalOpen, setFeedItemModalOpen] = useState<boolean>(false);
+  const [isFeedItemModalOpen, setFeedItemModalOpen] = useRecoilState(isFeedItemModalOpenState);
+
   const [db, setDb] = useState<IDBDatabase | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -19,6 +20,12 @@ const FeedList: React.FC = () => {
   const [hasMore, setHasMore] = useState(true);
 
   const loaderRef = useRef<HTMLDivElement | null>(null);
+
+  // 컴포넌트 렌더링 시 모달 상태 초기화
+  useEffect(() => {
+    setFeedItemModalOpen(false); // 모달 닫기
+    setSelectedFeedItem(null); // 선택된 피드 항목 초기화
+  }, []);
 
   const fetchData = async () => {
     if (loading || !hasMore) return;

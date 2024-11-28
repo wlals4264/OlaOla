@@ -59,6 +59,25 @@ export const isSuccessModalOpenState = atom<boolean>({
   default: false,
 });
 
+// isFeedItemModalOpenState
+export const isFeedItemModalOpenState = atom({
+  key: 'isFeedItemModalOpenState',
+  default: false,
+});
+
+// // 셀렉터로 로컬스토리지 상태 추적
+// export const isFeedItemModalOpenFromLocalStorage = selector({
+//   key: 'isFeedItemModalOpenFromLocalStorage',
+//   get: ({ get }) => {
+//     const storedModalState = localStorage.getItem('isFeedItemModalOpen');
+//     return storedModalState ? JSON.parse(storedModalState) : get(isFeedItemModalOpenState);
+//   },
+//   set: ({ set }, newValue) => {
+//     localStorage.setItem('isFeedItemModalOpen', JSON.stringify(newValue));
+//     set(isFeedItemModalOpenState, newValue);
+//   },
+// });
+
 // level
 export const climbingLevelState = atom<string>({
   key: 'climbingLevel',
