@@ -62,13 +62,14 @@ const FeedList: React.FC = () => {
               fileID: fileData.id,
               level: fileData.level,
               fileDescribe: fileData.describe,
+              niceCount: fileData.niceCount || 0,
             };
           });
 
-          setFeedItems((prevItems) => [...prevItems, ...fileUrls]); // 기존 데이터에 새 데이터 추가
-          setHasMore(pagedFiles.length === pageSize); // 더 이상 데이터가 없으면 hasMore를 false로 설정
+          setFeedItems((prevItems) => [...prevItems, ...fileUrls]);
+          setHasMore(pagedFiles.length === pageSize);
         } else {
-          setHasMore(false); // 더 이상 데이터가 없으면 hasMore를 false로 설정
+          setHasMore(false);
           setError('게시물 없음');
         }
       } else {
@@ -86,6 +87,7 @@ const FeedList: React.FC = () => {
     }
   };
 
+  // OpenFeedItem 함수
   const openFeedItem = async (item: any) => {
     try {
       const file = await getFileFromDB(item.fileID);
@@ -102,11 +104,13 @@ const FeedList: React.FC = () => {
     }
   };
 
+  // Modal에 전달한 close handler 함수
   const handleCloseModal = () => {
     setFeedItemModalOpen(false);
     setSelectedFeedItem(null);
   };
 
+  // 옵저버 생성
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -128,17 +132,20 @@ const FeedList: React.FC = () => {
     };
   }, [loading]);
 
+  // page와 db 상태 변화에 따른 데이터 요청
   useEffect(() => {
     fetchData();
   }, [page, db]);
 
+  // 에러처리
   if (error) {
     return <div className="min-w-2xl m-auto mt-4 text-center font-noto font-bold text-3xl">{error}</div>;
   }
 
+  // 로딩 보여주기
   if (loading && feedItems.length === 0) {
     return (
-      <div className="min-w-2xl m-auto mt-4">
+      <div className="min-w-2xl m-auto mt-4 text-center">
         <Spinner />
       </div>
     );
