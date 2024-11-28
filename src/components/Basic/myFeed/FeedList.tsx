@@ -38,7 +38,7 @@ const FeedList: React.FC = () => {
         return;
       }
 
-      const filteredFiles = files.filter((fileData) => fileData.UID === userUID);
+      const filteredFiles = files.filter((fileData) => fileData.UID === userUID).sort((a, b) => b.id - a.id);
       console.log('필터링된 파일들:', filteredFiles);
 
       if (filteredFiles.length > 0) {
@@ -86,8 +86,8 @@ const FeedList: React.FC = () => {
   };
 
   const handleCloseModal = () => {
-    setFeedItemModalOpen(false); // 모달 닫기
-    setSelectedFeedItem(null); // 선택된 feed item 초기화
+    setFeedItemModalOpen(false);
+    setSelectedFeedItem(null);
   };
 
   useEffect(() => {

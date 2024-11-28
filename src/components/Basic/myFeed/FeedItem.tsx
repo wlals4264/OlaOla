@@ -1,6 +1,6 @@
 import React from 'react';
 import { useRecoilValue } from 'recoil';
-import { userImgState, userNicknameState, climbingLevelState } from '../../../datas/recoilData';
+import { userImgState, userNicknameState } from '../../../datas/recoilData';
 import profileDefaultImg from '../../../assets/svgs/profileDefaultImg.svg';
 import { levelOptions } from '../../../datas/levelOptions';
 
@@ -10,7 +10,7 @@ interface FeedItemProps {
     fileType: string;
     fileID: string;
     fileUrl: string;
-    describe: string;
+    fileDescribe: string;
     level: string;
   };
 }
