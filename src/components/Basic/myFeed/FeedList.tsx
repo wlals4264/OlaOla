@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { getDB, getFileListFromDB, getFileFromDB } from '../../../utils/indexedDB';
 import { useRecoilValue } from 'recoil';
 import { userUIDState } from '../../../datas/recoilData';
@@ -7,15 +7,22 @@ import Modal from '../../Modal/Modal';
 import FeedItem from './FeedItem';
 
 const FeedList: React.FC = () => {
-  const [feedItems, setFeedItems] = useState<any[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
   const userUID = useRecoilValue(userUIDState);
+
+  const [feedItems, setFeedItems] = useState<any[]>([]);
+  const [selectedFeedItem, setSelectedFeedItem] = useState<any | null>(null);
+  const [isFeedItemModalOpen, setFeedItemModalOpen] = useState<boolean>(false);
   const [db, setDb] = useState<IDBDatabase | null>(null);
-  const [isFeedItemModalOpen, setFeedItemModalOpen] = useState<boolean>(false); // 모달 열기/닫기 상태
-  const [selectedFeedItem, setSelectedFeedItem] = useState<any | null>(null); // 선택된 feed item
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+
+  const loaderRef = useRef<HTMLDivElement | null>(null);
 
   const fetchData = async () => {
+    if (loading || !hasMore) return;
+
     setLoading(true);
     setError(null);
 
@@ -42,17 +49,28 @@ const FeedList: React.FC = () => {
       console.log('필터링된 파일들:', filteredFiles);
 
       if (filteredFiles.length > 0) {
-        const fileUrls = filteredFiles.map((fileData: any) => {
-          const fileUrl = URL.createObjectURL(fileData.file);
-          return {
-            fileUrl,
-            fileType: fileData.type,
-            fileID: fileData.id,
-            level: fileData.level,
-            fileDescribe: fileData.describe,
-          };
-        });
-        setFeedItems(fileUrls);
+        const pageSize = 10; // 한 번에 불러올 파일 수
+        const startIndex = page * pageSize;
+        const pagedFiles = filteredFiles.slice(startIndex, startIndex + pageSize);
+
+        if (pagedFiles.length > 0) {
+          const fileUrls = pagedFiles.map((fileData: any) => {
+            const fileUrl = URL.createObjectURL(fileData.file);
+            return {
+              fileUrl,
+              fileType: fileData.type,
+              fileID: fileData.id,
+              level: fileData.level,
+              fileDescribe: fileData.describe,
+            };
+          });
+
+          setFeedItems((prevItems) => [...prevItems, ...fileUrls]); // 기존 데이터에 새 데이터 추가
+          setHasMore(pagedFiles.length === pageSize); // 더 이상 데이터가 없으면 hasMore를 false로 설정
+        } else {
+          setHasMore(false); // 더 이상 데이터가 없으면 hasMore를 false로 설정
+          setError('게시물 없음');
+        }
       } else {
         setError('게시물 없음');
       }
@@ -70,7 +88,6 @@ const FeedList: React.FC = () => {
 
   const openFeedItem = async (item: any) => {
     try {
-      // Fetch the selected file by its fileId using the helper function
       const file = await getFileFromDB(item.fileID);
       if (file) {
         setSelectedFeedItem({ ...item, file });
@@ -91,14 +108,35 @@ const FeedList: React.FC = () => {
   };
 
   useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !loading) {
+          setPage((prevPage) => prevPage + 1);
+        }
+      },
+      { rootMargin: '200px' }
+    );
+
+    if (loaderRef.current) {
+      observer.observe(loaderRef.current);
+    }
+
+    return () => {
+      if (loaderRef.current) {
+        observer.unobserve(loaderRef.current);
+      }
+    };
+  }, [loading]);
+
+  useEffect(() => {
     fetchData();
-  }, [db]);
+  }, [page, db]);
 
   if (error) {
     return <div className="min-w-2xl m-auto mt-4 text-center font-noto font-bold text-3xl">{error}</div>;
   }
 
-  if (loading) {
+  if (loading && feedItems.length === 0) {
     return (
       <div className="min-w-2xl m-auto mt-4">
         <Spinner />
@@ -140,6 +178,9 @@ const FeedList: React.FC = () => {
           );
         })
       )}
+
+      {loading && <Spinner />}
+      <div ref={loaderRef} style={{ height: '10px' }}></div>
 
       {isFeedItemModalOpen && selectedFeedItem && (
         <Modal isOpen={isFeedItemModalOpen} onClose={handleCloseModal}>
