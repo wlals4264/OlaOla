@@ -212,3 +212,32 @@ export function updateFileInDB(
     }
   });
 }
+
+// DB 삭제 함수
+export function deleteFileInDB(fileId: number): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (!db) {
+      console.log('DB가 아직 준비되지 않았습니다.');
+      return reject('DB not available');
+    }
+
+    try {
+      const transaction = db.transaction('mediaData', 'readwrite');
+      const objectStore = transaction.objectStore('mediaData');
+      const request = objectStore.delete(fileId); // 파일 ID로 검색
+
+      request.onsuccess = () => {
+        console.log('파일이 성공적으로 삭제되었습니다.');
+        resolve();
+      };
+
+      request.onerror = (event) => {
+        console.error('파일 삭제 오류', event);
+        reject(event);
+      };
+    } catch (error) {
+      console.error('Unexpected error:', error);
+      reject(error);
+    }
+  });
+}

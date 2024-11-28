@@ -24,7 +24,6 @@ const FeedItem: React.FC<FeedItemProps> = ({ feedItem }) => {
   const userImg = useRecoilValue(userImgState);
   const nickname = useRecoilValue(userNicknameState);
   const [currentNiceCount, setCurrentNiceCount] = useState(niceCount);
-  const [isModifyModalOpen, setIsModifyModalOpen] = useState(false);
 
   const userProfileImg = userImg || profileDefaultImg;
 
@@ -33,9 +32,6 @@ const FeedItem: React.FC<FeedItemProps> = ({ feedItem }) => {
   const navigate = useNavigate();
 
   const handleOpenModifyModal = () => {
-    setIsModifyModalOpen(true);
-    console.log('수정하기 버튼');
-    console.log(isModifyModalOpen);
     navigate('modify-feed', { state: { feedItem } });
   };
 
@@ -46,7 +42,7 @@ const FeedItem: React.FC<FeedItemProps> = ({ feedItem }) => {
   const handleNiceButtonClick = () => {
     const updateNiceCount = niceCount + 1;
     updateFileInDB(fileID, { niceCount: updateNiceCount });
-    setCurrentNiceCount(updateNiceCount); // 로컬 상태 업데이트
+    setCurrentNiceCount(updateNiceCount);
   };
 
   return (
