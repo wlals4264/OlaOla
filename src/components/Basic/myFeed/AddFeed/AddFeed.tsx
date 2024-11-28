@@ -43,7 +43,7 @@ const AddFeed: React.FC = () => {
 
   return (
     <>
-      <div className="flex justify-center gap-12 min-w-2xl min-h-dvh m-auto mt-16">
+      <div className="flex justify-center items-center gap-12 min-w-2xl min-h-screen m-auto ">
         {/* image & video 업로드 container */}
         <div className="flex flex-col gap-4">
           {selectedFileUrl ? (
@@ -76,7 +76,7 @@ const AddFeed: React.FC = () => {
         </div>
 
         {/* form 요소들 */}
-        <form className="flex flex-col gap-4 font-noto">
+        <form className="flex flex-col gap-3 font-noto mt-0">
           {/* 내용 */}
           <label htmlFor="describe" className="text-xs">
             내용

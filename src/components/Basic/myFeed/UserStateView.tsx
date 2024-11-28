@@ -1,23 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
-import { userImgState, userNicknameState, userUIDState } from '../../../datas/recoilData';
+import { userImgState, userNicknameState, userUIDState, updateUserUIDState } from '../../../datas/recoilData';
 import profileDefaultImg from '../../../assets/svgs/profileDefaultImg.svg';
 import { getFileListFromDB } from '../../../utils/indexedDB';
 
 const UserStateView: React.FC = () => {
   const userImg = useRecoilValue(userImgState);
   const nickname = useRecoilValue(userNicknameState);
-  const userUID = useRecoilValue(userUIDState);
-
+  const userUID = useRecoilValue(updateUserUIDState);
   const [postCount, setPostCount] = useState<number>(0);
 
   const userProfileImg = userImg || profileDefaultImg;
 
   useEffect(() => {
     const fetchPostCount = async () => {
+      if (!userUID) {
+        setPostCount(0); // userUID가 없으면 게시물 수는 0으로 설정
+        return;
+      }
+
       try {
         const files = await getFileListFromDB();
+        console.log(files);
         if (userUID) {
+          console.log('UID:', userUID);
           const filteredFiles = files.filter((fileData: any) => fileData.UID === userUID);
           setPostCount(filteredFiles.length);
         }

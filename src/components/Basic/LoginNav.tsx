@@ -80,12 +80,12 @@ const LoginNav: React.FC = () => {
         <div className="flex flex-1 justify-between items-center">
           {/* nav Buttons */}
           <div className="flex gap-4 flex-shrink-0 mr-40">
-            <Link to="/browsing-feed">
+            <Link to="/center-info">
               <button className="flex">
                 <span className="text-l flex-shrink-0 font-semibold">암장 정보</span>
               </button>
             </Link>
-            <Link to="/center-info">
+            <Link to="/browsing-feed">
               <button className="flex">
                 <span className="text-l flex-shrink-0 font-semibold">피드 둘러보기</span>
               </button>

@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { getDB, getFileListFromDB, getFileFromDB } from '../../../utils/indexedDB';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { userUIDState, isFeedItemModalOpenState } from '../../../datas/recoilData';
-import Spinner from '../../Spinner/Spinner';
-import Modal from '../../Modal/Modal';
-import FeedItem from './FeedItem';
+import { getDB, getFileListFromDB, getFileFromDB } from '../../utils/indexedDB';
+import { useRecoilState } from 'recoil';
+import { isFeedItemModalOpenState } from '../../datas/recoilData';
+import Spinner from '../Spinner/Spinner';
+import Modal from '../Modal/Modal';
+import FeedItem from './MyFeed/FeedItem';
 
-const FeedList: React.FC = () => {
-  const userUID = useRecoilValue(userUIDState);
+const BrowsingFeedComponent: React.FC = () => {
+  // const userUID = useRecoilValue(userUIDState);
   const [feedItems, setFeedItems] = useState<any[]>([]);
   const [selectedFeedItem, setSelectedFeedItem] = useState<any | null>(null);
   const [isFeedItemModalOpen, setFeedItemModalOpen] = useRecoilState(isFeedItemModalOpenState);
@@ -30,43 +30,34 @@ const FeedList: React.FC = () => {
       const files = await getFileListFromDB();
       console.log('DB 연결 성공');
 
-      if (!userUID) {
-        setError('UID가 존재하지 않습니다.');
-        return;
-      }
+      const sortedFiles = files.sort((a, b) => b.id - a.id);
+      console.log(sortedFiles);
 
-      const filteredFiles = files.filter((fileData) => fileData.UID === userUID).sort((a, b) => b.id - a.id);
-      console.log('필터링된 파일들:', filteredFiles);
-
-      if (filteredFiles.length > 0) {
+      if (sortedFiles.length > 0) {
         const pageSize = 9;
 
         const startIndex = page * pageSize;
         console.log(page);
         console.log(startIndex);
-        if (startIndex < filteredFiles.length) {
-          const pagedFiles = filteredFiles.slice(startIndex, startIndex + pageSize);
+        const pagedFiles = sortedFiles.slice(startIndex, startIndex + pageSize);
+        console.log(pagedFiles);
 
-          console.log(pagedFiles); // 빈배열
+        if (pagedFiles.length > 0) {
+          const fileUrls = pagedFiles.map((fileData: any) => {
+            const fileUrl = URL.createObjectURL(fileData.file);
+            return {
+              fileUrl,
+              fileType: fileData.type,
+              fileID: fileData.id,
+              level: fileData.level,
+              fileDescribe: fileData.describe,
+              niceCount: fileData.niceCount || 0,
+              centerName: fileData.centerName,
+            };
+          });
 
-          if (pagedFiles.length > 0) {
-            const fileUrls = pagedFiles.map((fileData: any) => {
-              const fileUrl = URL.createObjectURL(fileData.file);
-              return {
-                fileUrl,
-                fileType: fileData.type,
-                fileID: fileData.id,
-                level: fileData.level,
-                fileDescribe: fileData.describe,
-                niceCount: fileData.niceCount || 0,
-                centerName: fileData.centerName,
-                userUID: fileData.UID,
-              };
-            });
-
-            setFeedItems((prevItems) => [...prevItems, ...fileUrls]);
-            setHasMore(pagedFiles.length === pageSize);
-          }
+          setFeedItems((prevItems) => [...prevItems, ...fileUrls]);
+          setHasMore(pagedFiles.length === pageSize);
         } else {
           setHasMore(false);
           setError('게시물 없음');
@@ -116,7 +107,9 @@ const FeedList: React.FC = () => {
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && !loading && hasMore) {
-          setPage((prevPage) => prevPage + 1);
+          setTimeout(() => {
+            setPage((prevPage) => prevPage + 1); // setPage가 완료된 후 렌더링을 기다리도록 지연
+          }, 200);
         }
       },
       { rootMargin: '200px' }
@@ -212,4 +205,4 @@ const FeedList: React.FC = () => {
   );
 };
 
-export default FeedList;
+export default BrowsingFeedComponent;
