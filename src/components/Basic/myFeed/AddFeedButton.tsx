@@ -9,7 +9,7 @@ const AddFeedButton: React.FC = () => {
   };
 
   return (
-    <div className="max-w-2xl m-auto mt-4">
+    <div className="max-w-2xl m-auto my-4">
       <div className="flex items-end justify-end">
         <button onClick={AddFeedOpen}>
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
