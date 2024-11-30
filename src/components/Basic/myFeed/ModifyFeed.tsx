@@ -6,11 +6,11 @@ import { updateFileInDB } from '../../../utils/indexedDB';
 
 const ModifyFeed: React.FC = () => {
   const location = useLocation();
-  const { feedItem } = location.state;
+  const { feedItem, fileUrl: initialFileUrl } = location.state;
 
   const [centerName, setCenterName] = useState<string>(feedItem.centerName);
-  const [fileDescribe, setFileDescribe] = useState<string>(feedItem.fileDescribe);
-  const [fileUrl, setFileUrl] = useState<string>(feedItem.fileUrl || '');
+  const [fileDescribe, setFileDescribe] = useState<string>(feedItem.describe);
+  const [fileUrl, setFileUrl] = useState<string>(initialFileUrl || ''); // fileUrl 초기화
   const [climbingLevel, setClimbingLevel] = useState<string>(feedItem.level);
 
   // 이미지 Blob Url 생성
@@ -24,7 +24,7 @@ const ModifyFeed: React.FC = () => {
         URL.revokeObjectURL(newFileUrl);
       };
     }
-  }, [feedItem]);
+  }, [feedItem.file]);
 
   // 난이도 변경 시 상태 업데이트 함수
   const handleClimbingLevelChange = (newClimbingLevel: string) => {
@@ -53,11 +53,11 @@ const ModifyFeed: React.FC = () => {
       <div className="flex justify-center gap-12 min-w-2xl min-h-dvh m-auto mt-16">
         {/* image & video 업로드 container */}
         <div className="flex flex-col gap-4">
-          {feedItem.fileType === 'image' ? (
+          {feedItem.type === 'image' ? (
             <div className="w-[300px] h-[400px] bg-gray-200 rounded-2xl flex flex-col gap-3 items-center justify-center">
               <img src={fileUrl} alt="업로드 이미지" className="w-full h-full object-cover rounded-2xl" />
             </div>
-          ) : feedItem.fileType === 'video' ? (
+          ) : feedItem.type === 'video' ? (
             <div className="relative min-w-[300px] min-h-[400px] bg-gray-200 rounded-2xl flex flex-col gap-3 items-center justify-center">
               <video
                 src={fileUrl}

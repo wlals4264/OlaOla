@@ -122,7 +122,7 @@ export function getFileFromDB(fileId: number): Promise<File | null> {
       request.onsuccess = () => {
         const fileData = request.result;
         if (fileData) {
-          resolve(fileData.file);
+          resolve(fileData);
         } else {
           reject('파일을 찾을 수 없습니다.');
         }

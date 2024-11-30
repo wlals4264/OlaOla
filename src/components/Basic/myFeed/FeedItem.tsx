@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { userImgState, userNicknameState, isFeedItemModalOpenState } from '../../../datas/recoilData';
+import {
+  userImgState,
+  userNicknameState,
+  isFeedItemModalOpenState,
+  isLoginUserState,
+  userUIDState,
+} from '../../../datas/recoilData';
 import profileDefaultImg from '../../../assets/svgs/profileDefaultImg.svg';
 import { levelOptions } from '../../../datas/levelOptions';
 import { updateFileInDB, deleteFileInDB } from '../../../utils/indexedDB';
@@ -9,10 +15,9 @@ import { useNavigate, useLocation } from 'react-router-dom';
 interface FeedItemProps {
   feedItem: {
     file: File;
-    fileType: string;
-    fileID: number;
-    fileUrl: string;
-    fileDescribe: string;
+    type: string;
+    id: number;
+    describe: string;
     level: string;
     niceCount: number;
     centerName: string;
@@ -20,40 +25,77 @@ interface FeedItemProps {
   };
 }
 const FeedItem: React.FC<FeedItemProps> = ({ feedItem }) => {
-  const { file, fileType, fileID, fileUrl, fileDescribe, level, niceCount, centerName, userUID } = feedItem;
+  console.log(feedItem);
   const userImg = useRecoilValue(userImgState);
   const nickname = useRecoilValue(userNicknameState);
-  const [currentNiceCount, setCurrentNiceCount] = useState(niceCount);
   const setFeedItemModalOpen = useSetRecoilState(isFeedItemModalOpenState);
+  const userProfileImg = userImg || profileDefaultImg;
+  const levelColor = levelOptions.find((option) => option.value === feedItem.level)?.color || 'white';
+  const [fileUrl, setFileUrl] = useState<string>('');
+  const [niceCount, setNiceCount] = useState(feedItem.niceCount);
+  // 로그인 상태와 userUID 가져오기
+  const isLogin = useRecoilValue(isLoginUserState);
+  const userUID = useRecoilValue(userUIDState);
 
   // my-feed 페이지의 FeedItem창에서만 수정하기 버튼 열리기
   const location = useLocation();
   const isEditPage = location.pathname.includes('/my-feed');
 
-  const userProfileImg = userImg || profileDefaultImg;
-
-  const levelColor = levelOptions.find((option) => option.value === level)?.color || 'white';
-
   const navigate = useNavigate();
 
-  const handleOpenModifyModal = () => {
-    navigate('modify-feed', { state: { feedItem } });
-  };
-
+  // 파일 Blob url 생성
   useEffect(() => {
-    setCurrentNiceCount(niceCount);
-  }, [niceCount]);
+    const url = URL.createObjectURL(feedItem.file);
+    setFileUrl(url);
 
+    return () => {
+      URL.revokeObjectURL(url);
+    };
+  }, [feedItem.file]);
+
+  // 나이스 버튼 핸들러 함수
   const handleNiceButtonClick = () => {
-    const updateNiceCount = niceCount + 1;
-    updateFileInDB(fileID, { niceCount: updateNiceCount });
-    setCurrentNiceCount(updateNiceCount);
+    console.log('Nice button click');
+
+    if (!isLogin || !userUID) {
+      alert('로그인 후 이용해주세요.');
+      return;
+    }
+
+    // 나이스를 누른 유저인지 확인하기 위한 값 불러오기
+    const hasClicked = localStorage.getItem(`hasClicked_${userUID}`);
+
+    if (hasClicked) {
+      // 이미 나이스를 눌렀다면 나이스 수 감소
+      setNiceCount((prevCount) => prevCount - 1);
+      // 클릭 기록 삭제
+      localStorage.removeItem(`hasClicked_${userUID}`);
+      // DB 업데이트
+      updateFileInDB(feedItem.id, { niceCount: niceCount });
+    } else {
+      // 누르지 않았다면 나이스 수 증가
+      setNiceCount((prevCount) => prevCount + 1);
+      // DB 업데이트
+      updateFileInDB(feedItem.id, { niceCount: niceCount });
+      // 클릭 기록 저장
+      localStorage.setItem(`hasClicked_${userUID}`, true);
+    }
   };
 
+  // const updateNiceCount = niceCount + 1;
+
+  // setCurrentNiceCount(updateNiceCount);
+
+  // 수정 버튼 핸들러 함수
+  const handleOpenModifyModal = () => {
+    navigate('modify-feed', { state: { feedItem, fileUrl } });
+  };
+
+  // 삭제 버튼 핸들러 함수
   const handleDeleteButtonClick = (id: number) => {
     const confirmDelete = window.confirm('정말 삭제하시겠습니까?');
     if (confirmDelete) {
-      deleteFileInDB(id);
+      deleteFileInDB(feedItem.id);
       setFeedItemModalOpen(false);
       navigate(0);
     }
@@ -63,9 +105,9 @@ const FeedItem: React.FC<FeedItemProps> = ({ feedItem }) => {
     <div className="flex px-10 py-6">
       <div className="w-[300px] h-[400px] relative mr-16">
         {/* 선택된 피드 이미지 & 비디오 렌더링 */}
-        {fileType.startsWith('image') ? (
-          <img src={fileUrl} alt={`Feed item ${fileID}`} className="w-full h-full object-cover rounded-2xl m-auto" />
-        ) : fileType.startsWith('video') ? (
+        {feedItem.type.startsWith('image') ? (
+          <img src={fileUrl} alt={'선택된 피드 이미지'} className="w-full h-full object-cover rounded-2xl m-auto" />
+        ) : feedItem.type.startsWith('video') ? (
           <video
             autoPlay
             muted
@@ -93,14 +135,20 @@ const FeedItem: React.FC<FeedItemProps> = ({ feedItem }) => {
             </svg>
           </p>
           <div className="w-[360px] min-h-24 mt-2">
-            <p className="font-noto font-normal text-sm">{fileDescribe}</p>
+            <p className="font-noto font-normal text-sm">{feedItem.describe}</p>
           </div>
         </div>
 
         {/* 암장명 */}
-        <p className="flex justify-center items-center mb-2 text-xs text-white bg-primary max-w-fit px-[8px] py-[2px] rounded-xl cursor-pointer">
-          # {centerName}
-        </p>
+        {feedItem.centerName ? (
+          <p className="flex justify-center items-center mb-2 text-xs text-white bg-primary max-w-fit px-[8px] py-[2px] rounded-xl cursor-pointer">
+            # {feedItem.centerName}
+          </p>
+        ) : (
+          <p className="flex justify-center items-center mb-2 text-xs text-white max-w-fit px-[8px] py-[2px] rounded-xl cursor-default">
+            ' '
+          </p>
+        )}
 
         {/* 구분선 */}
         <div className="w-[360px] border-t-[0.5px] border-solid border-gray-500"></div>
@@ -131,7 +179,7 @@ const FeedItem: React.FC<FeedItemProps> = ({ feedItem }) => {
                 </defs>
               </svg>
               <span className="flex items-center gap-2 font-noto font-normal text-md cursor-default">
-                <p>{currentNiceCount}</p>nice
+                <p>{niceCount}</p>nice
               </span>
             </div>
             {isEditPage && (
@@ -154,7 +202,7 @@ const FeedItem: React.FC<FeedItemProps> = ({ feedItem }) => {
                 {/* 삭제하기 버튼 */}
                 <button>
                   <svg
-                    onClick={() => handleDeleteButtonClick(fileID)}
+                    onClick={() => handleDeleteButtonClick(feedItem.id)}
                     className="cursor-pointer hover:scale-110"
                     width="18"
                     height="21"
@@ -172,7 +220,7 @@ const FeedItem: React.FC<FeedItemProps> = ({ feedItem }) => {
           </div>
           <div className="h-16 mt-2 ">
             <div className="flex items-center">
-              <span className="font-semiblod text-sm mr-2">user1</span>
+              <span className="font-semibold text-sm mr-2">user1</span>
               <p className="font-normal text-xs flex-1">댓글</p>
             </div>
           </div>

@@ -105,8 +105,9 @@ const FeedList: React.FC = () => {
   const openFeedItem = async (item: any) => {
     try {
       const file = await getFileFromDB(item.fileID);
+      console.log(file);
       if (file) {
-        setSelectedFeedItem({ ...item, file });
+        setSelectedFeedItem(file);
         setFeedItemModalOpen(true);
         console.log(selectedFeedItem);
       } else {
