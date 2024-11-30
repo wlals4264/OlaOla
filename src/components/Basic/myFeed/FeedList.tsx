@@ -22,9 +22,10 @@ const FeedList: React.FC = () => {
 
   // 데이터 불러오기
   const fetchData = async (page: number) => {
+    // 중복 호출 방지
     if (loading || !hasMore || pageParams.includes(page)) return;
 
-    // 로딩 true로 변환 & error 초깋과
+    // 로딩 true로 변환 & error 초기화
     setLoading(true);
     setError(null);
 
@@ -48,13 +49,9 @@ const FeedList: React.FC = () => {
       const pagedFiles = filteredFiles.slice(startIndex, startIndex + pageSize);
 
       console.log('현재 페이지:', page, '로딩할 파일들:', pagedFiles);
-      // 무한스크롤을 위한 페이지 셋팅
+
+      // fileUrl 생성
       if (filteredFiles.length > 0) {
-        // setPage(0);
-
-        console.log(startIndex, pageSize, startIndex + pageSize);
-        console.log('pagedFiles', pagedFiles);
-
         if (pagedFiles.length > 0) {
           const fileUrls = pagedFiles.map((fileData: any) => {
             const fileUrl = URL.createObjectURL(fileData.file);

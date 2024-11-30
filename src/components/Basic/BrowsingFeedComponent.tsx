@@ -16,32 +16,33 @@ const BrowsingFeedComponent: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
+  const [pageParams, setPageParams] = useState([]);
 
   const loaderRef = useRef<HTMLDivElement | null>(null);
 
   // 데이터 불러오기
-  const fetchData = async () => {
-    if (loading || !hasMore) return;
+  const fetchData = async (page: number) => {
+    // 중복 호출 방지
+    if (loading || !hasMore || pageParams.includes(page)) return;
 
+    // 로딩 true로 변환 & error 초기화
     setLoading(true);
     setError(null);
 
     try {
+      // DB에서 파일 리스트 가져오기
       const files = await getFileListFromDB();
       console.log('DB 연결 성공');
 
+      // 받아온 파일리스트를 id 내림차순으로 정렬해서 최신값부터 정렬
       const sortedFiles = files.sort((a, b) => b.id - a.id);
-      console.log(sortedFiles);
 
+      const pageSize = 9;
+      const startIndex = page * pageSize;
+      const pagedFiles = sortedFiles.slice(startIndex, startIndex + pageSize);
+
+      console.log('현재 페이지:', page, '로딩할 파일들:', pagedFiles);
       if (sortedFiles.length > 0) {
-        const pageSize = 9;
-
-        const startIndex = page * pageSize;
-        console.log(page);
-        console.log(startIndex);
-        const pagedFiles = sortedFiles.slice(startIndex, startIndex + pageSize);
-        console.log(pagedFiles);
-
         if (pagedFiles.length > 0) {
           const fileUrls = pagedFiles.map((fileData: any) => {
             const fileUrl = URL.createObjectURL(fileData.file);
@@ -53,14 +54,17 @@ const BrowsingFeedComponent: React.FC = () => {
               fileDescribe: fileData.describe,
               niceCount: fileData.niceCount || 0,
               centerName: fileData.centerName,
+              userUID: fileData.UID,
             };
           });
 
           setFeedItems((prevItems) => [...prevItems, ...fileUrls]);
+          setPageParams((prev) => [...prev, page]);
           setHasMore(pagedFiles.length === pageSize);
+          setLoading(false);
         } else {
           setHasMore(false);
-          setError('게시물 없음');
+          // setError('게시물 없음');
         }
       } else {
         setError('게시물 없음');
@@ -106,13 +110,15 @@ const BrowsingFeedComponent: React.FC = () => {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
+        // 로딩 중이 아니고 추가 데이터가 있고, 화면에 로더가 보일 때만 실행
         if (entries[0].isIntersecting && !loading && hasMore) {
+          // 페이지 업데이트를 방지하기 위해 타이머를 활용
           setTimeout(() => {
-            setPage((prevPage) => prevPage + 1); // setPage가 완료된 후 렌더링을 기다리도록 지연
-          }, 200);
+            setPage((prevPage) => prevPage + 1);
+          }, 200); // 200ms 딜레이
         }
       },
-      { rootMargin: '200px' }
+      { rootMargin: '200px' } // rootMargin을 적절히 설정
     );
 
     if (loaderRef.current) {
@@ -124,23 +130,39 @@ const BrowsingFeedComponent: React.FC = () => {
         observer.unobserve(loaderRef.current);
       }
     };
-  }, [loading, hasMore]);
+  }, [loading, hasMore, loaderRef.current]);
 
   // page와 db 상태 변화에 따른 데이터 요청
   useEffect(() => {
     const initializeDB = async () => {
-      const openedDb = await getDB();
-      if (openedDb) {
-        setDb(openedDb);
-      } else {
-        setError('DB가 준비되지 않았습니다.');
+      try {
+        const openedDb = await getDB();
+        if (openedDb) {
+          setDb(openedDb);
+
+          // 초기화
+          setPage(0); // 페이지 초기화
+          setFeedItems([]); // 피드 아이템 초기화
+          setPageParams([]); // 페이지 파라미터 초기화
+          setHasMore(true); // 추가 로드 가능 상태 초기화
+        } else {
+          setError('DB가 준비되지 않았습니다.');
+        }
+      } catch (error) {
+        setError('DB 초기화 중 오류 발생');
       }
     };
 
+    // DB 초기화 및 데이터 요청
     if (!db) {
       initializeDB();
-    } else {
-      fetchData();
+    }
+  }, [db]);
+
+  useEffect(() => {
+    // 페이지와 초기화 상태 확인 후 데이터 요청
+    if (db && !pageParams.includes(page)) {
+      fetchData(page);
     }
   }, [db, page]);
 
