@@ -6,7 +6,7 @@ export function initDB() {
     return;
   }
 
-  const dbReq: IDBOpenDBRequest = indexedDB.open('database', 1);
+  const dbReq: IDBOpenDBRequest = indexedDB.open('database', 2);
 
   dbReq.addEventListener('success', function (event: Event) {
     console.log('Database initialized successfully');
@@ -25,19 +25,21 @@ export function initDB() {
     db = target.result;
     const oldVersion = event.oldVersion;
 
-    if (oldVersion < 1) {
+    if (oldVersion < 2) {
       db.createObjectStore('mediaData', { keyPath: 'id', autoIncrement: true });
+    }
+
+    if (oldVersion < 2) {
+      db.createObjectStore('commentData', { keyPath: 'id', autoIncrement: true });
     }
   });
 }
 export const getDB = (): Promise<IDBDatabase | null> => {
+  if (db) {
+    return Promise.resolve(db);
+  }
   return new Promise((resolve, reject) => {
-    if (db) {
-      resolve(db);
-      return;
-    }
-
-    const request = indexedDB.open('database', 1);
+    const request = indexedDB.open('database', 2);
 
     request.onsuccess = () => {
       const db = request.result;
@@ -53,6 +55,10 @@ export const getDB = (): Promise<IDBDatabase | null> => {
       const db = request.result;
       if (!db.objectStoreNames.contains('mediaData')) {
         db.createObjectStore('mediaData', { keyPath: 'id', autoIncrement: true });
+      }
+
+      if (!db.objectStoreNames.contains('commentData')) {
+        db.createObjectStore('commentData', { keyPath: 'id', autoIncrement: true });
       }
     };
   });

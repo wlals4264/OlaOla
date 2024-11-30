@@ -55,7 +55,7 @@ const FeedList: React.FC = () => {
       const filteredFiles = files.filter((fileData) => fileData.UID === userUID).sort((a, b) => b.id - a.id);
       console.log('필터링된 파일들:', filteredFiles);
 
-      const pageSize = 9;
+      const pageSize = 6;
       const startIndex = page * pageSize;
       const pagedFiles = filteredFiles.slice(startIndex, startIndex + pageSize);
 
@@ -202,7 +202,7 @@ const FeedList: React.FC = () => {
   }
 
   return (
-    <div className="max-w-2xl m-auto mt-4 grid grid-cols-3 gap-4 font-noto">
+    <div className="max-w-2xl h-screen m-auto mt-4 grid grid-cols-3 gap-4 font-noto">
       {feedItems.length === 0 ? (
         <p className="text-center font-bold text-3xl">게시물 없음</p>
       ) : (

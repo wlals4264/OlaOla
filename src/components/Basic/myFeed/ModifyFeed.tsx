@@ -41,7 +41,7 @@ const ModifyFeed: React.FC = () => {
     };
 
     try {
-      await updateFileInDB(feedItem.fileID, updatedData);
+      await updateFileInDB(feedItem.id, updatedData);
       console.log('파일이 성공적으로 수정되었습니다!');
     } catch (error) {
       console.log('파일 수정 실패: ' + error);
