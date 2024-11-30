@@ -103,14 +103,14 @@ const FeedItem: React.FC<FeedItemProps> = ({ feedItem }) => {
       <div className="w-[300px] h-[400px] relative mr-16">
         {/* 선택된 피드 이미지 & 비디오 렌더링 */}
         {feedItem.type.startsWith('image') ? (
-          <img src={fileUrl} alt={'선택된 피드 이미지'} className="w-full h-full object-cover rounded-2xl m-auto" />
+          <img src={fileUrl} alt={'선택한 피드 이미지'} className="w-full h-full object-cover rounded-2xl m-auto" />
         ) : feedItem.type.startsWith('video') ? (
           <video
+            src={fileUrl}
             autoPlay
             muted
             loop
             className="absolute top-[50%] left-[50%] w-full h-full object-cover transition-transform -translate-x-1/2 -translate-y-1/2 rounded-2xl p-0">
-            <source src={fileUrl} />
             해당 비디오 타입을 지원하지 않습니다.
           </video>
         ) : (

@@ -213,18 +213,18 @@ const FeedList: React.FC = () => {
               {fileType.startsWith('image') ? (
                 <img
                   src={fileUrl}
-                  alt={`File ${index}`}
+                  alt={'피드 이미지'}
                   onClick={() => openFeedItem(item)}
                   className="w-full h-full object-cover rounded-2xl m-auto cursor-pointer transition-transform duration-300 group-hover:scale-105 group-hover:brightness-75"
                 />
               ) : fileType.startsWith('video') ? (
                 <video
+                  src={fileUrl}
                   autoPlay
                   muted
                   loop
                   onClick={() => openFeedItem(item)}
                   className="absolute top-[50%] left-[50%] w-full h-full object-cover transition-transform duration-300 -translate-x-1/2 -translate-y-1/2 rounded-2xl p-0 cursor-pointer group-hover:scale-105 group-hover:brightness-75">
-                  <source src={fileUrl} />
                   해당 비디오 타입을 지원하지 않습니다.
                 </video>
               ) : (
