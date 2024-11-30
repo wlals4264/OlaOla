@@ -292,7 +292,7 @@ export function addCommentToDB(
 }
 
 // DB에서 모든 댓글 리스트를 가져오기
-export function getCommentsListFromDB(): Promise<Array<{ userNickName: string; comment: string }>> {
+export function getCommentsListFromDB(): Promise<Array<{ userNickName: string; comment: string; UID: string | null }>> {
   return getDB().then((db) => {
     if (!db) {
       return Promise.reject('DB not available');
@@ -314,6 +314,31 @@ export function getCommentsListFromDB(): Promise<Array<{ userNickName: string; c
 
       request.onerror = (event) => {
         console.error('파일 가져오기 오류', event);
+        reject(event);
+      };
+    });
+  });
+}
+
+// DB에서 댓글 삭제하는 함수
+export function deleteCommentInDB(id: number): Promise<void> {
+  return getDB().then((db) => {
+    if (!db) {
+      return Promise.reject('DB not available');
+    }
+
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction('commentData', 'readwrite');
+      const objectStore = transaction.objectStore('commentData');
+      const request = objectStore.delete(id);
+
+      request.onsuccess = () => {
+        console.log('파일이 성공적으로 삭제되었습니다.');
+        resolve();
+      };
+
+      request.onerror = (event) => {
+        console.error('파일 삭제 오류', event);
         reject(event);
       };
     });

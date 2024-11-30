@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { userUIDState, isFeedItemModalOpenState, userNicknameState } from '../../../datas/recoilData';
-import { addCommentToDB, getCommentsListFromDB } from '../../../utils/indexedDB';
+import { addCommentToDB, getCommentsListFromDB, deleteCommentInDB } from '../../../utils/indexedDB';
 
 // Props 타입 정의
 interface CommentProps {
@@ -10,41 +10,73 @@ interface CommentProps {
 
 const Comment: React.FC<CommentProps> = ({ feedItemId }) => {
   const [comment, setComment] = useState<string>('');
-  const [commentsList, setCommentsList] = useState<Array<{ userNickName: string; comment: string }>>([]);
+  const [commentsList, setCommentsList] = useState<
+    Array<{ userNickName: string; comment: string; UID: string | null }>
+  >([]);
   const userNickName = useRecoilValue(userNicknameState);
   const userUID = useRecoilValue(userUIDState);
+  const [commentWriterUID, setCommentWriterUID] = useState<string | null>('');
   const setFeedItemModalOpen = useSetRecoilState(isFeedItemModalOpenState);
 
   const handleCommentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setComment(e.target.value);
   };
+
   const handleCommentSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (comment) {
       // 파일 DB에 저장
       addCommentToDB(comment, userUID, feedItemId, userNickName);
-      setCommentsList((prevCommentsList) => [...prevCommentsList, { userNickName, comment }]);
+      setCommentsList((prevCommentsList) => [...prevCommentsList, { userNickName, comment, UID: userUID }]);
       setFeedItemModalOpen(true);
+      setCommentWriterUID(userUID);
       setComment('');
     } else {
       alert('댓글을 입력해주세요!');
     }
   };
 
+  const handleCommentDelete = (commentId: number) => {
+    deleteCommentInDB(commentId);
+    // 댓글 목록에서 해당 댓글을 제거
+    setCommentsList((prevCommentsList) => prevCommentsList.filter((comment) => comment.id !== commentId));
+  };
+
   useEffect(() => {
-    getCommentsListFromDB().then((comments) => setCommentsList(comments));
-    console.log(commentsList);
+    getCommentsListFromDB().then((comments) => {
+      const filteredComments = comments.filter((comment) => comment.feedItemId === feedItemId);
+      setCommentsList(filteredComments);
+    });
   }, [feedItemId]);
+
+  const nowLoginUserUID = localStorage.getItem('userUID');
 
   return (
     <>
-      <div className="h-16 my-1 py-1">
+      <div className="h-16 my-2 py-1">
         <div className="max-h-[60px] overflow-y-auto scrollbar-hide">
           {commentsList.map((comment, index) => {
             return (
               <div key={index} className="flex items-center">
                 <span className="font-semibold text-sm mr-2">{comment.userNickName}</span>
                 <p className="font-normal text-xs flex-1">{comment.comment}</p>
+                {nowLoginUserUID === comment.UID ? (
+                  <button
+                    className=""
+                    type="button"
+                    onClick={() => {
+                      handleCommentDelete(comment.id);
+                    }}>
+                    <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        d="M11.4377 3.5687C11.1939 3.32495 10.8002 3.32495 10.5564 3.5687L7.5002 6.6187L4.44395 3.56245C4.2002 3.3187 3.80645 3.3187 3.5627 3.56245C3.31895 3.8062 3.31895 4.19995 3.5627 4.4437L6.61895 7.49995L3.5627 10.5562C3.31895 10.8 3.31895 11.1937 3.5627 11.4375C3.80645 11.6812 4.2002 11.6812 4.44395 11.4375L7.5002 8.3812L10.5564 11.4375C10.8002 11.6812 11.1939 11.6812 11.4377 11.4375C11.6814 11.1937 11.6814 10.8 11.4377 10.5562L8.38145 7.49995L11.4377 4.4437C11.6752 4.2062 11.6752 3.8062 11.4377 3.5687Z"
+                        fill="black"
+                      />
+                    </svg>
+                  </button>
+                ) : (
+                  <></>
+                )}
               </div>
             );
           })}
