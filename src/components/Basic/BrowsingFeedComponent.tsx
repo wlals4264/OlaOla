@@ -6,9 +6,19 @@ import Spinner from '../Spinner/Spinner';
 import Modal from '../Modal/Modal';
 import FeedItem from './MyFeed/FeedItem';
 
+interface FeedItem {
+  fileUrl: string;
+  fileType: string;
+  fileID: number;
+  level?: string;
+  fileDescribe?: string;
+  niceCount?: number;
+  centerName?: string;
+  userUID?: string;
+}
+
 const BrowsingFeedComponent: React.FC = () => {
-  // const userUID = useRecoilValue(userUIDState);
-  const [feedItems, setFeedItems] = useState<any[]>([]);
+  const [feedItems, setFeedItems] = useState<FeedItem[]>([]);
   const [selectedFeedItem, setSelectedFeedItem] = useState<any | null>(null);
   const [isFeedItemModalOpen, setFeedItemModalOpen] = useRecoilState(isFeedItemModalOpenState);
   const [db, setDb] = useState<IDBDatabase | null>(null);
@@ -16,7 +26,7 @@ const BrowsingFeedComponent: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
-  const [pageParams, setPageParams] = useState([]);
+  const [pageParams, setPageParams] = useState<number[]>([]);
 
   const loaderRef = useRef<HTMLDivElement | null>(null);
 
@@ -189,13 +199,13 @@ const BrowsingFeedComponent: React.FC = () => {
         <p className="text-center font-bold text-3xl">게시물 없음</p>
       ) : (
         feedItems.map((item, index) => {
-          const { fileUrl, fileType, fileID } = item;
+          const { fileUrl, fileType } = item;
           return (
             <div key={index} className="relative w-[210px] h-[280px] overflow-hidden rounded-2xl group">
               {fileType.startsWith('image') ? (
                 <img
                   src={fileUrl}
-                  id={fileID}
+                  // id={fileID}
                   alt={`File ${index}`}
                   onClick={() => openFeedItem(item)}
                   className="w-full h-full object-cover rounded-2xl m-auto cursor-pointer transition-transform duration-300 group-hover:scale-105 group-hover:brightness-75"
