@@ -96,7 +96,7 @@ const BrowsingFeedComponent: React.FC = () => {
     try {
       const file = await getFileFromDB(item.fileID);
       if (file) {
-        setSelectedFeedItem({ ...item, file });
+        setSelectedFeedItem(file);
         setFeedItemModalOpen(true);
         console.log(selectedFeedItem);
       } else {
