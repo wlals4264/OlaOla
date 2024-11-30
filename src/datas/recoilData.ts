@@ -35,7 +35,6 @@ export const userNicknameState = atom<string>({
 });
 
 // userImg
-
 export const userImgState = atom<string | null>({
   key: 'userImgState',
   default: null,

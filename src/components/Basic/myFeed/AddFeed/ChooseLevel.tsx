@@ -9,12 +9,9 @@ interface ChooseLevelProps {
 
 const ChooseLevel: React.FC<ChooseLevelProps> = ({ currentClimbingLevel, onClimbingLevelChange }) => {
   const [climbingLevel, setClimbingLevel] = useRecoilState<string>(climbingLevelState);
+  const levelToUse = currentClimbingLevel || '';
 
-  // If `currentClimbingLevel` is passed via props, use it instead of the state
-  const levelToUse = currentClimbingLevel || climbingLevel;
-
-  const handleSelectedLevel = (e: any) => {
-    const level = e.target.value;
+  const handleSelectedLevel = (level: string) => {
     setClimbingLevel(level);
     if (onClimbingLevelChange) {
       onClimbingLevelChange(level);
@@ -26,37 +23,26 @@ const ChooseLevel: React.FC<ChooseLevelProps> = ({ currentClimbingLevel, onClimb
   return (
     <fieldset>
       <div className="flex items-center text-xs cursor-default mb-4 min-h-[40px]">
-        난이도{' '}
-        {levelToUse && selectedColor && (
-          <svg
-            className="scale-50"
-            width="38"
-            height="38"
-            viewBox="0 0 38 38"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M20.2588 28.3556L20.0005 28.1994L19.742 28.3551L12.8253 32.5218L12.8244 32.5223C11.9381 33.0587 10.8534 32.2679 11.087 31.2633L12.9203 23.3969L12.9888 23.1031L12.7608 22.9055L6.64409 17.6055L6.64392 17.6054C5.86052 16.9272 6.28474 15.6464 7.30631 15.5652L7.30896 15.5649L15.359 14.8816L15.6591 14.8561L15.7769 14.5789L18.9269 7.16219L18.9277 7.16024C19.3228 6.21888 20.6772 6.21888 21.0723 7.16024L21.073 7.16181L24.223 14.5951L24.3406 14.8728L24.641 14.8983L32.691 15.5816L32.6937 15.5818C33.7153 15.6631 34.1395 16.9439 33.3561 17.622L33.3559 17.6222L27.2392 22.9222L27.0112 23.1197L27.0797 23.4135L28.913 31.28C28.913 31.2801 28.913 31.2801 28.913 31.2802C29.1465 32.2847 28.0618 33.0754 27.1756 32.539L27.1754 32.5389L20.2588 28.3556Z"
-              fill={selectedColor}
-              stroke={selectedColor !== 'white' ? '' : '#8C8C8C'}
-            />
-          </svg>
-        )}
+        난이도
+        <svg
+          className="scale-50"
+          width="38"
+          height="38"
+          viewBox="0 0 38 38"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M20.2588 28.3556L20.0005 28.1994L19.742 28.3551L12.8253 32.5218L12.8244 32.5223C11.9381 33.0587 10.8534 32.2679 11.087 31.2633L12.9203 23.3969L12.9888 23.1031L12.7608 22.9055L6.64409 17.6055L6.64392 17.6054C5.86052 16.9272 6.28474 15.6464 7.30631 15.5652L7.30896 15.5649L15.359 14.8816L15.6591 14.8561L15.7769 14.5789L18.9269 7.16219L18.9277 7.16024C19.3228 6.21888 20.6772 6.21888 21.0723 7.16024L21.073 7.16181L24.223 14.5951L24.3406 14.8728L24.641 14.8983L32.691 15.5816L32.6937 15.5818C33.7153 15.6631 34.1395 16.9439 33.3561 17.622L33.3559 17.6222L27.2392 22.9222L27.0112 23.1197L27.0797 23.4135L28.913 31.28C28.913 31.2801 28.913 31.2801 28.913 31.2802C29.1465 32.2847 28.0618 33.0754 27.1756 32.539L27.1754 32.5389L20.2588 28.3556Z"
+            fill={selectedColor}
+            stroke={selectedColor !== 'white' ? '' : '#8C8C8C'}
+          />
+        </svg>
       </div>
 
       <div className="flex">
         {levelOptions.map((option) => (
           <div key={option.value}>
-            <input
-              id={option.value}
-              name="level"
-              value={option.value}
-              aria-label={option.label}
-              className="hidden"
-              onClick={handleSelectedLevel}
-              checked={levelToUse === option.value}
-            />
-            <label htmlFor={option.value}>
+            <button type="button" onClick={() => handleSelectedLevel(option.value)} className="outline-none">
               <svg
                 width="40"
                 height="40"
@@ -70,7 +56,7 @@ const ChooseLevel: React.FC<ChooseLevelProps> = ({ currentClimbingLevel, onClimb
                   stroke={option.color !== 'white' ? '' : '#8C8C8C'}
                 />
               </svg>
-            </label>
+            </button>
           </div>
         ))}
       </div>
