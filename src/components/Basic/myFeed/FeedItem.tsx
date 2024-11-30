@@ -1,16 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import {
-  userImgState,
-  userNicknameState,
-  isFeedItemModalOpenState,
-  isLoginUserState,
-  userUIDState,
-} from '../../../datas/recoilData';
+import { userImgState, userNicknameState, isFeedItemModalOpenState } from '../../../datas/recoilData';
 import profileDefaultImg from '../../../assets/svgs/profileDefaultImg.svg';
 import { levelOptions } from '../../../datas/levelOptions';
 import { updateFileInDB, deleteFileInDB } from '../../../utils/indexedDB';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 interface FeedItemProps {
   feedItem: {
@@ -22,21 +16,19 @@ interface FeedItemProps {
     level: string;
     niceCount: number;
     centerName: string;
-    userUID: stinrg;
+    userUID: string;
   };
 }
 const FeedItem: React.FC<FeedItemProps> = ({ feedItem }) => {
-  console.log(feedItem);
   const { file, fileType, fileID, fileUrl, fileDescribe, level, niceCount, centerName, userUID } = feedItem;
   const userImg = useRecoilValue(userImgState);
   const nickname = useRecoilValue(userNicknameState);
   const [currentNiceCount, setCurrentNiceCount] = useState(niceCount);
   const setFeedItemModalOpen = useSetRecoilState(isFeedItemModalOpenState);
-  const isLoginUser = useRecoilValue(isLoginUserState); // 로그인 여부
-  const loggedInUserUID = useRecoilValue(userUIDState); // 로그인한 사용자의 UID
 
-  // 로그인한 사용자와 feedItem의 작성자 UID가 일치하고 로그인 상태가 true일 때 버튼을 렌더링
-  const canEditOrDelete = isLoginUser && feedItem.userUID === loggedInUserUID;
+  // my-feed 페이지의 FeedItem창에서만 수정하기 버튼 열리기
+  const location = useLocation();
+  const isEditPage = location.pathname.includes('/my-feed');
 
   const userProfileImg = userImg || profileDefaultImg;
 
@@ -142,7 +134,7 @@ const FeedItem: React.FC<FeedItemProps> = ({ feedItem }) => {
                 <p>{currentNiceCount}</p>nice
               </span>
             </div>
-            {canEditOrDelete && (
+            {isEditPage && (
               // 수정 및 삭제 버튼
               <div className="flex gap-4">
                 {/* 수정하기 버튼 */}
