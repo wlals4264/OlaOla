@@ -215,7 +215,7 @@ const FeedItem: React.FC<FeedItemProps> = ({ feedItem }) => {
               </div>
             )}
           </div>
-          <Comment />
+          <Comment feedItemId={feedItem.id} />
         </div>
       </div>
     </div>

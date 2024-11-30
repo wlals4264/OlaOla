@@ -64,7 +64,7 @@ export const getDB = (): Promise<IDBDatabase | null> => {
   });
 };
 
-// DB에 파일 추가
+// mediaData를 DB에 파일 추가
 export function addFileToDB(
   file: File,
   fileType: string,
@@ -106,6 +106,43 @@ export function addFileToDB(
       addReq.addEventListener('error', function (event) {
         const target = event.target as IDBRequest;
         console.error('파일 추가 오류 발생 : ', target?.error);
+      });
+    })
+    .catch((error) => {
+      console.error('DB 연결 오류:', error);
+    });
+}
+
+// 댓글 데이터를 DB에 추가
+export function addCommentToDB(commentText: string, userUID: string | null, feedItemId: number): void {
+  getDB()
+    .then((db) => {
+      if (!db) {
+        console.log('DB가 아직 준비되지 않았습니다.');
+        return;
+      }
+
+      const transaction = db.transaction('commentData', 'readwrite');
+      const store = transaction.objectStore('commentData');
+
+      const commentData = {
+        comment: commentText,
+        UID: userUID,
+        feedItemId: feedItemId,
+        createdAt: new Date().toISOString(),
+      };
+
+      const addReq = store.add(commentData);
+
+      addReq.addEventListener('success', function (event: Event) {
+        const target = event.target as IDBRequest;
+        console.log('댓글이 DB에 추가되었습니다.');
+        console.log(target.result);
+      });
+
+      addReq.addEventListener('error', function (event) {
+        const target = event.target as IDBRequest;
+        console.error('댓글 추가 오류 발생 : ', target?.error);
       });
     })
     .catch((error) => {

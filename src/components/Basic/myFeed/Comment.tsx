@@ -1,6 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useRecoilValue, useRecoilState } from 'recoil';
+import { userUIDState, isFeedItemModalOpenState } from '../../../datas/recoilData';
+import { useNavigate } from 'react-router-dom';
+import { addCommentToDB } from '../../../utils/indexedDB';
 
-const Comment: React.FC = () => {
+// Props 타입 정의
+interface CommentProps {
+  id: number;
+}
+
+const Comment: React.FC<CommentProps> = ({ feedItemId }) => {
+  const [comment, setComment] = useState<string>('');
+  // const [commentsList, setCommentsList] = useState<string[]>([]);
+  const userUID = useRecoilValue(userUIDState);
+  const [isFeedItemModalOpen, setFeedItemModalOpen] = useRecoilState(isFeedItemModalOpenState);
+  const navigate = useNavigate();
+
+  const handleCommentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setComment(e.target.value);
+  };
+  const handleCommentSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (comment) {
+      // 파일 DB에 저장
+      addCommentToDB(comment, userUID, feedItemId);
+      setFeedItemModalOpen(true);
+      setComment('');
+    } else {
+      alert('댓글을 입력해주세요!');
+    }
+  };
+
   return (
     <>
       <div className="h-16 mt-2 ">
@@ -10,11 +40,15 @@ const Comment: React.FC = () => {
         </div>
       </div>
       {/* 댓글창 */}
-      <form className="relative flex items-center w-[360px] border border-gray-300 rounded-xl ">
+      <form
+        className="relative flex items-center w-[360px] border border-gray-300 rounded-xl"
+        onSubmit={handleCommentSubmit}>
         <input
+          onChange={handleCommentChange}
           type="text"
           placeholder="댓글을 남겨주세요!"
-          className="w-full p-[6px] rounded-xl text-sm items-center outline-none focus:ring-2 focus:ring-primary"
+          value={comment}
+          className="w-full h-8 px-3 py-[6px] rounded-xl text-xs items-center outline-none focus:ring-2 focus:ring-primary"
         />
         <button type="submit" className="absolute right-2 top-1/2 -translate-y-1/2">
           <svg className="w-6 h-6 text-black" viewBox="0 0 23 20" fill="none" xmlns="http://www.w3.org/2000/svg">
