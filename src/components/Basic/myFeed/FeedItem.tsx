@@ -34,9 +34,13 @@ const FeedItem: React.FC<FeedItemProps> = ({ feedItem }) => {
   const levelColor = levelOptions.find((option) => option.value === feedItem.level)?.color || 'white';
   const [fileUrl, setFileUrl] = useState<string>('');
   const [niceCount, setNiceCount] = useState(feedItem.niceCount);
+
   // 로그인 상태와 userUID 가져오기
   const isLogin = useRecoilValue(isLoginUserState);
   const userUID = useRecoilValue(userUIDState);
+
+  // 나이스를 누른 유저인지 확인하기 위한 값 불러오기
+  const hasClicked = localStorage.getItem(`hasClicked_${userUID}`);
 
   // my-feed 페이지의 FeedItem창에서만 수정하기 버튼 열리기
   const location = useLocation();
@@ -56,15 +60,10 @@ const FeedItem: React.FC<FeedItemProps> = ({ feedItem }) => {
 
   // 나이스 버튼 핸들러 함수
   const handleNiceButtonClick = () => {
-    console.log('Nice button click');
-
     if (!isLogin || !userUID) {
       alert('로그인 후 이용해주세요.');
       return;
     }
-
-    // 나이스를 누른 유저인지 확인하기 위한 값 불러오기
-    const hasClicked = localStorage.getItem(`hasClicked_${userUID}`);
 
     if (hasClicked) {
       // 이미 나이스를 눌렀다면 나이스 수 감소
@@ -154,6 +153,7 @@ const FeedItem: React.FC<FeedItemProps> = ({ feedItem }) => {
         <div className="w-[360px] flex flex-col justify-between">
           <div className="w-[360px] mt-2 flex gap-4 items-center justify-between">
             {/* 나이스 버튼 */}
+
             <div className="flex items-center gap-4">
               <svg
                 onClick={handleNiceButtonClick}
@@ -166,7 +166,7 @@ const FeedItem: React.FC<FeedItemProps> = ({ feedItem }) => {
                 <g clipPath="url(#clip0_8_1389)">
                   <path
                     d="M4.0625 8.75H0.9375C0.419727 8.75 0 9.16973 0 9.6875V19.0625C0 19.5803 0.419727 20 0.9375 20H4.0625C4.58027 20 5 19.5803 5 19.0625V9.6875C5 9.16973 4.58027 8.75 4.0625 8.75ZM2.5 18.4375C1.98223 18.4375 1.5625 18.0178 1.5625 17.5C1.5625 16.9822 1.98223 16.5625 2.5 16.5625C3.01777 16.5625 3.4375 16.9822 3.4375 17.5C3.4375 18.0178 3.01777 18.4375 2.5 18.4375ZM15 3.18172C15 4.83859 13.9855 5.76797 13.7001 6.875H17.6737C18.9782 6.875 19.9939 7.95883 20 9.14445C20.0032 9.84516 19.7052 10.5995 19.2406 11.0662L19.2363 11.0705C19.6205 11.9821 19.5581 13.2595 18.8727 14.1748C19.2118 15.1863 18.87 16.4288 18.2328 17.095C18.4007 17.7824 18.3205 18.3674 17.9927 18.8384C17.1954 19.9839 15.2194 20 13.5484 20L13.4373 20C11.5511 19.9993 10.0073 19.3125 8.76695 18.7607C8.14363 18.4834 7.32863 18.1401 6.71027 18.1288C6.4548 18.1241 6.25 17.9156 6.25 17.6601V9.30969C6.25 9.18469 6.30008 9.06473 6.38898 8.97684C7.93641 7.44777 8.6018 5.82891 9.87012 4.55844C10.4484 3.97906 10.6587 3.10391 10.862 2.25758C11.0357 1.53488 11.3991 0 12.1875 0C13.125 0 15 0.3125 15 3.18172Z"
-                    fill="#A5E1FF"
+                    fill={!hasClicked ? '#e5e7eb' : '#A5E1FF'}
                   />
                 </g>
                 <defs>
