@@ -188,14 +188,14 @@ const BrowsingFeedComponent: React.FC = () => {
         feedItems.map((item, index) => {
           const { fileUrl, fileType, fileID } = item;
           return (
-            <div key={index} className="relative w-[210px] h-[280px]">
+            <div key={index} className="relative w-[210px] h-[280px] overflow-hidden rounded-2xl group">
               {fileType.startsWith('image') ? (
                 <img
                   src={fileUrl}
                   id={fileID}
                   alt={`File ${index}`}
                   onClick={() => openFeedItem(item)}
-                  className="w-full h-full object-cover rounded-2xl m-auto cursor-pointer"
+                  className="w-full h-full object-cover rounded-2xl m-auto cursor-pointer transition-transform duration-300 group-hover:scale-105 group-hover:brightness-75"
                 />
               ) : fileType.startsWith('video') ? (
                 <video
@@ -203,7 +203,7 @@ const BrowsingFeedComponent: React.FC = () => {
                   muted
                   loop
                   onClick={() => openFeedItem(item)}
-                  className="absolute top-[50%] left-[50%] w-full h-full object-cover transition-transform -translate-x-1/2 -translate-y-1/2 rounded-2xl p-0 cursor-pointer">
+                  className="absolute top-[50%] left-[50%] w-full h-full object-cover transition-transform duration-300 -translate-x-1/2 -translate-y-1/2 rounded-2xl p-0 cursor-pointer group-hover:scale-105 group-hover:brightness-75">
                   <source src={fileUrl} />
                   해당 비디오 타입을 지원하지 않습니다.
                 </video>
