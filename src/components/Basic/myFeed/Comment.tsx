@@ -1,20 +1,19 @@
-import React, { useState } from 'react';
-import { useRecoilValue, useRecoilState } from 'recoil';
-import { userUIDState, isFeedItemModalOpenState } from '../../../datas/recoilData';
-import { useNavigate } from 'react-router-dom';
-import { addCommentToDB } from '../../../utils/indexedDB';
+import React, { useState, useEffect } from 'react';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { userUIDState, isFeedItemModalOpenState, userNicknameState } from '../../../datas/recoilData';
+import { addCommentToDB, getCommentsListFromDB } from '../../../utils/indexedDB';
 
 // Props 타입 정의
 interface CommentProps {
-  id: number;
+  feedItemId: number;
 }
 
 const Comment: React.FC<CommentProps> = ({ feedItemId }) => {
   const [comment, setComment] = useState<string>('');
-  // const [commentsList, setCommentsList] = useState<string[]>([]);
+  const [commentsList, setCommentsList] = useState<Array<{ userNickName: string; comment: string }>>([]);
+  const userNickName = useRecoilValue(userNicknameState);
   const userUID = useRecoilValue(userUIDState);
-  const [isFeedItemModalOpen, setFeedItemModalOpen] = useRecoilState(isFeedItemModalOpenState);
-  const navigate = useNavigate();
+  const setFeedItemModalOpen = useSetRecoilState(isFeedItemModalOpenState);
 
   const handleCommentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setComment(e.target.value);
@@ -23,7 +22,8 @@ const Comment: React.FC<CommentProps> = ({ feedItemId }) => {
     e.preventDefault();
     if (comment) {
       // 파일 DB에 저장
-      addCommentToDB(comment, userUID, feedItemId);
+      addCommentToDB(comment, userUID, feedItemId, userNickName);
+      setCommentsList((prevCommentsList) => [...prevCommentsList, { userNickName, comment }]);
       setFeedItemModalOpen(true);
       setComment('');
     } else {
@@ -31,17 +31,29 @@ const Comment: React.FC<CommentProps> = ({ feedItemId }) => {
     }
   };
 
+  useEffect(() => {
+    getCommentsListFromDB().then((comments) => setCommentsList(comments));
+    console.log(commentsList);
+  }, [feedItemId]);
+
   return (
     <>
-      <div className="h-16 mt-2 ">
-        <div className="flex items-center">
-          <span className="font-semibold text-sm mr-2">user1</span>
-          <p className="font-normal text-xs flex-1">댓글</p>
+      <div className="h-16 my-1 py-1">
+        <div className="max-h-[60px] overflow-y-auto scrollbar-hide">
+          {commentsList.map((comment, index) => {
+            return (
+              <div key={index} className="flex items-center">
+                <span className="font-semibold text-sm mr-2">{comment.userNickName}</span>
+                <p className="font-normal text-xs flex-1">{comment.comment}</p>
+              </div>
+            );
+          })}
         </div>
       </div>
+
       {/* 댓글창 */}
       <form
-        className="relative flex items-center w-[360px] border border-gray-300 rounded-xl"
+        className="relative flex items-center w-[360px] border border-gray-300 rounded-xl mt-2"
         onSubmit={handleCommentSubmit}>
         <input
           onChange={handleCommentChange}

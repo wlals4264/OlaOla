@@ -117,8 +117,9 @@ const FeedItem: React.FC<FeedItemProps> = ({ feedItem }) => {
         )}
       </div>
 
+      {/* 상세 내용 & 댓글창 */}
       <div className="w-[360px] h-[400px]">
-        <div className="flex-col shrink-0 justify-center items-center">
+        <div className="flex-col h-[220px] justify-center items-center overflow-y-auto scrollbar-hide">
           <img className="w-[100px] h-[100px] rounded-full" src={userProfileImg} alt="UserProfileImg" />
           <p className="mt-2 flex gap-4 shrink-0 items-center font-bold font-noto">
             {nickname}
