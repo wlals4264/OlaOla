@@ -67,7 +67,6 @@ const Comment: React.FC<CommentProps> = ({ feedItemId }) => {
                 <p className="font-normal text-xs flex-1">{comment.comment}</p>
                 {nowLoginUserUID === comment.UID ? (
                   <button
-                    className=""
                     type="button"
                     onClick={() => {
                       handleCommentDelete(comment.id);
