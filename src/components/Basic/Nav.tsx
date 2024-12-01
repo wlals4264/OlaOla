@@ -5,7 +5,7 @@ import LoginForm from '../Basic/LoginForm/LoginForm';
 import JoinForm from '../Basic/LoginForm/JoinForm';
 import { useRecoilState } from 'recoil';
 import { isJoinModalOpenState, isLoginModalOpenState } from '../../datas/recoilData';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import ModalTitle from '../Modal/ModalTitle';
 
 const Nav: React.FC = () => {
@@ -51,8 +51,12 @@ const Nav: React.FC = () => {
         <div className="flex flex-1 justify-between items-center">
           {/* nav Buttons */}
           <div className="flex gap-4 flex-shrink-0 mr-40">
-            <button className="text-l flex-shrink-0 font-semibold">암장 정보</button>
-            <button className="text-l flex-shrink-0 font-semibold">피드 둘러보기</button>
+            <Link to="/center-info">
+              <button className="text-l flex-shrink-0 font-semibold">암장 정보</button>
+            </Link>
+            <Link to="/browsing-feed">
+              <button className="text-l flex-shrink-0 font-semibold">피드 둘러보기</button>
+            </Link>
           </div>
 
           {/* Login Button & Join Button */}

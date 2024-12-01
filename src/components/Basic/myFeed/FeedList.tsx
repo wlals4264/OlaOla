@@ -202,7 +202,7 @@ const FeedList: React.FC = () => {
   }
 
   return (
-    <div className="max-w-2xl h-screen m-auto mt-4 grid grid-cols-3 gap-4 font-noto">
+    <div className="max-w-2xl m-auto mt-4 grid grid-cols-3 gap-4 font-noto grid-flow-dense">
       {feedItems.length === 0 ? (
         <p className="text-center font-bold text-3xl">게시물 없음</p>
       ) : (
