@@ -3,11 +3,6 @@ import Sidebar from './Sidebar';
 import Map from './Map';
 import styled from 'styled-components';
 
-interface MapProps {
-  searchText: string;
-  showSearchResults: boolean;
-}
-
 const SearchResultList = styled.ul`
   position: absolute;
   top: 80%;
@@ -70,7 +65,7 @@ const FindCenter: React.FC = () => {
         <Sidebar />
 
         {/* 암장 찾기 컴포넌트 */}
-        <div className="w-full flex flex-col gap-10 mt-10 items-center">
+        <div className="w-full flex flex-col gap-10 mt-10 items-center font-noto">
           {/* 검색창 */}
           <form
             className="relative flex items-center w-[360px] h-[40px] border border-gray-300 rounded-xl mt-2"
@@ -79,7 +74,7 @@ const FindCenter: React.FC = () => {
               type="text"
               value={searchText}
               onChange={handleSearchChange}
-              className="w-full h-full px-3 py-[6px] rounded-xl text-xs items-center outline-none focus:ring-2 focus:ring-primary"
+              className="w-full h-full px-3 py-[6px] rounded-xl text-sm items-center outline-none focus:ring-2 focus:ring-primary"
               placeholder="찾고 싶은 암장 이름을 입력해주세요 (ex 더클라임)"
             />
             <button className="absolute right-2 top-1/2 -translate-y-1/2">
