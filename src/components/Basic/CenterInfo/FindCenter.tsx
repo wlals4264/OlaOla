@@ -1,7 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Sidebar from './Sidebar';
 import Map from './Map';
+
+interface MapProps {
+  searchText: string;
+  showSearchResults: boolean;
+}
 const FindCenter: React.FC = () => {
+  const [searchText, setSearchText] = useState('');
+  const [showSearchResults, setShowSearchResults] = useState(false);
+
+  // 검색어를 이용한 카카오 맵 링크 생성
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setShowSearchResults(true);
+  };
+
   return (
     <div>
       <div className="flex">
@@ -10,9 +24,15 @@ const FindCenter: React.FC = () => {
         {/* 암장 찾기 컴포넌트  */}
         <div className="w-full flex flex-col gap-10 mt-10 items-center">
           {/* 검색창 */}
-          <form className="relative flex items-center w-[360px] h-[40px] border border-gray-300 rounded-xl mt-2">
+          <form
+            className="relative flex items-center w-[360px] h-[40px] border border-gray-300 rounded-xl mt-2"
+            onSubmit={handleSearchSubmit}>
             <input
               type="text"
+              value={searchText}
+              onChange={(e) => {
+                setSearchText(e.target.value);
+              }}
               className="w-full h-full px-3 py-[6px] rounded-xl text-xs items-center outline-none focus:ring-2 focus:ring-primary"
               placeholder="찾고 싶은 암장 이름을 입력해주세요 (ex 더클라임)"
             />
@@ -35,7 +55,7 @@ const FindCenter: React.FC = () => {
           {/* 지도맵 & 세부 정보 */}
           <div className="flex">
             {/* <div className="w-[500px] h-[400px] bg-gray-300"></div> */}
-            <Map />
+            <Map searchText={searchText} showSearchResults={showSearchResults} />
           </div>
         </div>
       </div>
