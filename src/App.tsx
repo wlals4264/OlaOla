@@ -7,8 +7,6 @@ import { initDB } from './utils/indexedDB.ts';
 const App: React.FC = () => {
   initDB();
 
-  console.log(window.kakao);
-
   return (
     <>
       <div className="bg-bg-color min-w-full min-h-screen">
