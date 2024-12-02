@@ -24,6 +24,7 @@ const FindCenter: React.FC = () => {
   const [searchText, setSearchText] = useState('');
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [filteredSearchTextList, setFilteredSearchTextList] = useState<any[]>([]);
+  const [selectedIndex, setSelectedIndex] = useState<number>(-1); // 선택된 항목 인덱스
   const [isListOpen, setIsListOpen] = useState(true);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -39,7 +40,7 @@ const FindCenter: React.FC = () => {
 
   const handleSearchResultClick = (place: any) => {
     setSearchText(place.place_name);
-    setIsListOpen(false); // 검색 목록을 닫음
+    setIsListOpen(false);
   };
 
   useEffect(() => {
@@ -58,6 +59,25 @@ const FindCenter: React.FC = () => {
       }
     });
   }, [searchText]);
+
+  // 키보드 이벤트 핸들러
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.key === 'ArrowDown') {
+      setSelectedIndex((prev) => Math.min(prev + 1, filteredSearchTextList.length - 1));
+    } else if (e.key === 'ArrowUp') {
+      setSelectedIndex((prev) => Math.max(prev - 1, 0));
+    } else if (e.key === 'Enter' && selectedIndex !== -1) {
+      handleSearchResultClick(filteredSearchTextList[selectedIndex]);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [filteredSearchTextList, selectedIndex]);
 
   return (
     <div>
@@ -96,10 +116,12 @@ const FindCenter: React.FC = () => {
             {/* 검색 결과 미리보기 */}
             {isListOpen && filteredSearchTextList.length > 0 && (
               <SearchResultList>
-                {filteredSearchTextList.map((place) => (
+                {filteredSearchTextList.map((place, index) => (
                   <li
                     key={place.id}
-                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    className={`px-4 py-2 hover:bg-gray-100 cursor-pointer ${
+                      selectedIndex === index ? 'bg-gray-200' : ''
+                    }`}
                     onClick={() => handleSearchResultClick(place)}>
                     {place.place_name}
                   </li>
@@ -107,6 +129,7 @@ const FindCenter: React.FC = () => {
               </SearchResultList>
             )}
           </form>
+
           {/* 지도맵 & 세부 정보 */}
           <div className="flex">
             <Map searchText={searchText} showSearchResults={showSearchResults} />
