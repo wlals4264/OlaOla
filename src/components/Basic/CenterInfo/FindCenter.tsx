@@ -1,14 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
 import Map from './Map';
+import styled from 'styled-components';
 
 interface MapProps {
   searchText: string;
   showSearchResults: boolean;
 }
+
+const SearchResultList = styled.ul`
+  position: absolute;
+  top: 80%;
+  left: 0;
+  width: 100%;
+  background-color: white;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  margin-top: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 10;
+`;
+
 const FindCenter: React.FC = () => {
+  const { kakao } = window as any;
+
   const [searchText, setSearchText] = useState('');
   const [showSearchResults, setShowSearchResults] = useState(false);
+  const [filteredSearchTextList, setFilteredSearchTextList] = useState<any[]>([]);
+  const [isListOpen, setIsListOpen] = useState(true);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,14 +39,37 @@ const FindCenter: React.FC = () => {
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
     setShowSearchResults(false);
+    setIsListOpen(true);
   };
+
+  const handleSearchResultClick = (place: any) => {
+    setSearchText(place.place_name);
+    setIsListOpen(false); // 검색 목록을 닫음
+  };
+
+  useEffect(() => {
+    if (!searchText.trim()) {
+      setFilteredSearchTextList([]);
+      return;
+    }
+
+    const places = new kakao.maps.services.Places();
+    places.keywordSearch(searchText, (data, status) => {
+      if (status === kakao.maps.services.Status.OK) {
+        const filtered = data.filter((place: any) => place.category_name && place.category_name.includes('클라이밍'));
+        setFilteredSearchTextList(filtered);
+      } else {
+        setFilteredSearchTextList([]);
+      }
+    });
+  }, [searchText]);
 
   return (
     <div>
       <div className="flex">
         <Sidebar />
 
-        {/* 암장 찾기 컴포넌트  */}
+        {/* 암장 찾기 컴포넌트 */}
         <div className="w-full flex flex-col gap-10 mt-10 items-center">
           {/* 검색창 */}
           <form
@@ -53,10 +97,23 @@ const FindCenter: React.FC = () => {
                 </defs>
               </svg>
             </button>
+
+            {/* 검색 결과 미리보기 */}
+            {isListOpen && filteredSearchTextList.length > 0 && (
+              <SearchResultList>
+                {filteredSearchTextList.map((place) => (
+                  <li
+                    key={place.id}
+                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    onClick={() => handleSearchResultClick(place)}>
+                    {place.place_name}
+                  </li>
+                ))}
+              </SearchResultList>
+            )}
           </form>
           {/* 지도맵 & 세부 정보 */}
           <div className="flex">
-            {/* <div className="w-[500px] h-[400px] bg-gray-300"></div> */}
             <Map searchText={searchText} showSearchResults={showSearchResults} />
           </div>
         </div>

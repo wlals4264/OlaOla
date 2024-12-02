@@ -45,6 +45,7 @@ const Map: React.FC<MapProps> = ({ searchText, showSearchResults }) => {
     const places = new kakao.maps.services.Places();
     places.keywordSearch(searchText, (data, status) => {
       if (status === kakao.maps.services.Status.OK) {
+        console.log(data);
         const place = data[0];
 
         // "클라이밍"이 카테고리 이름에 포함되어 있는 장소만 필터링
