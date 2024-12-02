@@ -1,12 +1,15 @@
 import React from 'react';
 import Sidebar from './Sidebar';
+import Map from './Map';
 const FindCenter: React.FC = () => {
   return (
     <div>
       <div className="flex">
         <Sidebar />
 
-        <div className="w-full h-[100px] flex justify-center items-center">
+        {/* 암장 찾기 컴포넌트  */}
+        <div className="w-full flex flex-col gap-10 mt-10 items-center">
+          {/* 검색창 */}
           <form className="relative flex items-center w-[360px] h-[40px] border border-gray-300 rounded-xl mt-2">
             <input
               type="text"
@@ -29,6 +32,11 @@ const FindCenter: React.FC = () => {
               </svg>
             </button>
           </form>
+          {/* 지도맵 & 세부 정보 */}
+          <div className="flex">
+            {/* <div className="w-[500px] h-[400px] bg-gray-300"></div> */}
+            <Map />
+          </div>
         </div>
       </div>
     </div>
