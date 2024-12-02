@@ -1,6 +1,22 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 
 const CenterHeader: React.FC = () => {
+  const location = useLocation();
+
+  const getTitle = () => {
+    switch (location.pathname) {
+      case '/center-info':
+        return '암장 찾기';
+      case '/center-info/new-settings':
+        return '뉴셋 소식';
+      case '/center-info/center-reviews':
+        return '암장 후기';
+      default:
+        return '암장 정보';
+    }
+  };
+
   return (
     <div className="h-[120px] bg-gray-200 flex items-center pl-10 gap-2">
       <span className="font-noto text-2xl font-bold">암장 정보</span>
@@ -17,7 +33,7 @@ const CenterHeader: React.FC = () => {
         />
       </svg>
 
-      <span className="font-noto text-2xl font-bold">암장 찾기</span>
+      <span className="font-noto text-2xl font-bold">{getTitle()}</span>
     </div>
   );
 };

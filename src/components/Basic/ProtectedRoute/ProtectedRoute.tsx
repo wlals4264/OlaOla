@@ -11,6 +11,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
 
   // 로그인 상태가 아니면 리다이렉트
   if (!isLoginUser) {
+    alert('로그인 후 이용해주세요.');
     return <Navigate to="/" replace />;
   }
 
