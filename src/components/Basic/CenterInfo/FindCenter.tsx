@@ -10,10 +10,14 @@ const FindCenter: React.FC = () => {
   const [searchText, setSearchText] = useState('');
   const [showSearchResults, setShowSearchResults] = useState(false);
 
-  // 검색어를 이용한 카카오 맵 링크 생성
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setShowSearchResults(true);
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchText(e.target.value);
+    setShowSearchResults(false);
   };
 
   return (
@@ -30,9 +34,7 @@ const FindCenter: React.FC = () => {
             <input
               type="text"
               value={searchText}
-              onChange={(e) => {
-                setSearchText(e.target.value);
-              }}
+              onChange={handleSearchChange}
               className="w-full h-full px-3 py-[6px] rounded-xl text-xs items-center outline-none focus:ring-2 focus:ring-primary"
               placeholder="찾고 싶은 암장 이름을 입력해주세요 (ex 더클라임)"
             />
