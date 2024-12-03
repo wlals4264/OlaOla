@@ -19,7 +19,7 @@ const CenterHeader: React.FC = () => {
 
   return (
     <div className="h-[120px] bg-gray-200 flex items-center pl-10 gap-2">
-      <span className="font-noto text-2xl font-bold">암장 정보</span>
+      <span className="font-noto text-2xl font-bold cursor-default">암장 정보</span>
       <svg
         className="pt-[2px]"
         width="11"
@@ -33,7 +33,7 @@ const CenterHeader: React.FC = () => {
         />
       </svg>
 
-      <span className="font-noto text-2xl font-bold">{getTitle()}</span>
+      <span className="font-noto text-2xl font-bold cursor-default">{getTitle()}</span>
     </div>
   );
 };

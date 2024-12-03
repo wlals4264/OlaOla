@@ -95,7 +95,7 @@ const FeedList: React.FC = () => {
       } else {
         console.error('알 수 없는 오류 발생:', error);
       }
-      setError('파일을 가져오는 도중 오류 발생');
+      setError('게시물 없음');
     } finally {
       setLoading(false);
     }
@@ -111,11 +111,11 @@ const FeedList: React.FC = () => {
         setFeedItemModalOpen(true);
         console.log(selectedFeedItem);
       } else {
-        setError('파일을 가져오는 도중 오류 발생');
+        setError('게시물 없음');
       }
     } catch (error) {
       console.error('파일을 가져오는 도중 오류 발생:', error);
-      setError('파일을 가져오는 도중 오류 발생');
+      setError('게시물 없음');
     } finally {
       setLoading(false);
     }
@@ -167,10 +167,10 @@ const FeedList: React.FC = () => {
           setPageParams([]); // 페이지 파라미터 초기화
           setHasMore(true); // 추가 로드 가능 상태 초기화
         } else {
-          setError('DB가 준비되지 않았습니다.');
+          setError('게시물 없음');
         }
       } catch (error) {
-        setError('DB 초기화 중 오류 발생');
+        setError('게시물 없음');
       }
     };
 

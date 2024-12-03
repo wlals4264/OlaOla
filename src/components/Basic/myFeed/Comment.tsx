@@ -8,16 +8,22 @@ interface CommentProps {
   feedItemId: number;
 }
 
+interface CommentType {
+  userNickName: string;
+  comment: string;
+  userUID: string | null;
+  ItemId: number;
+}
+
 const Comment: React.FC<CommentProps> = ({ feedItemId }) => {
   const [comment, setComment] = useState<string>('');
-  const [commentsList, setCommentsList] = useState<
-    Array<{ userNickName: string; comment: string; UID: string | null }>
-  >([]);
+  const [commentsList, setCommentsList] = useState<CommentType[]>([]);
   const userNickName = useRecoilValue(userNicknameState);
   const userUID = useRecoilValue(userUIDState);
   const [commentWriterUID, setCommentWriterUID] = useState<string | null>('');
   const setFeedItemModalOpen = useSetRecoilState(isFeedItemModalOpenState);
   const isLoginUser = useRecoilValue(isLoginUserState);
+  const storeName = 'feedCommentData';
 
   const handleCommentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (isLoginUser) {
@@ -29,10 +35,14 @@ const Comment: React.FC<CommentProps> = ({ feedItemId }) => {
 
   const handleCommentSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
     if (comment) {
       // 파일 DB에 저장
-      addCommentToDB(comment, userUID, feedItemId, userNickName);
-      setCommentsList((prevCommentsList) => [...prevCommentsList, { userNickName, comment, UID: userUID }]);
+      addCommentToDB(storeName, { comment, userUID, ItemId: feedItemId, userNickName });
+      setCommentsList((prevCommentsList) => [
+        ...prevCommentsList,
+        { userNickName, comment, userUID: userUID, ItemId: feedItemId },
+      ]);
       setFeedItemModalOpen(true);
       setCommentWriterUID(userUID);
       setComment('');
@@ -42,14 +52,17 @@ const Comment: React.FC<CommentProps> = ({ feedItemId }) => {
   };
 
   const handleCommentDelete = (commentId: number) => {
-    deleteCommentInDB(commentId);
-    // 댓글 목록에서 해당 댓글을 제거
-    setCommentsList((prevCommentsList) => prevCommentsList.filter((comment) => comment.id !== commentId));
+    deleteCommentInDB(storeName, commentId).then(() => {
+      console.log(commentId);
+      setCommentsList(
+        (prevCommentsList) => prevCommentsList.filter((comment) => comment.id !== commentId) // `id`를 그대로 사용
+      );
+    });
   };
 
   useEffect(() => {
-    getCommentsListFromDB().then((comments) => {
-      const filteredComments = comments.filter((comment) => comment.feedItemId === feedItemId);
+    getCommentsListFromDB(storeName).then((comments) => {
+      const filteredComments = comments.filter((comment) => comment.ItemId === feedItemId);
       setCommentsList(filteredComments);
     });
   }, [feedItemId]);
@@ -65,7 +78,7 @@ const Comment: React.FC<CommentProps> = ({ feedItemId }) => {
               <div key={index} className="flex items-center">
                 <span className="font-semibold text-sm mr-2">{comment.userNickName}</span>
                 <p className="font-normal text-xs flex-1">{comment.comment}</p>
-                {nowLoginUserUID === comment.UID ? (
+                {nowLoginUserUID === comment.userUID ? (
                   <button
                     type="button"
                     onClick={() => {
