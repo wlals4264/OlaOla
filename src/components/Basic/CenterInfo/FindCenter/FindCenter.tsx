@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import Sidebar from './Sidebar';
+import Sidebar from '../Sidebar';
 import Map from './Map';
 import styled from 'styled-components';
-import CenterHeader from './CenterHeader';
+import CenterHeader from '../CenterHeader';
 
 const SearchResultList = styled.ul`
   position: absolute;
