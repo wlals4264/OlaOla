@@ -20,7 +20,6 @@ const Comment: React.FC<CommentProps> = ({ feedItemId }) => {
   const [commentsList, setCommentsList] = useState<CommentType[]>([]);
   const userNickName = useRecoilValue(userNicknameState);
   const userUID = useRecoilValue(userUIDState);
-  const [commentWriterUID, setCommentWriterUID] = useState<string | null>('');
   const setFeedItemModalOpen = useSetRecoilState(isFeedItemModalOpenState);
   const isLoginUser = useRecoilValue(isLoginUserState);
   const storeName = 'feedCommentData';
@@ -37,15 +36,21 @@ const Comment: React.FC<CommentProps> = ({ feedItemId }) => {
     e.preventDefault();
 
     if (comment) {
-      // 파일 DB에 저장
-      addCommentToDB(storeName, { comment, userUID, ItemId: feedItemId, userNickName });
-      setCommentsList((prevCommentsList) => [
-        ...prevCommentsList,
-        { userNickName, comment, userUID: userUID, ItemId: feedItemId },
-      ]);
-      setFeedItemModalOpen(true);
-      setCommentWriterUID(userUID);
-      setComment('');
+      addCommentToDB(storeName, { comment, userUID, ItemId: feedItemId, userNickName })
+        .then((newCommentWithId) => {
+          // DB에서 id를 받아오는 형태
+          setCommentsList((prevCommentsList) => [
+            ...prevCommentsList,
+            { ...newCommentWithId, comment, userUID, ItemId: feedItemId, userNickName }, // id 포함
+          ]);
+          setFeedItemModalOpen(true);
+          setComment('');
+          console.log(newCommentWithId); // 저장된 댓글의 id를 포함한 정보 출력
+        })
+        .catch((error) => {
+          console.error('댓글 저장 오류', error);
+        });
+      console.log({ userNickName, comment, userUID: userUID, ItemId: feedItemId });
     } else {
       alert('댓글을 입력해주세요!');
     }

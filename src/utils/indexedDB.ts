@@ -264,33 +264,39 @@ interface Comment {
 }
 
 // 댓글 데이터를 DB에 추가
-export function addCommentToDB(storeName: string, comment: Comment): void {
-  getDB()
-    .then((db) => {
-      if (!db) {
-        console.log('DB가 아직 준비되지 않았습니다.');
-        return;
-      }
+export function addCommentToDB(storeName: string, comment: Comment): Promise<Comment> {
+  return new Promise((resolve, reject) => {
+    getDB()
+      .then((db) => {
+        if (!db) {
+          console.log('DB가 아직 준비되지 않았습니다.');
+          reject('DB 연결 실패');
+          return;
+        }
 
-      const transaction = db.transaction(storeName, 'readwrite');
-      const store = transaction.objectStore(storeName);
+        const transaction = db.transaction(storeName, 'readwrite');
+        const store = transaction.objectStore(storeName);
 
-      const addReq = store.add(comment);
+        const addReq = store.add(comment);
 
-      addReq.addEventListener('success', function (event: Event) {
-        const target = event.target as IDBRequest;
-        console.log('댓글이 DB에 추가되었습니다.');
-        console.log(target.result);
+        addReq.addEventListener('success', function (event: Event) {
+          const target = event.target as IDBRequest;
+          const commentWithId = { ...comment, id: addReq.result }; // 생성된 id를 포함
+          resolve(commentWithId); // 성공적으로 댓글을 추가하고 id와 함께 반환
+          console.log('댓글이 DB에 추가되었습니다.');
+        });
+
+        addReq.addEventListener('error', function (event) {
+          const target = event.target as IDBRequest;
+          console.error('댓글 추가 오류 발생 : ', target?.error);
+          reject('댓글 추가 오류');
+        });
+      })
+      .catch((error) => {
+        console.error('DB 연결 오류:', error);
+        reject('DB 연결 오류');
       });
-
-      addReq.addEventListener('error', function (event) {
-        const target = event.target as IDBRequest;
-        console.error('댓글 추가 오류 발생 : ', target?.error);
-      });
-    })
-    .catch((error) => {
-      console.error('DB 연결 오류:', error);
-    });
+  });
 }
 
 // DB에서 모든 댓글 리스트를 가져오기
