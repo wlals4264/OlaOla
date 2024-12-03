@@ -1,6 +1,7 @@
 import React from 'react';
 import ChooseLevel from '../MyFeed/AddFeed/ChooseLevel';
 import PostingButtons from './NewSetting/PostingButtons';
+import QuillEditor from '../CenterInfo/QuillTest';
 
 const AddPost: React.FC = () => {
   return (
@@ -16,12 +17,13 @@ const AddPost: React.FC = () => {
             className="w-full h-12 font-extrabold text-3xl mb-4 focus:outline-none"
           />
 
-          <textarea
+          <QuillEditor />
+          {/* <textarea
             name="postContent"
             id="content"
             placeholder="내용을 적어주세요."
             className="w-full h-[380px] focus:outline-none resize-none"
-          />
+          /> */}
         </form>
         {/* 암장명 & 난이도 선택창 & buttons */}
         <div className="flex justify-between">

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import ChooseLevel from '../MyFeed/AddFeed/ChooseLevel';
-import Buttons from '../Buttons';
+import Buttons from '../MyFeed/Buttons';
 import { updateFileInDB } from '../../../utils/indexedDB';
 
 const ModifyFeed: React.FC = () => {

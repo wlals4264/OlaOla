@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
-import { addFileToDB } from '../../utils/indexedDB';
+import { addFileToDB } from '../../../utils/indexedDB';
 import { useRecoilValue } from 'recoil';
-import { climbingLevelState, userUIDState } from '../../datas/recoilData';
+import { climbingLevelState, userUIDState } from '../../../datas/recoilData';
 
 interface ButtonsProps {
   selectedFile: File | null;

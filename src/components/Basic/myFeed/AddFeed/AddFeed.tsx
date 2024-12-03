@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ChooseLevel from './ChooseLevel';
 import FileUploadButton from './FileUploadButton';
-import Buttons from '../../Buttons';
+import Buttons from '../Buttons';
 
 const AddFeed: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
