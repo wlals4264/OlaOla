@@ -7,9 +7,9 @@ import ModifyFeed from '../components/Basic/MyFeed/ModifyFeed';
 import AddFeed from '../components/Basic/MyFeed/AddFeed/AddFeed';
 import ProtectedRoute from '../components/Basic/ProtectedRoute/ProtectedRoute';
 import FindCenter from '../components/Basic/CenterInfo/FindCenter/FindCenter';
-import NewSettings from '../components/Basic/CenterInfo/NewSetting/NewSettings';
-import CenterReviews from '../components/Basic/CenterInfo/CenterReviews';
-import AddPost from '../components/Basic/CenterInfo/AddPost';
+import UserCommunity from '../components/Basic/CenterInfo/UserCommunity/UserCommunity';
+
+import AddPost from '../components/Basic/CenterInfo/UserCommunity/AddPost';
 
 const Router = (): JSX.Element => {
   return (
@@ -41,16 +41,15 @@ const Router = (): JSX.Element => {
       <Route path="/browsing-feed" element={<BrowsingFeed />}></Route>
       <Route path="/center-info" element={<CenterInfo />}>
         <Route index element={<FindCenter />} /> {/* 기본 경로에서 FindCenter 표시 */}
-        <Route path="/center-info/new-settings" element={<ProtectedRoute>{<NewSettings />}</ProtectedRoute>} />
+        <Route path="/center-info/user-community" element={<ProtectedRoute>{<UserCommunity />}</ProtectedRoute>} />
         <Route
-          path="/center-info/new-settings/add-post"
+          path="/center-info/user-community/add-post"
           element={
             <ProtectedRoute>
               <AddPost />
             </ProtectedRoute>
           }
         />
-        <Route path="/center-info/center-reviews" element={<ProtectedRoute>{<CenterReviews />}</ProtectedRoute>} />
       </Route>
     </Routes>
   );

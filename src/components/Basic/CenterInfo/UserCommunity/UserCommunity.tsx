@@ -3,7 +3,7 @@ import CenterHeader from '../CenterHeader';
 import Sidebar from '../Sidebar';
 import { Link } from 'react-router-dom';
 
-const NewSettings: React.FC = () => {
+const UserCommunity: React.FC = () => {
   return (
     <div>
       <CenterHeader />
@@ -25,7 +25,7 @@ const NewSettings: React.FC = () => {
                 </button>
               </div>
               <div>
-                <Link to="/center-info/new-settings/add-post">
+                <Link to="/center-info/user-community/add-post">
                   <button
                     className="w-20 h-8 mr-10 bg-black text-white flex justify-center items-center rounded-2xl hover:bg-primary"
                     type="button">
@@ -67,4 +67,4 @@ const NewSettings: React.FC = () => {
   );
 };
 
-export default NewSettings;
+export default UserCommunity;

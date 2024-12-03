@@ -1,14 +1,14 @@
 import React from 'react';
-import ChooseLevel from '../MyFeed/AddFeed/ChooseLevel';
-import PostingButtons from './NewSetting/PostingButtons';
-import QuillEditor from '../CenterInfo/QuillTest';
+import ChooseLevel from '../../MyFeed/AddFeed/ChooseLevel';
+import PostingButtons from './PostingButtons';
+import QuillEditor from './QuillTest';
 
 const AddPost: React.FC = () => {
   return (
     <div>
       <div className="flex flex-col max-w-[752px] m-auto">
         <h1 className="w-full h-12 flex items-center justify-center rounded-xl mt-4 mb-4 bg-primary font-extrabold text-xl text-indigo-600">
-          새로운 셋팅 소식을 유저들과 공유해주세요!
+          새로운 소식을 유저들과 공유해주세요!
         </h1>
         <form id="postContent" action="submit" className="w-full flex flex-col ">
           <input

@@ -36,11 +36,8 @@ export function initDB() {
       if (!db.objectStoreNames.contains('postCommentData')) {
         db.createObjectStore('postCommentData', { keyPath: 'id', autoIncrement: true });
       }
-      if (!db.objectStoreNames.contains('newSettingPostData')) {
+      if (!db.objectStoreNames.contains('postData')) {
         db.createObjectStore('postData', { keyPath: 'id', autoIncrement: true });
-      }
-      if (!db.objectStoreNames.contains('centerReviewPostData')) {
-        db.createObjectStore('postCommentData', { keyPath: 'id', autoIncrement: true });
       }
     }
   });
@@ -360,7 +357,7 @@ export function deleteCommentInDB(storeName: string, id: number): Promise<void> 
 // postData store 접근 함수들
 // ---------------------------
 
-interface PostData {
+interface Post {
   userUID: string | null;
   userNickName: string;
   attachments: File;
@@ -371,10 +368,11 @@ interface PostData {
   viewCount: number | 0;
   updatedAt: Date;
   centerName: string;
+  type: string | null;
 }
 
 // DB에 게시글 올리기
-export function addPostToDB(storeName: string, postData: PostData): void {
+export function addPostToDB(post: Post): void {
   getDB()
     .then((db) => {
       if (!db) {
@@ -382,8 +380,8 @@ export function addPostToDB(storeName: string, postData: PostData): void {
         return;
       }
 
-      const transaction = db.transaction(storeName, 'readwrite');
-      const store = transaction.objectStore(storeName);
+      const transaction = db.transaction('postData', 'readwrite');
+      const store = transaction.objectStore('postData');
 
       // const postData = {
       //   UID: userUID,
@@ -399,7 +397,7 @@ export function addPostToDB(storeName: string, postData: PostData): void {
       //   content: content,
       // };
 
-      const addReq = store.add(postData);
+      const addReq = store.add(post);
 
       addReq.addEventListener('success', function (event: Event) {
         const target = event.target as IDBRequest;
@@ -418,15 +416,15 @@ export function addPostToDB(storeName: string, postData: PostData): void {
 }
 
 // DB에서 게시글 가져오기
-export function getPostFromDB(storeName: string, postId: number): Promise<void> {
+export function getPostFromDB(postId: number): Promise<void> {
   return getDB().then((db) => {
     if (!db) {
       return Promise.reject('DB not available');
     }
 
     return new Promise((resolve, reject) => {
-      const transaction = db.transaction(storeName, 'readonly');
-      const objectStore = transaction.objectStore(storeName);
+      const transaction = db.transaction('postData', 'readonly');
+      const objectStore = transaction.objectStore('postData');
       const request = objectStore.get(postId);
 
       request.onsuccess = () => {
@@ -447,15 +445,15 @@ export function getPostFromDB(storeName: string, postId: number): Promise<void> 
 }
 
 // DB에서 모든 파일 리스트를 가져오기
-export function getPostListFromDB(storeName: string): Promise<File[]> {
+export function getPostListFromDB(): Promise<File[]> {
   return getDB().then((db) => {
     if (!db) {
       return Promise.reject('DB not available');
     }
 
     return new Promise((resolve, reject) => {
-      const transaction = db.transaction(storeName, 'readonly');
-      const objectStore = transaction.objectStore(storeName);
+      const transaction = db.transaction('postData', 'readonly');
+      const objectStore = transaction.objectStore('postData');
       const request = objectStore.getAll();
 
       request.onsuccess = () => {
@@ -477,7 +475,6 @@ export function getPostListFromDB(storeName: string): Promise<File[]> {
 
 // DB 파일 수정 함수
 export function updatePostInDB(
-  storeName: string,
   postId: number,
   updatedData: {
     centerName: string;
@@ -494,8 +491,8 @@ export function updatePostInDB(
     }
 
     return new Promise((resolve, reject) => {
-      const transaction = db.transaction(storeName, 'readwrite');
-      const objectStore = transaction.objectStore(storeName);
+      const transaction = db.transaction('postData', 'readwrite');
+      const objectStore = transaction.objectStore('postData');
       const request = objectStore.get(postId);
 
       request.onsuccess = () => {
@@ -527,15 +524,15 @@ export function updatePostInDB(
 }
 
 // DB 파일 삭제 함수
-export function deletePostInDB(storeName: string, postId: number): Promise<void> {
+export function deletePostInDB(postId: number): Promise<void> {
   return getDB().then((db) => {
     if (!db) {
       return Promise.reject('DB not available');
     }
 
     return new Promise((resolve, reject) => {
-      const transaction = db.transaction(storeName, 'readwrite');
-      const objectStore = transaction.objectStore(storeName);
+      const transaction = db.transaction('postData', 'readwrite');
+      const objectStore = transaction.objectStore('postData');
       const request = objectStore.delete(postId);
 
       request.onsuccess = () => {

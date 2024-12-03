@@ -7,11 +7,8 @@ const Sidebar: React.FC = () => {
       <Link to="/center-info">
         <span className="text-md font-semibold hover:text-primary cursor-pointer">암창 찾기</span>
       </Link>
-      <Link to="/center-info/new-settings">
-        <span className="text-md font-semibold hover:text-primary cursor-pointer">뉴셋 소식</span>
-      </Link>
-      <Link to="/center-info/center-reviews">
-        <span className="text-md font-semibold hover:text-primary cursor-pointer">암장 후기</span>
+      <Link to="/center-info/user-community">
+        <span className="text-md font-semibold hover:text-primary cursor-pointer">커뮤니티</span>
       </Link>
     </div>
   );

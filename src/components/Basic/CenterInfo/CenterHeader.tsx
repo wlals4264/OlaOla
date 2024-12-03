@@ -8,10 +8,8 @@ const CenterHeader: React.FC = () => {
     switch (location.pathname) {
       case '/center-info':
         return '암장 찾기';
-      case '/center-info/new-settings':
-        return '뉴셋 소식';
-      case '/center-info/center-reviews':
-        return '암장 후기';
+      case '/center-info/user-community':
+        return '커뮤니티';
       default:
         return '암장 정보';
     }
