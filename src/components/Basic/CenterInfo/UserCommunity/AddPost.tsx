@@ -7,7 +7,7 @@ const AddPost: React.FC = () => {
   const [currentClimbingLevel, setCurrentClimbingLevel] = useState<string>('');
   const [centerName, setCenterName] = useState<string>('');
   const [postTitle, setPostTitle] = useState<string>('');
-  const [postCategory, setPostCategory] = useState<string>('');
+  const [postCategory, setPostCategory] = useState<string>('재잘재잘');
 
   // ChooseLevel의 onClimbingLevelChange 핸들러
   const handleClimbingLevelChange = (newClimbingLevel: string): void => {
@@ -24,10 +24,10 @@ const AddPost: React.FC = () => {
         <div className="flex gap-4 mb-4">
           {/* 타입 input */}
           <select onChange={(e) => setPostCategory(e.target.value)} className="w-28 h-12 focus:outline-none">
-            <option value="newSettings">뉴셋소식</option>
-            <option value="centerReview">암장후기</option>
-            <option value="crewRecruitment">크루모집</option>
-            <option value="freeTalk">재잘재잘</option>
+            <option value="뉴셋소식">뉴셋소식</option>
+            <option value="암장후기">암장후기</option>
+            <option value="크루모집">크루모집</option>
+            <option value="재잘재잘">재잘재잘</option>
           </select>
           {/* 제목 input */}
           <input

@@ -3,18 +3,20 @@ import CenterHeader from '../CenterHeader';
 import Sidebar from '../Sidebar';
 import { Link } from 'react-router-dom';
 import { getPostListFromDB } from '../../../../utils/indexedDB';
+import Spinner from '../../../Spinner/Spinner';
 
 interface PostItem {
   userNickname?: string;
   postTitle?: string;
   createdAt: Date;
+  postCategory: string | null;
 }
 
 const UserCommunity: React.FC = () => {
   const [postList, setPostList] = useState<PostItem[]>([]);
-  // const [db, setDb] = useState<IDBDatabase | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [page, setPage] = useState(1);
+  // const [db, setDb] = useState<IDBDatabase | null>(null);
   // const [hasMore, setHasMore] = useState(true);
   // const [pageParams, setPageParams] = useState<number[]>([]);
 
@@ -43,22 +45,24 @@ const UserCommunity: React.FC = () => {
             createdAt: postData.createdAt,
             userNickname: postData.userNickName,
             postTitle: postData.postTitle,
+            postCategory: postData.postCategory,
+            id: postData.id, // DB id
           };
         });
-        setPostList((prevPosts) => [...prevPosts, ...postContents]);
+        setPostList(postContents);
       }
     } catch (error) {
       if (error instanceof Error) {
         console.error('파일을 가져오는 도중 오류 발생:', error.message);
       } else {
         console.error('알 수 없는 오류 발생:', error);
+        setLoading(false);
       }
     } finally {
       setLoading(false);
     }
   };
 
-  // 페이지가 변경되거나, DB 연결된 경우에 데이터를 요청
   useEffect(() => {
     fetchData();
   }, []);
@@ -70,28 +74,40 @@ const UserCommunity: React.FC = () => {
         <Sidebar />
         <div className="w-full flex flex-col gap-4 mt-10 items-center font-noto">
           {postList.length === 0 ? (
-            <p className="text-center font-bold text-3xl">게시물 없음</p>
+            <div className="flex w-full h-48 items-center justify-center font-bold text-3xl">게시글 없음</div>
           ) : (
             postList.map((item, index) => {
-              const { postTitle, userNickname, createdAt } = item;
+              const { postCategory, postTitle, userNickname, createdAt, id } = item;
+
               return (
-                <div key={index} className="w-[80%] bg-white p-4 rounded-lg shadow-md mb-2">
-                  <div className="flex justify-between">
-                    <h2 className="text-lg font-semibold">{postTitle}</h2>
-                  </div>
-                  <div className="flex gap-2 mt-2">
-                    <p className="text-xs text-gray-700">{userNickname || '익명'}</p>
-                    <span className="text-xs text-gray-500">{new Date(createdAt).toLocaleDateString()}</span>
-                  </div>
-                </div>
+                <ul className="w-[645px] flex flex-col gap-4 mt-2 items-center font-noto" key={id}>
+                  <Link to={`/center-info/user-community/post/${id}`}>
+                    <li className="w-[645px] bg-white p-4 rounded-xl shadow-sm mb-2 hover:bg-gray-100 cursor-pointer">
+                      <div className="flex items-center gap-4">
+                        {postCategory ? (
+                          <span className="text-xs w-fit h-fit py-1 px-2 rounded-2xl bg-primary font-bold text-white">
+                            {postCategory}
+                          </span>
+                        ) : (
+                          ''
+                        )}
+                        <h2 className="text-lg font-semibold">{postTitle}</h2>
+                      </div>
+                      <div className="flex gap-2 mt-2">
+                        <p className="text-xs text-gray-400">{userNickname || '익명'}</p>
+                        <span className="text-xs text-gray-400">{new Date(createdAt).toLocaleDateString()}</span>
+                      </div>
+                    </li>
+                  </Link>
+                </ul>
               );
             })
           )}
 
           <div>{page}</div>
-          <div className="w-full mt-10 font-noto text-sm">
+          <div className="flex justify-center w-full mt-10 font-noto text-sm">
             {/* 필터링 버튼들 */}
-            <div className="w-full flex justify-between items-center shrink-0 mr-28">
+            <div className="flex justify-between items-center shrink-0 w-[645px]">
               <div className="flex gap-4 ml-10">
                 <button className="shrink-0" type="button">
                   최신순
@@ -107,7 +123,7 @@ const UserCommunity: React.FC = () => {
               <div>
                 <Link to="/center-info/user-community/add-post">
                   <button
-                    className="w-20 h-8 mr-10 bg-black text-white flex justify-center items-center rounded-2xl hover:bg-primary"
+                    className="w-20 h-8 bg-black text-white flex justify-center items-center rounded-2xl hover:bg-primary"
                     type="button">
                     글쓰기
                   </button>
@@ -117,7 +133,7 @@ const UserCommunity: React.FC = () => {
           </div>
 
           {/* 검색창 */}
-          <form className="relative flex items-center w-[80%] h-[40px] border border-gray-300 rounded-xl mt-2">
+          <form className="relative flex items-center w-[645px] h-[40px] border border-gray-300 rounded-xl mt-2">
             <input
               type="text"
               // value={searchText}

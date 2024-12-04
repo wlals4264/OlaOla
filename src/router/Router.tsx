@@ -10,6 +10,7 @@ import FindCenter from '../components/Basic/CenterInfo/FindCenter/FindCenter';
 import UserCommunity from '../components/Basic/CenterInfo/UserCommunity/UserCommunity';
 
 import AddPost from '../components/Basic/CenterInfo/UserCommunity/AddPost';
+import PostItem from '../components/Basic/CenterInfo/UserCommunity/PostItem';
 
 const Router = (): JSX.Element => {
   return (
@@ -47,6 +48,14 @@ const Router = (): JSX.Element => {
           element={
             <ProtectedRoute>
               <AddPost />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="user-community/post/:postId"
+          element={
+            <ProtectedRoute>
+              <PostItem />
             </ProtectedRoute>
           }
         />
