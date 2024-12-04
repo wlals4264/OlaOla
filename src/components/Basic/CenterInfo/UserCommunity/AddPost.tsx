@@ -10,14 +10,13 @@ const AddPost: React.FC = () => {
         <h1 className="w-full h-12 flex items-center justify-center rounded-xl mt-4 mb-4 bg-primary font-extrabold text-xl text-indigo-600">
           새로운 소식을 유저들과 공유해주세요!
         </h1>
-        <form id="postContent" action="submit" className="w-full flex flex-col ">
+        <form id="postContent" action="submit" className="w-full flex flex-col">
           <input
             type="text"
             placeholder="제목을 적어주세요."
             className="w-full h-12 font-extrabold text-3xl mb-4 focus:outline-none"
           />
 
-          <QuillEditor />
           {/* <textarea
             name="postContent"
             id="content"
@@ -25,7 +24,10 @@ const AddPost: React.FC = () => {
             className="w-full h-[380px] focus:outline-none resize-none"
           /> */}
         </form>
-        {/* 암장명 & 난이도 선택창 & buttons */}
+        <div className="mb-12">
+          <QuillEditor />
+          {/* 암장명 & 난이도 선택창 & buttons */}
+        </div>
         <div className="flex justify-between">
           <div className="flex flex-col">
             <label htmlFor="center-name" className="flex items-center text-xs cursor-default mb-4 min-h-[40px]">

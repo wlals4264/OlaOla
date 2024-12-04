@@ -3,7 +3,7 @@ import ReactQuill from 'react-quill-new';
 import 'react-quill/dist/quill.snow.css';
 import { saveImageToIndexedDB, getImageFromIndexedDB } from '../../../../utils/indexedDB';
 
-const formats = ['font', 'header', 'bold', 'italic', 'strike', 'indent', 'link', 'color', 'image'];
+const formats = ['font', 'header', 'bold', 'italic', 'strike', 'indent', 'link', 'color', 'image', 'align'];
 
 const QuillEditor = () => {
   const [editorValue, setEditorValue] = useState('');
@@ -16,7 +16,8 @@ const QuillEditor = () => {
         container: [
           ['bold', 'italic', 'strike', { color: [] }],
           ['link', 'image'],
-          [{ header: 1 }, { header: 2 }],
+          [{ align: [] }],
+          [{ header: 1 }, { header: 2 }, { header: 3 }],
         ],
         handlers: {
           // 클릭 이벤트 중복 호출 방지
@@ -73,6 +74,7 @@ const QuillEditor = () => {
         onChange={setEditorValue}
         modules={modules}
         theme="snow"
+        style={{ height: '360px' }}
       />
       {/* Hidden file input */}
       <input type="file" ref={fileInputRef} style={{ display: 'none' }} accept="image/*" onChange={handleImageUpload} />
