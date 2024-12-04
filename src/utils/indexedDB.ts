@@ -430,15 +430,14 @@ export const getImageFromIndexedDB = async (imageId: string) => {
 interface Post {
   userUID: string | null;
   userNickName: string;
-  attachments: File;
-  title: string;
+  postTitle: string;
   content: string;
   level: string;
   likeCount: number | 0;
   viewCount: number | 0;
   updatedAt: Date;
   centerName: string;
-  type: string | null;
+  postCategory: string | null;
 }
 
 // DB에 게시글 올리기
@@ -452,20 +451,6 @@ export function addPostToDB(post: Post): void {
 
       const transaction = db.transaction('postData', 'readwrite');
       const store = transaction.objectStore('postData');
-
-      // const postData = {
-      //   UID: userUID,
-      //   userNickName: userNickName,
-      //   attachments: attachments,
-      //   level: level,
-      //   centerName: centerName,
-      //   likeCount: likeCount,
-      //   viewCount: viewCount,
-      //   createdAt: new Date().toISOString(),
-      //   updatedAt: updatedAt.toISOString(),
-      //   title: title,
-      //   content: content,
-      // };
 
       const addReq = store.add(post);
 

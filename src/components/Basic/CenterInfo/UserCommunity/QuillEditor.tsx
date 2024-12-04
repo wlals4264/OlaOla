@@ -2,11 +2,18 @@ import React, { useMemo, useState, useRef } from 'react';
 import ReactQuill from 'react-quill-new';
 import 'react-quill/dist/quill.snow.css';
 import { saveImageToIndexedDB, getImageFromIndexedDB } from '../../../../utils/indexedDB';
+import { useRecoilState } from 'recoil';
+import { editorValueState } from '../../../../datas/recoilData';
 
 const formats = ['font', 'header', 'bold', 'italic', 'strike', 'indent', 'link', 'color', 'image', 'align'];
 
-const QuillEditor = () => {
-  const [editorValue, setEditorValue] = useState('');
+// interface QuillEditorProps {
+//   editorValue: string;
+//   onEditorChange: (value: string) => void;
+// }
+const QuillEditor: React.FC = () => {
+  const [editorValue, setEditorValue] = useRecoilState<string>(editorValueState);
+
   const quillRef = useRef<ReactQuill>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 

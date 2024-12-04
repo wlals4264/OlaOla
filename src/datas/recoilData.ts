@@ -70,6 +70,12 @@ export const climbingLevelState = atom<string>({
   default: '',
 });
 
+// editorValue
+export const editorValueState = atom<string>({
+  key: 'editorValueState',
+  default: '',
+});
+
 // 로그인 상태를 로컬 스토리지에서 불러오거나 기본값 설정
 export const isLoginUserState = atom<boolean>({
   key: 'isLoginUserState',
