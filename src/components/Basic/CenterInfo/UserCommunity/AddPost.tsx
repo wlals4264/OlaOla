@@ -1,7 +1,7 @@
 import React from 'react';
 import ChooseLevel from '../../MyFeed/AddFeed/ChooseLevel';
 import PostingButtons from './PostingButtons';
-import QuillEditor from './QuillTest';
+import QuillEditor from './QuillEditor';
 
 const AddPost: React.FC = () => {
   return (
