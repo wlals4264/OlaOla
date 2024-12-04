@@ -39,6 +39,9 @@ export function initDB() {
       if (!db.objectStoreNames.contains('postData')) {
         db.createObjectStore('postData', { keyPath: 'id', autoIncrement: true });
       }
+      if (!db.objectStoreNames.contains('postImgData')) {
+        db.createObjectStore('postData', { keyPath: 'id', autoIncrement: true });
+      }
     }
   });
 }
@@ -49,7 +52,7 @@ export const getDB = (): Promise<IDBDatabase | null> => {
     return Promise.resolve(db);
   }
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open('database', 2);
+    const request = indexedDB.open('database', 1);
 
     request.onsuccess = () => {
       const db = request.result;
@@ -66,9 +69,17 @@ export const getDB = (): Promise<IDBDatabase | null> => {
       if (!db.objectStoreNames.contains('mediaData')) {
         db.createObjectStore('mediaData', { keyPath: 'id', autoIncrement: true });
       }
-
-      if (!db.objectStoreNames.contains('commentData')) {
-        db.createObjectStore('commentData', { keyPath: 'id', autoIncrement: true });
+      if (!db.objectStoreNames.contains('feedCommentData')) {
+        db.createObjectStore('feedCommentData', { keyPath: 'id', autoIncrement: true });
+      }
+      if (!db.objectStoreNames.contains('postCommentData')) {
+        db.createObjectStore('postCommentData', { keyPath: 'id', autoIncrement: true });
+      }
+      if (!db.objectStoreNames.contains('postData')) {
+        db.createObjectStore('postData', { keyPath: 'id', autoIncrement: true });
+      }
+      if (!db.objectStoreNames.contains('postImgData')) {
+        db.createObjectStore('postImgData', { keyPath: 'id', autoIncrement: true });
       }
     };
   });
@@ -352,6 +363,65 @@ export function deleteCommentInDB(storeName: string, id: number): Promise<void> 
     });
   });
 }
+
+// ---------------------------
+// postImgData store 접근 함수들
+// ---------------------------
+export const saveImageToIndexedDB = async (file: File) => {
+  const db = await getDB();
+
+  return new Promise<string>((resolve, reject) => {
+    const transaction = db.transaction('postImgData', 'readwrite');
+    const store = transaction.objectStore('postImgData');
+    const addReq = store.add(file);
+
+    addReq.addEventListener('success', function (event: Event) {
+      const target = event.target as IDBRequest;
+      console.log('파일이 DB에 추가되었습니다.');
+      console.log('저장된 이미지 ID:', target.result); // 여기서 ID 확인
+      resolve(target.result as string); // ID 값을 resolve
+    });
+
+    addReq.addEventListener('error', function (event) {
+      const target = event.target as IDBRequest;
+      console.error('파일 추가 오류 발생 : ', target?.error);
+      reject(target?.error); // 오류 발생 시 reject
+    });
+  }).catch((error) => {
+    console.error('DB 연결 오류:', error);
+    reject(error);
+  });
+};
+
+export const getImageFromIndexedDB = async (imageId: string) => {
+  const db = await getDB();
+
+  return new Promise<any>((resolve, reject) => {
+    const transaction = db.transaction('postImgData', 'readonly');
+    const store = transaction.objectStore('postImgData');
+
+    const getReq = store.get(imageId);
+
+    getReq.onsuccess = (event: Event) => {
+      const target = event.target as IDBRequest;
+      const result = target.result;
+      if (result) {
+        console.log('이미지 데이터 로드 성공');
+        resolve(result); // 데이터가 있으면 반환
+      } else {
+        reject('이미지 데이터가 없습니다.');
+      }
+    };
+
+    getReq.onerror = (event) => {
+      const target = event.target as IDBRequest;
+      console.error('이미지 불러오기 오류:', target?.error);
+      reject(target?.error); // 오류 발생 시 reject
+    };
+  }).catch((error) => {
+    console.error('이미지 불러오기 오류:', error);
+  });
+};
 
 // ---------------------------
 // postData store 접근 함수들

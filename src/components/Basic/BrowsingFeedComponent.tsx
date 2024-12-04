@@ -85,7 +85,7 @@ const BrowsingFeedComponent: React.FC = () => {
       } else {
         console.error('알 수 없는 오류 발생:', error);
       }
-      setError('파일을 가져오는 도중 오류 발생');
+      setError('게시글 없음');
     } finally {
       setLoading(false);
     }
@@ -100,11 +100,11 @@ const BrowsingFeedComponent: React.FC = () => {
         setFeedItemModalOpen(true);
         console.log(selectedFeedItem);
       } else {
-        setError('파일을 가져오는 도중 오류 발생');
+        setError('게시글 없음');
       }
     } catch (error) {
       console.error('파일을 가져오는 도중 오류 발생:', error);
-      setError('파일을 가져오는 도중 오류 발생');
+      setError('게시글 없음');
     } finally {
       setLoading(false);
     }
