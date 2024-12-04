@@ -6,8 +6,8 @@ import { RecoilRoot } from 'recoil';
 
 createRoot(document.getElementById('root')!).render(
   <RecoilRoot>
-    <StrictMode>
-      <App />
-    </StrictMode>
+    {/* <StrictMode> */}
+    <App />
+    {/* </StrictMode> */}
   </RecoilRoot>
 );

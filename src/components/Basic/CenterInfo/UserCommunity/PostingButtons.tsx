@@ -40,6 +40,7 @@ const PostingButtons: React.FC<PostingButtonsProps> = ({ postCategory, postTitle
       level: climbingLevel,
       likeCount: 0,
       viewCount: 0,
+      createdAt: new Date(),
       updatedAt: new Date(),
       centerName,
       postCategory,

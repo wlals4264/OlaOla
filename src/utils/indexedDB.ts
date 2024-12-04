@@ -435,6 +435,7 @@ interface Post {
   level: string;
   likeCount: number | 0;
   viewCount: number | 0;
+  createdAt: Date;
   updatedAt: Date;
   centerName: string;
   postCategory: string | null;

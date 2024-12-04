@@ -1,15 +1,94 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import CenterHeader from '../CenterHeader';
 import Sidebar from '../Sidebar';
 import { Link } from 'react-router-dom';
+import { getPostListFromDB } from '../../../../utils/indexedDB';
+
+interface PostItem {
+  userNickname?: string;
+  postTitle?: string;
+  createdAt: Date;
+}
 
 const UserCommunity: React.FC = () => {
+  const [postList, setPostList] = useState<PostItem[]>([]);
+  // const [db, setDb] = useState<IDBDatabase | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [page, setPage] = useState(1);
+  // const [hasMore, setHasMore] = useState(true);
+  // const [pageParams, setPageParams] = useState<number[]>([]);
+
+  const fetchData = async () => {
+    if (loading) return; // 로딩 중이면 중단
+
+    setLoading(true);
+
+    try {
+      // DB에서 게시글 리스트 가져오기
+      const posts = await getPostListFromDB();
+      console.log('DB 연결 성공');
+
+      // 받아온 파일 리스트를 id 내림차순으로 정렬해서 최신값부터 정렬
+      const sortedPosts = posts.sort((a, b) => b.id - a.id);
+
+      const pageSize = 10;
+      const startIndex = (page - 1) * pageSize;
+      const pagedPosts = sortedPosts.slice(startIndex, startIndex + pageSize);
+
+      console.log('현재 페이지:', page, '로딩할 파일들:', pagedPosts);
+
+      if (pagedPosts.length > 0) {
+        const postContents = pagedPosts.map((postData: any) => {
+          return {
+            createdAt: postData.createdAt,
+            userNickname: postData.userNickName,
+            postTitle: postData.postTitle,
+          };
+        });
+        setPostList((prevPosts) => [...prevPosts, ...postContents]);
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error('파일을 가져오는 도중 오류 발생:', error.message);
+      } else {
+        console.error('알 수 없는 오류 발생:', error);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 페이지가 변경되거나, DB 연결된 경우에 데이터를 요청
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <div>
       <CenterHeader />
       <div className="flex">
         <Sidebar />
         <div className="w-full flex flex-col gap-4 mt-10 items-center font-noto">
+          {postList.length === 0 ? (
+            <p className="text-center font-bold text-3xl">게시물 없음</p>
+          ) : (
+            postList.map((item, index) => {
+              const { postTitle, userNickname, createdAt } = item;
+              return (
+                <div key={index} className="w-[80%] bg-white p-4 rounded-lg shadow-md mb-2">
+                  <div className="flex justify-between">
+                    <h2 className="text-lg font-semibold">{postTitle}</h2>
+                  </div>
+                  <div className="flex gap-2 mt-2">
+                    <p className="text-xs text-gray-700">{userNickname || '익명'}</p>
+                    <span className="text-xs text-gray-500">{new Date(createdAt).toLocaleDateString()}</span>
+                  </div>
+                </div>
+              );
+            })
+          )}
+
+          <div>{page}</div>
           <div className="w-full mt-10 font-noto text-sm">
             {/* 필터링 버튼들 */}
             <div className="w-full flex justify-between items-center shrink-0 mr-28">
@@ -24,6 +103,7 @@ const UserCommunity: React.FC = () => {
                   좋아요순
                 </button>
               </div>
+
               <div>
                 <Link to="/center-info/user-community/add-post">
                   <button
