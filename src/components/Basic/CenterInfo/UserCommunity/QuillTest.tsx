@@ -5,6 +5,16 @@ import { saveImageToIndexedDB, getImageFromIndexedDB } from '../../../../utils/i
 
 const formats = ['font', 'header', 'bold', 'italic', 'strike', 'indent', 'link', 'color', 'image'];
 
+// 이미지 sanitize 함수 설정
+const Image = ReactQuill.Quill.import('formats/image');
+Image.sanitize = (url: string) => {
+  if (url.startsWith('blob:')) {
+    return url;
+  }
+
+  return '';
+};
+
 const QuillEditor = () => {
   const [editorValue, setEditorValue] = useState('');
   const quillRef = useRef<ReactQuill>(null);
