@@ -15,13 +15,11 @@ interface PostItem {
 const UserCommunity: React.FC = () => {
   const [postList, setPostList] = useState<PostItem[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [page, setPage] = useState(1);
-  // const [db, setDb] = useState<IDBDatabase | null>(null);
-  // const [hasMore, setHasMore] = useState(true);
-  // const [pageParams, setPageParams] = useState<number[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
-  const fetchData = async () => {
-    if (loading) return; // 로딩 중이면 중단
+  const fetchData = async (currentPage: number) => {
+    if (loading) return;
 
     setLoading(true);
 
@@ -33,11 +31,11 @@ const UserCommunity: React.FC = () => {
       // 받아온 파일 리스트를 id 내림차순으로 정렬해서 최신값부터 정렬
       const sortedPosts = posts.sort((a, b) => b.id - a.id);
 
-      const pageSize = 10;
-      const startIndex = (page - 1) * pageSize;
+      const pageSize = 5;
+      const startIndex = (currentPage - 1) * pageSize;
       const pagedPosts = sortedPosts.slice(startIndex, startIndex + pageSize);
 
-      console.log('현재 페이지:', page, '로딩할 파일들:', pagedPosts);
+      // console.log('현재 페이지:', currentPage, '로딩할 파일들:', pagedPosts);
 
       if (pagedPosts.length > 0) {
         const postContents = pagedPosts.map((postData: any) => {
@@ -50,22 +48,25 @@ const UserCommunity: React.FC = () => {
           };
         });
         setPostList(postContents);
+        setTotalPages(Math.ceil(sortedPosts.length / pageSize));
       }
     } catch (error) {
-      if (error instanceof Error) {
-        console.error('파일을 가져오는 도중 오류 발생:', error.message);
-      } else {
-        console.error('알 수 없는 오류 발생:', error);
-        setLoading(false);
-      }
+      console.error('파일을 가져오는 도중 오류 발생:', error.message);
+      setLoading(false);
     } finally {
       setLoading(false);
     }
   };
 
+  const handlePageChange = (pageNumber: number) => {
+    if (pageNumber > 0 && pageNumber <= totalPages) {
+      setCurrentPage(pageNumber);
+    }
+  };
+
   useEffect(() => {
-    fetchData();
-  }, []);
+    fetchData(currentPage);
+  }, [currentPage]);
 
   return (
     <div>
@@ -78,7 +79,7 @@ const UserCommunity: React.FC = () => {
           {postList.length === 0 ? (
             <div className="flex w-full h-48 items-center justify-center font-bold text-3xl">게시글 없음</div>
           ) : (
-            postList.map((item, index) => {
+            postList.map((item) => {
               const { postCategory, postTitle, userNickname, createdAt, id } = item;
 
               return (
@@ -106,7 +107,33 @@ const UserCommunity: React.FC = () => {
             })
           )}
 
-          <div>{page}</div>
+          <div className="flex items-center gap-4 font-noto">
+            <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M2.67493 9.58789L7.98743 4.27539C8.35462 3.9082 8.94837 3.9082 9.31165 4.27539L10.1945 5.1582C10.5616 5.52539 10.5616 6.11914 10.1945 6.48242L6.43274 10.252L10.1984 14.0176C10.5656 14.3848 10.5656 14.9785 10.1984 15.3418L9.31555 16.2285C8.94837 16.5957 8.35462 16.5957 7.99134 16.2285L2.67883 10.916C2.30774 10.5488 2.30774 9.95508 2.67493 9.58789Z"
+                  fill="black"
+                />
+              </svg>
+            </button>
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button
+                key={i + 1}
+                onClick={() => handlePageChange(i + 1)}
+                disabled={i + 1 === currentPage}
+                className={i + 1 === currentPage ? 'font-bold' : ''}>
+                {i + 1}
+              </button>
+            ))}
+            <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M13.7617 10.6641L8.44922 15.9766C8.08203 16.3437 7.48828 16.3437 7.125 15.9766L6.24219 15.0937C5.875 14.7266 5.875 14.1328 6.24219 13.7695L10.0078 10.0039L6.24219 6.23828C5.875 5.87109 5.875 5.27734 6.24219 4.91406L7.12109 4.02344C7.48828 3.65625 8.08203 3.65625 8.44531 4.02344L13.7578 9.33594C14.1289 9.70313 14.1289 10.2969 13.7617 10.6641Z"
+                  fill="black"
+                />
+              </svg>
+            </button>
+          </div>
           <div className="flex justify-center w-full mt-10 font-noto text-sm">
             {/* 필터링 버튼들 */}
             <div className="flex justify-between items-center shrink-0 w-[645px] m-auto">

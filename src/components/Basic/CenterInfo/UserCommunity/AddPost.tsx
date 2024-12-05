@@ -27,10 +27,10 @@ const AddPost: React.FC = () => {
         <div className="flex gap-4 mb-4">
           {/* 타입 input */}
           <select onChange={(e) => setPostCategory(e.target.value)} className="w-28 h-12 focus:outline-none">
+            <option value="재잘재잘">재잘재잘</option>
             <option value="뉴셋소식">뉴셋소식</option>
             <option value="암장후기">암장후기</option>
             <option value="크루모집">크루모집</option>
-            <option value="재잘재잘">재잘재잘</option>
           </select>
           {/* 제목 input */}
           <input
