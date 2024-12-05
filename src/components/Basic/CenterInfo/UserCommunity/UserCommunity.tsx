@@ -3,7 +3,6 @@ import CenterHeader from '../CenterHeader';
 import Sidebar from '../Sidebar';
 import { Link } from 'react-router-dom';
 import { getPostListFromDB } from '../../../../utils/indexedDB';
-import Spinner from '../../../Spinner/Spinner';
 
 interface PostItem {
   userNickname?: string;

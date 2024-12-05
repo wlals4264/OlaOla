@@ -49,7 +49,7 @@ const PostItem: React.FC = () => {
           const doc = parser.parseFromString(content, 'text/html');
           const imgTags = Array.from(doc.querySelectorAll('img[src^="blob:"]')) as HTMLImageElement[];
 
-          const blobs = (await getImageByPostId(Number(postId))) as Blob[]; // Blob 배열 가져오기
+          const blobs = (await getImageByPostId(Number(postId))) as Blob[];
 
           // 이미지 태그에 Blob URL 적용
           imgTags.forEach((img, index) => {
@@ -126,7 +126,7 @@ const PostItem: React.FC = () => {
       >
         <textarea
           // onChange={handleCommentChange}
-          type="text"
+          // type="text"
           placeholder="댓글을 남겨주세요!"
           // value={comment}
           className="w-full h-20 px-4 py-3 rounded-xl text-sm outline-none resize-none border-gray-100 border-[1px]"></textarea>
