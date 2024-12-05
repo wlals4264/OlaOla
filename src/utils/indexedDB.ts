@@ -298,10 +298,9 @@ export function addCommentToDB(storeName: string, comment: Comment): Promise<Com
 
         const addReq = store.add(comment);
 
-        addReq.addEventListener('success', function (event: Event) {
-          const target = event.target as IDBRequest;
-          const commentWithId = { ...comment, id: addReq.result }; // 생성된 id를 포함
-          resolve(commentWithId); // 성공적으로 댓글을 추가하고 id와 함께 반환
+        addReq.addEventListener('success', function () {
+          const commentWithId = { ...comment, id: addReq.result };
+          resolve(commentWithId);
           console.log('댓글이 DB에 추가되었습니다.');
         });
 
@@ -376,11 +375,18 @@ export function deleteCommentInDB(storeName: string, id: number): Promise<void> 
 // postImgData store 접근 함수들
 // ---------------------------
 
+interface imageData {
+  imageData: Blob;
+  postId: number;
+}
+
 // 이미지 추가
 export const saveImageToIndexedDB = async (file: File, postId: number) => {
   const db = await getDB();
 
   return new Promise<string>((resolve, reject) => {
+    if (!db) return;
+
     const transaction = db.transaction('postImgData', 'readwrite');
     const store = transaction.objectStore('postImgData');
 
@@ -398,19 +404,18 @@ export const saveImageToIndexedDB = async (file: File, postId: number) => {
     addReq.addEventListener('error', function (event) {
       const target = event.target as IDBRequest;
       console.error('파일 추가 오류 발생 : ', target?.error);
-      reject(target?.error); // 오류 발생 시 reject
+      reject(target?.error);
     });
-  }).catch((error) => {
-    console.error('DB 연결 오류:', error);
-    reject(error);
   });
 };
 
 // 이미지 리스트 가져오기
 export const getImageByPostId = async (postId: number) => {
-  const db = await getDB(); // IndexedDB 인스턴스 가져오기
+  const db = await getDB();
 
   return new Promise<Blob[]>((resolve, reject) => {
+    if (!db) return;
+
     const transaction = db.transaction('postImgData', 'readonly');
     const store = transaction.objectStore('postImgData');
 
@@ -424,7 +429,7 @@ export const getImageByPostId = async (postId: number) => {
 
       if (results && results.length > 0) {
         console.log('postId로 데이터 검색 성공:', results);
-        const blobs = results.map((item) => item.imageData);
+        const blobs = results.map((item: imageData) => item.imageData);
         resolve(blobs); // Blob 배열 반환
         console.log(blobs);
       } else {

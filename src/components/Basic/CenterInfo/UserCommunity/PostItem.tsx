@@ -8,8 +8,21 @@ const PostItem: React.FC = () => {
   const [post, setPost] = useState<any | null>(null);
   const [content, setContent] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
+  const [userNickName, setUserNickName] = useState<string>('');
+  const [postTitle, setPostTitle] = useState<string>('');
+  const [centerName, setCenterName] = useState<string>('');
+  const [level, setLevel] = useState<string>('');
+  const [postCategory, setPostCategory] = useState<string | null>('');
+  const [likeCount, setLikeCount] = useState<number>('');
+  const [viewCount, setViewCount] = useState<number>('');
+  const [createdAt, setCreatedAt] = useState<string>('');
 
   console.log('게시글 ID:', postId);
+
+  const formatDate = (dateString: string): string => {
+    const date = new Date(dateString);
+    return date.toLocaleString();
+  };
 
   useEffect(() => {
     // 비동기 함수 정의
@@ -17,8 +30,17 @@ const PostItem: React.FC = () => {
       try {
         const postData = await getPostFromDB(Number(postId));
         setPost(postData);
-
+        console.log(postData);
         let updatedContent = postData.content;
+        const { createdAt, userNickName, postTitle, centerName, level, postCategory, likeCount, viewCount } = postData;
+        setCreatedAt(createdAt);
+        setUserNickName(userNickName);
+        setPostTitle(postTitle);
+        setCenterName(centerName);
+        setLevel(level);
+        setPostCategory(postCategory);
+        setLikeCount(likeCount);
+        setViewCount(viewCount);
 
         const processImages = async (content: string, postId: number): Promise<string> => {
           const parser = new DOMParser();
@@ -53,8 +75,8 @@ const PostItem: React.FC = () => {
   // 로딩 중 처리
   if (loading) {
     return (
-      <div className="flex justify-center items-center">
-        <Spinner />;
+      <div className="w-full h-screen flex justify-center items-center">
+        <Spinner />
       </div>
     );
   }
@@ -65,19 +87,53 @@ const PostItem: React.FC = () => {
   }
 
   return (
-    <div>
-      <h1>게시글 ID: {postId}</h1>
-      {/* 실제 게시글 내용은 여기에서 로드하여 표시 */}
-      <div
-        dangerouslySetInnerHTML={{
-          __html: content,
-        }}
-        style={{
-          marginTop: '30px',
-          overflow: 'hidden',
-          whiteSpace: 'pre-wrap',
-        }}
-      />
+    <div className="font-noto w-[760px] flex flex-col justify-center items-center m-auto mb-4">
+      <div className="">
+        <div className="flex mt-10 items-center">
+          <span className="text-xs w-fit h-fit py-1 px-2 rounded-2xl bg-primary font-semibold text-white cursor-default">
+            {postCategory}
+          </span>
+        </div>
+        <h1 className="font-extrabold text-4xl mt-4">{postTitle}</h1>
+        <div className="my-6 flex items-center gap-1">
+          <span className="font-semibold text-sm">{userNickName}</span>
+          <span>·</span>
+          <span className="text-gray-800 text-sm">{formatDate(createdAt)}</span>
+        </div>
+        <div className="flex mt-4 items-center">
+          <span className="text-xs w-fit h-fit py-1 px-2 rounded-xl bg-gray-100 text-gray-500 hover:bg-gray-500 hover:text-white cursor-pointer">
+            # {centerName}
+          </span>
+        </div>
+        <div
+          dangerouslySetInnerHTML={{
+            __html: content,
+          }}
+          style={{
+            marginTop: '30px',
+            overflow: 'hidden',
+            whiteSpace: 'pre-wrap',
+          }}
+        />
+      </div>
+
+      {/* 댓글창 */}
+      <form
+        className="w-full mt-10"
+        // onSubmit={handleCommentSubmit}
+      >
+        <textarea
+          // onChange={handleCommentChange}
+          type="text"
+          placeholder="댓글을 남겨주세요!"
+          // value={comment}
+          className="w-full h-20 px-4 py-3 rounded-xl text-sm outline-none resize-none border-gray-100 border-[1px]"></textarea>
+        <div className="flex justify-end items-center my-4">
+          <button type="submit" className="bg-primary rounded-md px-4 py-1 font-bold text-white">
+            댓글 작성
+          </button>
+        </div>
+      </form>
     </div>
   );
 };
