@@ -1,16 +1,23 @@
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { climbingLevelState, editorValueState, userNicknameState, userUIDState } from '../../../../datas/recoilData';
-import { addPostToDB } from '../../../../utils/indexedDB';
+import { addPostToDB, saveImageToIndexedDB } from '../../../../utils/indexedDB';
 
 interface PostingButtonsProps {
+  fileList: File[] | null;
   postTitle: string;
   centerName: string;
   postCategory: string;
   updatePostInDB?: () => void;
 }
 
-const PostingButtons: React.FC<PostingButtonsProps> = ({ postCategory, postTitle, centerName, updatePostInDB }) => {
+const PostingButtons: React.FC<PostingButtonsProps> = ({
+  fileList,
+  postCategory,
+  postTitle,
+  centerName,
+  updatePostInDB,
+}) => {
   const navigate = useNavigate();
   const climbingLevel = useRecoilValue(climbingLevelState);
   const userUID = useRecoilValue(userUIDState);
@@ -29,8 +36,8 @@ const PostingButtons: React.FC<PostingButtonsProps> = ({ postCategory, postTitle
     }
   };
 
-  // 게시글 올리기
-  const handlePost = (): void => {
+  // 게시글 올리기 & db에 이미지 저장
+  const handlePost = async (): Promise<void> => {
     // 게시글 DB에 저장
     const newPost = {
       userUID,
@@ -46,7 +53,16 @@ const PostingButtons: React.FC<PostingButtonsProps> = ({ postCategory, postTitle
       postCategory,
     };
 
-    addPostToDB(newPost);
+    const postId = await addPostToDB(newPost);
+    // addPostToDB(newPost);
+
+    // DB에 file 업로드
+    if (fileList) {
+      for (const file of fileList) {
+        saveImageToIndexedDB(file, postId);
+      }
+    }
+
     // 게시 후 추가 동작
     navigate('/center-info/user-community'); // 게시 후 페이지 이동
   };

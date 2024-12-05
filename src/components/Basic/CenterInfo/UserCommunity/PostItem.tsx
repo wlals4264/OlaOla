@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getPostFromDB } from '../../../../utils/indexedDB';
+import Spinner from '../../../Spinner/Spinner';
 
 const PostItem: React.FC = () => {
   const { postId } = useParams<{ postId: string }>();
@@ -29,7 +30,11 @@ const PostItem: React.FC = () => {
 
   // 로딩 중 처리
   if (loading) {
-    return <p>로딩 중...</p>;
+    return (
+      <div className="flex justify-center items-center">
+        <Spinner />;
+      </div>
+    );
   }
 
   // 게시글 데이터가 없을 경우 처리

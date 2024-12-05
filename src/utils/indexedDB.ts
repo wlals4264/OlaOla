@@ -42,6 +42,9 @@ export function initDB() {
       if (!db.objectStoreNames.contains('postImgData')) {
         db.createObjectStore('postData', { keyPath: 'id', autoIncrement: true });
       }
+      if (!db.objectStoreNames.contains('postImageRelation')) {
+        db.createObjectStore('postImageRelation', { keyPath: 'id', autoIncrement: true });
+      }
     }
   });
 }
@@ -80,6 +83,9 @@ export const getDB = (): Promise<IDBDatabase | null> => {
       }
       if (!db.objectStoreNames.contains('postImgData')) {
         db.createObjectStore('postImgData', { keyPath: 'id', autoIncrement: true });
+      }
+      if (!db.objectStoreNames.contains('postImageRelation')) {
+        db.createObjectStore('postImageRelation', { keyPath: 'id', autoIncrement: true });
       }
     };
   });
@@ -367,13 +373,18 @@ export function deleteCommentInDB(storeName: string, id: number): Promise<void> 
 // ---------------------------
 // postImgData store 접근 함수들
 // ---------------------------
-export const saveImageToIndexedDB = async (file: File) => {
+
+// 이미지 추가
+export const saveImageToIndexedDB = async (file: File, postId: number) => {
   const db = await getDB();
 
   return new Promise<string>((resolve, reject) => {
     const transaction = db.transaction('postImgData', 'readwrite');
     const store = transaction.objectStore('postImgData');
-    const addReq = store.add(file);
+
+    const imageBlob = file.slice(0, file.size); // Blob 생성
+
+    const addReq = store.add({ imageData: imageBlob, postId: postId });
 
     addReq.addEventListener('success', function (event: Event) {
       const target = event.target as IDBRequest;
@@ -393,10 +404,11 @@ export const saveImageToIndexedDB = async (file: File) => {
   });
 };
 
+// 이미지 가져오기
 export const getImageFromIndexedDB = async (imageId: string) => {
   const db = await getDB();
 
-  return new Promise<any>((resolve, reject) => {
+  return new Promise<Blob>((resolve, reject) => {
     const transaction = db.transaction('postImgData', 'readonly');
     const store = transaction.objectStore('postImgData');
 
@@ -443,32 +455,38 @@ interface Post {
 
 // DB에 게시글 올리기
 export function addPostToDB(post: Post): void {
-  getDB()
-    .then((db) => {
-      if (!db) {
-        console.log('DB가 아직 준비되지 않았습니다.');
-        return;
-      }
+  return new Promise((resolve, reject) => {
+    getDB()
+      .then((db) => {
+        if (!db) {
+          console.log('DB가 아직 준비되지 않았습니다.');
+          return;
+        }
 
-      const transaction = db.transaction('postData', 'readwrite');
-      const store = transaction.objectStore('postData');
+        const transaction = db.transaction('postData', 'readwrite');
+        const store = transaction.objectStore('postData');
 
-      const addReq = store.add(post);
+        const addReq = store.add(post);
 
-      addReq.addEventListener('success', function (event: Event) {
-        const target = event.target as IDBRequest;
-        console.log('게시글이 DB에 추가되었습니다.');
-        console.log(target.result);
+        addReq.addEventListener('success', function (event: Event) {
+          const target = event.target as IDBRequest;
+          const postId = target.result;
+          resolve(postId);
+          console.log('게시글이 DB에 추가되었습니다.');
+          console.log(target.result);
+        });
+
+        addReq.addEventListener('error', function (event) {
+          const target = event.target as IDBRequest;
+          console.error('게시글 추가 오류 발생 : ', target?.error);
+          reject('게시글 추가 오류');
+        });
+      })
+      .catch((error) => {
+        console.error('DB 연결 오류:', error);
+        reject('DB 연결 오류');
       });
-
-      addReq.addEventListener('error', function (event) {
-        const target = event.target as IDBRequest;
-        console.error('게시글 추가 오류 발생 : ', target?.error);
-      });
-    })
-    .catch((error) => {
-      console.error('DB 연결 오류:', error);
-    });
+  });
 }
 
 // DB에서 게시글 가져오기

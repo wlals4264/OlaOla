@@ -8,11 +8,14 @@ const AddPost: React.FC = () => {
   const [centerName, setCenterName] = useState<string>('');
   const [postTitle, setPostTitle] = useState<string>('');
   const [postCategory, setPostCategory] = useState<string>('재잘재잘');
+  const [fileList, setFileList] = useState<File[]>([]);
 
   // ChooseLevel의 onClimbingLevelChange 핸들러
   const handleClimbingLevelChange = (newClimbingLevel: string): void => {
     setCurrentClimbingLevel(newClimbingLevel);
   };
+
+  console.log(fileList);
 
   return (
     <div>
@@ -40,7 +43,7 @@ const AddPost: React.FC = () => {
 
         {/* 텍스트 편집기 */}
         <div className="mb-12">
-          <QuillEditor />
+          <QuillEditor fileList={fileList} setFileList={setFileList} />
         </div>
 
         {/* 암장명 & 난이도 선택창 & buttons */}
@@ -67,7 +70,12 @@ const AddPost: React.FC = () => {
 
           {/* 게시글 버튼 */}
           <div className="flex items-end mb-5">
-            <PostingButtons postCategory={postCategory} postTitle={postTitle} centerName={centerName} />
+            <PostingButtons
+              fileList={fileList}
+              postCategory={postCategory}
+              postTitle={postTitle}
+              centerName={centerName}
+            />
           </div>
         </div>
       </div>

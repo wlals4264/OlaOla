@@ -1,21 +1,28 @@
-import React, { useMemo, useState, useRef } from 'react';
+import React, { useMemo, useEffect, useRef } from 'react';
 import ReactQuill from 'react-quill-new';
 import 'react-quill/dist/quill.snow.css';
-import { saveImageToIndexedDB, getImageFromIndexedDB } from '../../../../utils/indexedDB';
+// import { saveImageToIndexedDB, getImageFromIndexedDB } from '../../../../utils/indexedDB';
 import { useRecoilState } from 'recoil';
 import { editorValueState } from '../../../../datas/recoilData';
 
 const formats = ['font', 'header', 'bold', 'italic', 'strike', 'indent', 'link', 'color', 'image', 'align'];
 
-// interface QuillEditorProps {
-//   editorValue: string;
-//   onEditorChange: (value: string) => void;
-// }
-const QuillEditor: React.FC = () => {
+interface QuillEditorProps {
+  fileList: File[];
+  setFileList: React.Dispatch<React.SetStateAction<File[]>>;
+}
+
+const QuillEditor: React.FC<QuillEditorProps> = ({ fileList, setFileList }) => {
   const [editorValue, setEditorValue] = useRecoilState<string>(editorValueState);
 
   const quillRef = useRef<ReactQuill>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // 초기화 코드
+  const resetEditor = () => {
+    setEditorValue('');
+    setFileList([]);
+  };
 
   const modules = useMemo(() => {
     return {
@@ -47,28 +54,48 @@ const QuillEditor: React.FC = () => {
     if (!fileInputRef.current || !quillRef.current) return;
 
     const file = fileInputRef.current.files?.[0];
-    // 초기화 코드(중복 업로드 방지)
-    fileInputRef.current.value = '';
 
     if (file) {
-      try {
-        const imageId = await saveImageToIndexedDB(file);
-        const savedImage = await getImageFromIndexedDB(imageId);
+      // 파일 목록 업데이트
+      setFileList((prevFileList) => [...prevFileList, file]);
 
-        if (savedImage instanceof Blob) {
-          const blobUrl = URL.createObjectURL(savedImage);
-          const editor = quillRef.current.getEditor();
-          const range = editor.getSelection();
-          if (range) {
-            editor.insertEmbed(range.index, 'image', blobUrl);
-            editor.setSelection(range.index + 1);
-          }
-        }
-      } catch (error) {
-        console.error('이미지 처리 오류:', error);
+      // 에디터에 이미지 삽입
+      const blobUrl = URL.createObjectURL(file);
+      const editor = quillRef.current.getEditor();
+      const range = editor.getSelection();
+      if (range) {
+        editor.insertEmbed(range.index, 'image', blobUrl);
+        editor.setSelection(range.index + 1);
       }
+
+      // 초기화
+      fileInputRef.current.value = '';
     }
+
+    // DB에 file 업로드
+    // if (file) {
+    //   try {
+    //     const imageId = await saveImageToIndexedDB(file);
+    //     const savedImage = await getImageFromIndexedDB(imageId);
+
+    //     if (savedImage instanceof Blob) {
+    //       const blobUrl = URL.createObjectURL(savedImage);
+    //       const editor = quillRef.current.getEditor();
+    //       const range = editor.getSelection();
+    //       if (range) {
+    //         editor.insertEmbed(range.index, 'image', blobUrl);
+    //         editor.setSelection(range.index + 1);
+    //       }
+    //     }
+    //   } catch (error) {
+    //     console.error('이미지 처리 오류:', error);
+    //   }
+    // }
   };
+
+  useEffect(() => {
+    resetEditor();
+  }, []);
 
   console.log('Editor Value:', editorValue);
 
