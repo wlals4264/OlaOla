@@ -82,7 +82,9 @@ export const getDB = (): Promise<IDBDatabase | null> => {
         db.createObjectStore('postData', { keyPath: 'id', autoIncrement: true });
       }
       if (!db.objectStoreNames.contains('postImgData')) {
-        db.createObjectStore('postImgData', { keyPath: 'id', autoIncrement: true });
+        const objectStore = db.createObjectStore('postImgData', { keyPath: 'id', autoIncrement: true });
+
+        objectStore.createIndex('postIdIndex', 'postId', { unique: false });
       }
       if (!db.objectStoreNames.contains('postImageRelation')) {
         db.createObjectStore('postImageRelation', { keyPath: 'id', autoIncrement: true });
@@ -382,7 +384,7 @@ export const saveImageToIndexedDB = async (file: File, postId: number) => {
     const transaction = db.transaction('postImgData', 'readwrite');
     const store = transaction.objectStore('postImgData');
 
-    const imageBlob = file.slice(0, file.size); // Blob 생성
+    const imageBlob = file.slice(0, file.size, file.type);
 
     const addReq = store.add({ imageData: imageBlob, postId: postId });
 
@@ -404,34 +406,37 @@ export const saveImageToIndexedDB = async (file: File, postId: number) => {
   });
 };
 
-// 이미지 가져오기
-export const getImageFromIndexedDB = async (imageId: string) => {
-  const db = await getDB();
+// 이미지 리스트 가져오기
+export const getImageByPostId = async (postId: number) => {
+  const db = await getDB(); // IndexedDB 인스턴스 가져오기
 
-  return new Promise<Blob>((resolve, reject) => {
+  return new Promise<Blob[]>((resolve, reject) => {
     const transaction = db.transaction('postImgData', 'readonly');
     const store = transaction.objectStore('postImgData');
 
-    const getReq = store.get(imageId);
+    // postIdIndex 인덱스를 사용하여 검색
+    const index = store.index('postIdIndex');
+    const getReq = index.getAll(postId);
 
     getReq.onsuccess = (event: Event) => {
       const target = event.target as IDBRequest;
-      const result = target.result;
-      if (result) {
-        console.log('이미지 데이터 로드 성공');
-        resolve(result); // 데이터가 있으면 반환
+      const results = target.result;
+
+      if (results && results.length > 0) {
+        console.log('postId로 데이터 검색 성공:', results);
+        const blobs = results.map((item) => item.imageData);
+        resolve(blobs); // Blob 배열 반환
+        console.log(blobs);
       } else {
-        reject('이미지 데이터가 없습니다.');
+        reject('해당 postId에 해당하는 데이터가 없습니다.');
       }
     };
 
     getReq.onerror = (event) => {
       const target = event.target as IDBRequest;
-      console.error('이미지 불러오기 오류:', target?.error);
-      reject(target?.error); // 오류 발생 시 reject
+      console.error('postId로 데이터 검색 중 오류:', target?.error);
+      reject(target?.error);
     };
-  }).catch((error) => {
-    console.error('이미지 불러오기 오류:', error);
   });
 };
 
@@ -447,14 +452,14 @@ interface Post {
   level: string;
   likeCount: number | 0;
   viewCount: number | 0;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
   centerName: string;
   postCategory: string | null;
 }
 
 // DB에 게시글 올리기
-export function addPostToDB(post: Post): void {
+export function addPostToDB(post: Post): Promise<number> {
   return new Promise((resolve, reject) => {
     getDB()
       .then((db) => {
@@ -473,7 +478,7 @@ export function addPostToDB(post: Post): void {
           const postId = target.result;
           resolve(postId);
           console.log('게시글이 DB에 추가되었습니다.');
-          console.log(target.result);
+          console.log(postId);
         });
 
         addReq.addEventListener('error', function (event) {
@@ -490,7 +495,7 @@ export function addPostToDB(post: Post): void {
 }
 
 // DB에서 게시글 가져오기
-export function getPostFromDB(postId: number): Promise<void> {
+export function getPostFromDB(postId: number): Promise<Post> {
   return getDB().then((db) => {
     if (!db) {
       return Promise.reject('DB not available');
@@ -504,6 +509,8 @@ export function getPostFromDB(postId: number): Promise<void> {
       request.onsuccess = () => {
         const postData = request.result;
         if (postData) {
+          postData.createdAt = new Date(postData.createdAt).toISOString();
+          postData.updatedAt = new Date(postData.updatedAt).toISOString();
           resolve(postData);
         } else {
           reject('게시글을 찾을 수 없습니다.');

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { getPostFromDB, getImageFromIndexedDB } from '../../../../utils/indexedDB';
+import { getPostFromDB, getImageByPostId } from '../../../../utils/indexedDB';
 import Spinner from '../../../Spinner/Spinner';
 
 const PostItem: React.FC = () => {
@@ -17,36 +17,28 @@ const PostItem: React.FC = () => {
       try {
         const postData = await getPostFromDB(Number(postId));
         setPost(postData);
-        // setContent(postData.content);
 
         let updatedContent = postData.content;
 
-        const processImages = async (content: string, postId: string): Promise<string> => {
+        const processImages = async (content: string, postId: number): Promise<string> => {
           const parser = new DOMParser();
           const doc = parser.parseFromString(content, 'text/html');
-          const imgTags = Array.from(doc.querySelectorAll('img[src^="blob:"]'));
+          const imgTags = Array.from(doc.querySelectorAll('img[src^="blob:"]')) as HTMLImageElement[];
 
-          await Promise.all(
-            imgTags.map(async (img) => {
-              const blobUrl = img.getAttribute('src');
-              if (blobUrl) {
-                try {
-                  const blob = await getImageFromIndexedDB(postId);
-                  if (blob instanceof Blob) {
-                    const newBlobUrl = URL.createObjectURL(blob);
-                    img.setAttribute('src', newBlobUrl);
-                  }
-                } catch (error) {
-                  console.error(`이미지 로드 실패 (Blob URL: ${blobUrl}):`, error);
-                }
-              }
-            })
-          );
+          const blobs = (await getImageByPostId(Number(postId))) as Blob[]; // Blob 배열 가져오기
+
+          // 이미지 태그에 Blob URL 적용
+          imgTags.forEach((img, index) => {
+            if (blobs[index]) {
+              const newBlobUrl = URL.createObjectURL(blobs[index]);
+              img.setAttribute('src', newBlobUrl);
+            }
+          });
 
           return doc.body.innerHTML;
         };
 
-        updatedContent = await processImages(updatedContent, postId);
+        updatedContent = await processImages(updatedContent, Number(postId));
         setContent(updatedContent);
       } catch (error) {
         console.error('게시글을 가져오는 중 오류가 발생했습니다:', error);
@@ -55,7 +47,7 @@ const PostItem: React.FC = () => {
       }
     };
 
-    fetchPost(); // 비동기 함수 호출
+    fetchPost();
   }, [postId]);
 
   // 로딩 중 처리
@@ -89,7 +81,5 @@ const PostItem: React.FC = () => {
     </div>
   );
 };
-
-// Blob URL에서 이미지 ID 추출 (예시 함수)
 
 export default PostItem;
