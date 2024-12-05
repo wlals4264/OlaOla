@@ -191,7 +191,7 @@ const BrowsingFeedComponent: React.FC = () => {
   }
 
   return (
-    <div className="max-w-2xl m-auto mt-4 grid grid-cols-auto xs:grid-cols-1 gap-4 font-noto grid-flow-dense">
+    <div className="max-w-2xl m-auto mt-4 grid grid-cols-3 gap-4 font-noto grid-flow-dense">
       <p className="col-span-3 font-noto font-bold text-3xl my-8 text-center cursor-default">
         ✨ 유저들의 피드를 확인하세요!
       </p>
