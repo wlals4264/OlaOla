@@ -110,7 +110,7 @@ const FeedItem: React.FC<FeedItemProps> = ({ feedItem }) => {
 
       {/* 상세 내용 & 댓글창 */}
       <div className="w-[360px] h-[400px]">
-        <div className="flex-col h-[220px] justify-center items-center overflow-y-auto scrollbar-hide">
+        <div className="flex-col h-[200px] justify-center items-center">
           <img className="w-[100px] h-[100px] rounded-full" src={userProfileImg} alt="UserProfileImg" />
           <p className="mt-2 flex gap-4 shrink-0 items-center font-bold font-noto">
             {nickname}
@@ -122,7 +122,7 @@ const FeedItem: React.FC<FeedItemProps> = ({ feedItem }) => {
               />
             </svg>
           </p>
-          <div className="w-[360px] min-h-24 mt-2">
+          <div className="w-[360px] h-14 mt-2 overflow-auto break-words overflow-y-auto scrollbar-hide">
             <p className="font-noto font-normal text-sm">{feedItem.describe}</p>
           </div>
         </div>
