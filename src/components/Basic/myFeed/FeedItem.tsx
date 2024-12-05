@@ -40,7 +40,7 @@ const FeedItem: React.FC<FeedItemProps> = ({ feedItem }) => {
   const userUID = useRecoilValue(userUIDState);
 
   // 나이스를 누른 유저인지 확인하기 위한 값 불러오기
-  const hasClicked = localStorage.getItem(`hasClicked_${userUID}`);
+  const [hasClicked, setHasClicked] = useState(Boolean(localStorage.getItem(`hasClicked_${userUID}`)));
 
   // my-feed 페이지의 FeedItem창에서만 수정하기 버튼 열리기
   const location = useLocation();
@@ -65,21 +65,12 @@ const FeedItem: React.FC<FeedItemProps> = ({ feedItem }) => {
       return;
     }
 
-    if (hasClicked) {
-      // 이미 나이스를 눌렀다면 나이스 수 감소
-      setNiceCount((prevCount) => prevCount - 1);
-      // 클릭 기록 삭제
-      localStorage.removeItem(`hasClicked_${userUID}`);
-      // DB 업데이트
-      updateFileInDB(feedItem.id, { niceCount: niceCount });
-    } else {
-      // 누르지 않았다면 나이스 수 증가
-      setNiceCount((prevCount) => prevCount + 1);
-      // DB 업데이트
-      updateFileInDB(feedItem.id, { niceCount: niceCount });
-      // 클릭 기록 저장
-      localStorage.setItem(`hasClicked_${userUID}`, true);
-    }
+    const newNiceCount = hasClicked ? niceCount - 1 : niceCount + 1;
+    setNiceCount(newNiceCount);
+    setHasClicked(!hasClicked);
+
+    localStorage.setItem(`hasClicked_${userUID}`, !hasClicked ? 'true' : '');
+    updateFileInDB(feedItem.id, { niceCount: newNiceCount });
   };
 
   // 수정 버튼 핸들러 함수
