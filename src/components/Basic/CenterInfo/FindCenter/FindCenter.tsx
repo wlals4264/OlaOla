@@ -87,7 +87,7 @@ const FindCenter: React.FC = () => {
         <Sidebar />
 
         {/* 암장 찾기 컴포넌트 */}
-        <div className="w-full flex flex-col gap-10 mt-10 items-center font-noto shrink-0">
+        <div className="w-[80%] flex flex-col gap-10 mt-10 items-center font-noto shrink-0">
           {/* 검색창 */}
           <form
             className="relative flex items-center w-[360px] h-[40px] border border-gray-300 rounded-xl mt-2"

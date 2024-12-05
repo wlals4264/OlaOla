@@ -99,8 +99,8 @@ const LoginNav: React.FC = () => {
 
           {/* welcome message & logout Button */}
           <div className="flex gap-4 items-center justify-center mr-2 flex-shrink-0">
-            <p className="flex-shrink-0 ">
-              <span className="hover:text-primary text-lg font-semibold">{nickname}</span>님 환영합니다!
+            <p className="flex-shrink-0 cursor-default">
+              <span className="hover:text-primary text-lg font-semibold cursor-default">{nickname}</span>님 환영합니다!
             </p>
             <button
               className="flex-shrink-0 text-l font-semibold w-86px px-3 py-1 rounded-xl bg-gray-200 flex items-center justify-center hover:bg-primary hover:text-whi"

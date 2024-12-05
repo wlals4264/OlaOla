@@ -74,7 +74,10 @@ const UserCommunity: React.FC = () => {
         <Sidebar />
 
         {/* 커뮤니티 컴포넌트 */}
-        <div className="w-4/5 flex flex-col gap-4 mt-10 items-center font-noto shrink-0 ">
+        <div className="w-[80%] flex flex-col gap-4 mt-10 items-center font-noto shrink-0 ">
+          <h1 className="font-bold text-2xl cursor-default text-indigo-500 mb-2">
+            유저들과 흥미로운 이야기를 나눠보세요! 😀
+          </h1>
           {postList.length === 0 ? (
             <div className="flex w-full h-48 items-center justify-center font-bold text-3xl">게시글 없음</div>
           ) : (
@@ -135,6 +138,7 @@ const UserCommunity: React.FC = () => {
           </div>
           <div className="flex justify-center w-full mt-10 font-noto text-sm">
             {/* 필터링 버튼들 */}
+
             <div className="flex justify-between items-center shrink-0 w-[645px] m-auto">
               <div className="flex gap-3">
                 <button className="shrink-0" type="button">
@@ -162,7 +166,7 @@ const UserCommunity: React.FC = () => {
           </div>
 
           {/* 검색창 */}
-          <form className="relative flex items-center w-[645px] h-[40px] border border-gray-300 rounded-xl mt-2">
+          <form className="relative flex items-center w-[645px] h-[40px] border border-gray-300 rounded-xl mt-2 mb-8">
             <input
               type="text"
               // value={searchText}
