@@ -30,9 +30,11 @@ const PostItem: React.FC = () => {
       try {
         const postData = await getPostFromDB(Number(postId));
         setPost(postData);
-        console.log(postData);
         let updatedContent = postData.content;
+        setContent(updatedContent);
+
         const { createdAt, userNickName, postTitle, centerName, level, postCategory, likeCount, viewCount } = postData;
+
         setCreatedAt(createdAt);
         setUserNickName(userNickName);
         setPostTitle(postTitle);
@@ -87,7 +89,7 @@ const PostItem: React.FC = () => {
   }
 
   return (
-    <div className="font-noto w-[760px] flex flex-col justify-center items-center m-auto mb-4">
+    <div className="font-noto w-[760px] flex flex-col justify-center m-auto mb-4">
       <div className="">
         <div className="flex mt-10 items-center">
           <span className="text-xs w-fit h-fit py-1 px-2 rounded-2xl bg-primary font-semibold text-white cursor-default">

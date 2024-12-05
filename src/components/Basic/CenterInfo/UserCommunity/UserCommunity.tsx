@@ -70,9 +70,11 @@ const UserCommunity: React.FC = () => {
   return (
     <div>
       <CenterHeader />
-      <div className="flex">
+      <div className="flex m-auto w-[95%]">
         <Sidebar />
-        <div className="w-full flex flex-col gap-4 mt-10 items-center font-noto">
+
+        {/* 커뮤니티 컴포넌트 */}
+        <div className="w-4/5 flex flex-col gap-4 mt-10 items-center font-noto shrink-0 ">
           {postList.length === 0 ? (
             <div className="flex w-full h-48 items-center justify-center font-bold text-3xl">게시글 없음</div>
           ) : (
@@ -80,7 +82,7 @@ const UserCommunity: React.FC = () => {
               const { postCategory, postTitle, userNickname, createdAt, id } = item;
 
               return (
-                <ul className="w-[645px] flex flex-col gap-4 mt-2 items-center font-noto" key={id}>
+                <ul className="w-[645px] flex flex-col gap-4 mt-2 items-center" key={id}>
                   <Link to={`/center-info/user-community/post/${id}`}>
                     <li className="w-[645px] bg-white p-4 rounded-xl shadow-sm mb-2 hover:bg-gray-100 cursor-pointer">
                       <div className="flex items-center gap-4">
@@ -107,8 +109,8 @@ const UserCommunity: React.FC = () => {
           <div>{page}</div>
           <div className="flex justify-center w-full mt-10 font-noto text-sm">
             {/* 필터링 버튼들 */}
-            <div className="flex justify-between items-center shrink-0 w-[645px]">
-              <div className="flex gap-4 ml-10">
+            <div className="flex justify-between items-center shrink-0 w-[645px] m-auto">
+              <div className="flex gap-3">
                 <button className="shrink-0" type="button">
                   최신순
                 </button>
@@ -120,6 +122,7 @@ const UserCommunity: React.FC = () => {
                 </button>
               </div>
 
+              {/* 글쓰기 버튼 */}
               <div>
                 <Link to="/center-info/user-community/add-post">
                   <button

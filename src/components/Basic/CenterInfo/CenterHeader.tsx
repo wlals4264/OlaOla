@@ -16,7 +16,7 @@ const CenterHeader: React.FC = () => {
   };
 
   return (
-    <div className="h-[120px] bg-gray-200 flex items-center pl-10 gap-2">
+    <div className="h-[120px] bg-gray-200 flex items-center pl-20 gap-2">
       <span className="font-noto text-2xl font-bold cursor-default shrink-0">암장 정보</span>
       <svg
         className="pt-[2px] shrink-0"
