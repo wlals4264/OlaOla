@@ -530,8 +530,8 @@ export function getPostFromDB(postId: number): Promise<Post> {
   });
 }
 
-// DB에서 모든 파일 리스트를 가져오기
-export function getPostListFromDB(): Promise<File[]> {
+// DB에서 모든 게시글 리스트를 가져오기
+export function getPostListFromDB(): Promise<Post[]> {
   return getDB().then((db) => {
     if (!db) {
       return Promise.reject('DB not available');
@@ -559,7 +559,7 @@ export function getPostListFromDB(): Promise<File[]> {
   });
 }
 
-// DB 파일 수정 함수
+// DB 게시글 수정 함수
 export function updatePostInDB(
   postId: number,
   updatedData: {
@@ -612,7 +612,7 @@ export function updatePostInDB(
 }
 
 // DB 파일 삭제 함수
-export function deletePostInDB(postId: number): Promise<void> {
+export function deletePostInDB(postId: number): Promise<number> {
   return getDB().then((db) => {
     if (!db) {
       return Promise.reject('DB not available');
@@ -625,7 +625,7 @@ export function deletePostInDB(postId: number): Promise<void> {
 
       request.onsuccess = () => {
         console.log('게시글이 성공적으로 삭제되었습니다.');
-        resolve();
+        resolve(postId);
       };
 
       request.onerror = (event) => {

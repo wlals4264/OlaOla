@@ -28,6 +28,7 @@ const UserCommunity: React.FC = () => {
     try {
       // DB에서 게시글 리스트 가져오기
       const posts = await getPostListFromDB();
+      console.log(posts);
       console.log('DB 연결 성공');
 
       // 받아온 파일 리스트를 id 내림차순으로 정렬해서 최신값부터 정렬

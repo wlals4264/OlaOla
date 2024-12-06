@@ -11,11 +11,15 @@ import UserCommunity from '../components/Basic/CenterInfo/UserCommunity/UserComm
 
 import AddPost from '../components/Basic/CenterInfo/UserCommunity/AddPost';
 import PostItem from '../components/Basic/CenterInfo/UserCommunity/PostItem';
+import ModifyPost from '../components/Basic/CenterInfo/UserCommunity/ModifyPost';
 
 const Router = (): JSX.Element => {
   return (
     <Routes>
+      {/* 시작 페이지 */}
       <Route path="/" element={<StartPage />}></Route>
+
+      {/* My Feed */}
       <Route
         path="/my-feed"
         element={
@@ -31,6 +35,7 @@ const Router = (): JSX.Element => {
           </ProtectedRoute>
         }
       />
+
       <Route
         path="/my-feed/modify-feed"
         element={
@@ -39,12 +44,23 @@ const Router = (): JSX.Element => {
           </ProtectedRoute>
         }
       />
+
+      {/* Browsing Feed */}
       <Route path="/browsing-feed" element={<BrowsingFeed />}></Route>
+
+      {/* Center Info */}
       <Route path="/center-info" element={<CenterInfo />}>
-        <Route index element={<FindCenter />} /> {/* 기본 경로에서 FindCenter 표시 */}
-        <Route path="/center-info/user-community" element={<ProtectedRoute>{<UserCommunity />}</ProtectedRoute>} />
+        <Route index element={<FindCenter />} /> {/* 기본 경로 */}
         <Route
-          path="/center-info/user-community/add-post"
+          path="user-community"
+          element={
+            <ProtectedRoute>
+              <UserCommunity />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="user-community/add-post"
           element={
             <ProtectedRoute>
               <AddPost />
@@ -56,6 +72,14 @@ const Router = (): JSX.Element => {
           element={
             <ProtectedRoute>
               <PostItem />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="user-community/post/:postId/modify-post"
+          element={
+            <ProtectedRoute>
+              <ModifyPost />
             </ProtectedRoute>
           }
         />

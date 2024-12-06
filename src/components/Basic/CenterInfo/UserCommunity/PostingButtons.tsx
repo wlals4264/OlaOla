@@ -31,8 +31,8 @@ const PostingButtons: React.FC<PostingButtonsProps> = ({
   // 수정하기
   const handleUpdate = (): void => {
     if (updatePostInDB) {
-      updatePostInDB(); // 업데이트 함수가 있을 경우 호출
-      navigate('/center-info/user-community'); // 게시 후 페이지 이동
+      updatePostInDB();
+      navigate('/center-info/user-community');
     }
   };
 
@@ -47,8 +47,8 @@ const PostingButtons: React.FC<PostingButtonsProps> = ({
       level: climbingLevel,
       likeCount: 0,
       viewCount: 0,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
       centerName,
       postCategory,
     };

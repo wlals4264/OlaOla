@@ -1,16 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getPostFromDB, getImageByPostId } from '../../../../utils/indexedDB';
 import Spinner from '../../../Spinner/Spinner';
 import { levelOptions } from '../../../../datas/levelOptions';
 import { PostCategory } from '../../../Types/postCategory';
-
-// enum PostCategory {
-//   FREETALK = '재잘재잘',
-//   NEWSETTING = '뉴셋소식',
-//   CENTERREVIEW = '암장후기',
-//   CREWRECRUIT = '크루모집',
-// }
 
 const PostItem: React.FC = () => {
   const { postId } = useParams<{ postId: string }>();
@@ -29,6 +22,8 @@ const PostItem: React.FC = () => {
   const levelColor = levelOptions.find((option) => option.value === level)?.color || 'white';
 
   const isMyPost = userUID === localStorage.getItem('userUID') ? true : false;
+
+  const navigate = useNavigate();
 
   console.log('게시글 ID:', postId);
 
@@ -103,6 +98,10 @@ const PostItem: React.FC = () => {
     return <div className="font-noto font-bold text-center text-3xl mt-20">게시글을 찾을 수 없습니다.</div>;
   }
 
+  const handleOpenModifyComponent = () => {
+    navigate('modify-post', { state: { post, postId } });
+  };
+
   return (
     <div className="font-noto w-[760px] flex flex-col justify-center m-auto mb-4">
       <div className="">
@@ -134,7 +133,7 @@ const PostItem: React.FC = () => {
               // 수정 및 삭제 버튼
               <div className="flex gap-2">
                 {/* 수정하기 버튼 */}
-                <button type="button" className="text-gray-600 text-sm">
+                <button onClick={handleOpenModifyComponent} type="button" className="text-gray-600 text-sm">
                   수정
                 </button>
                 {/* 삭제하기 버튼 */}

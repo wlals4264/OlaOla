@@ -8,11 +8,13 @@ import { editorValueState } from '../../../../datas/recoilData';
 const formats = ['font', 'header', 'bold', 'italic', 'strike', 'indent', 'link', 'color', 'image', 'align'];
 
 interface QuillEditorProps {
+  content: string;
+  setContent: (content: string) => void;
   fileList: File[];
   setFileList: React.Dispatch<React.SetStateAction<File[]>>;
 }
 
-const QuillEditor: React.FC<QuillEditorProps> = ({ fileList, setFileList }) => {
+const QuillEditor: React.FC<QuillEditorProps> = ({ content, setContent, fileList, setFileList }) => {
   const [editorValue, setEditorValue] = useRecoilState<string>(editorValueState);
 
   const quillRef = useRef<ReactQuill>(null);
@@ -103,9 +105,9 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ fileList, setFileList }) => {
     <div>
       <ReactQuill
         ref={quillRef}
-        value={editorValue}
+        value={content ? content : editorValue}
         formats={formats}
-        onChange={setEditorValue}
+        onChange={content ? setContent : setEditorValue}
         modules={modules}
         theme="snow"
         style={{ height: '360px' }}
