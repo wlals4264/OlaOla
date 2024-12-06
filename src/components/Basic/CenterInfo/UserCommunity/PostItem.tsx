@@ -2,6 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getPostFromDB, getImageByPostId } from '../../../../utils/indexedDB';
 import Spinner from '../../../Spinner/Spinner';
+import { levelOptions } from '../../../../datas/levelOptions';
+import { PostCategory } from '../../../Types/postCategory';
+
+// enum PostCategory {
+//   FREETALK = '재잘재잘',
+//   NEWSETTING = '뉴셋소식',
+//   CENTERREVIEW = '암장후기',
+//   CREWRECRUIT = '크루모집',
+// }
 
 const PostItem: React.FC = () => {
   const { postId } = useParams<{ postId: string }>();
@@ -16,6 +25,7 @@ const PostItem: React.FC = () => {
   const [likeCount, setLikeCount] = useState<number>('');
   const [viewCount, setViewCount] = useState<number>('');
   const [createdAt, setCreatedAt] = useState<string>('');
+  const levelColor = levelOptions.find((option) => option.value === level)?.color || 'white';
 
   console.log('게시글 ID:', postId);
 
@@ -96,7 +106,18 @@ const PostItem: React.FC = () => {
             {postCategory}
           </span>
         </div>
-        <h1 className="font-extrabold text-4xl mt-4">{postTitle}</h1>
+        <div className="flex items-end gap-4">
+          {postCategory === PostCategory.NEWSETTING && level && (
+            <svg width="45" height="45" viewBox="0 0 45 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M25.2586 35.5514L25.0004 35.3952L24.7418 35.5509L16.096 40.7593L16.0951 40.7598C14.8922 41.4879 13.4199 40.4137 13.7369 39.0508L16.0285 29.2177L16.0969 28.9239L15.8689 28.7263L8.22311 22.1013L8.22293 22.1012C7.16037 21.1813 7.73458 19.4422 9.12283 19.3318L9.12283 19.3318L9.12547 19.3316L19.188 18.4774L19.4881 18.4519L19.6059 18.1747L23.5434 8.90384L23.5442 8.90189C24.081 7.62303 25.9187 7.62303 26.4555 8.90189L26.4561 8.90346L30.3936 18.1951L30.5113 18.4727L30.8117 18.4983L40.8742 19.3524L40.8769 19.3526C42.2651 19.4631 42.8393 21.2022 41.7768 22.122L41.7766 22.1222L34.1308 28.7472L33.9028 28.9447L33.9712 29.2385L36.2628 39.0716C36.2629 39.0717 36.2629 39.0718 36.2629 39.0719C36.5796 40.4347 35.1075 41.5087 33.9046 40.7806L33.9044 40.7805L25.2586 35.5514Z"
+                fill={levelColor}
+                stroke={levelColor !== 'white' ? '' : '#8C8C8C'}
+              />
+            </svg>
+          )}{' '}
+          <h1 className="font-extrabold text-4xl mt-4">{postTitle}</h1>
+        </div>
         <div className="my-6 flex items-center gap-1">
           <span className="font-semibold text-sm">{userNickName}</span>
           <span>·</span>

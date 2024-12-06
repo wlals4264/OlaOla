@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import ChooseLevel from '../../MyFeed/AddFeed/ChooseLevel';
 import PostingButtons from './PostingButtons';
 import QuillEditor from './QuillEditor';
+import { PostCategory } from '../../../Types/postCategory';
 
-enum PostCategory {
-  FREETALK = '재잘재잘',
-  NEWSETTING = '뉴셋소식',
-  CENTERREVIEW = '암장후기',
-  CREWRECRUIT = '크루모집',
-}
+// enum PostCategory {
+//   FREETALK = '재잘재잘',
+//   NEWSETTING = '뉴셋소식',
+//   CENTERREVIEW = '암장후기',
+//   CREWRECRUIT = '크루모집',
+// }
 
 const AddPost: React.FC = () => {
   const [currentClimbingLevel, setCurrentClimbingLevel] = useState<string>('');

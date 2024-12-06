@@ -3,12 +3,15 @@ import CenterHeader from '../CenterHeader';
 import Sidebar from '../Sidebar';
 import { Link } from 'react-router-dom';
 import { getPostListFromDB } from '../../../../utils/indexedDB';
+import { PostCategory } from '../../../Types/postCategory';
+import { levelOptions } from '../../../../datas/levelOptions';
 
 interface PostItem {
   userNickname?: string;
   postTitle?: string;
   createdAt: Date;
   postCategory: string | null;
+  level: string;
 }
 
 const UserCommunity: React.FC = () => {
@@ -38,15 +41,18 @@ const UserCommunity: React.FC = () => {
 
       if (pagedPosts.length > 0) {
         const postContents = pagedPosts.map((postData: any) => {
+          console.log(postData);
           return {
             createdAt: postData.createdAt,
             userNickname: postData.userNickName,
             postTitle: postData.postTitle,
             postCategory: postData.postCategory,
+            level: postData.level,
             id: postData.id, // DB id
           };
         });
         setPostList(postContents);
+
         setTotalPages(Math.ceil(sortedPosts.length / pageSize));
       }
     } catch (error) {
@@ -82,7 +88,8 @@ const UserCommunity: React.FC = () => {
             <div className="flex w-full h-48 items-center justify-center font-bold text-3xl">게시글 없음</div>
           ) : (
             postList.map((item) => {
-              const { postCategory, postTitle, userNickname, createdAt, id } = item;
+              const { level, postCategory, postTitle, userNickname, createdAt, id } = item;
+              const levelColor = levelOptions.find((option) => option.value === level)?.color || 'white';
 
               return (
                 <ul className="w-[645px] flex flex-col gap-4 mt-2 items-center" key={id}>
@@ -96,7 +103,23 @@ const UserCommunity: React.FC = () => {
                         ) : (
                           ''
                         )}
-                        <h2 className="text-lg font-semibold">{postTitle}</h2>
+                        <div className="flex gap-1 items-center">
+                          {postCategory === PostCategory.NEWSETTING && level && (
+                            <svg
+                              width="20"
+                              height="20"
+                              viewBox="0 0 20 20"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg">
+                              <path
+                                d="M10.7384 16.9615L15.5883 19.8948C16.4764 20.4324 17.5633 19.6377 17.3295 18.6327L16.044 13.1167L20.3329 9.40045C21.1159 8.72263 20.6952 7.43713 19.6668 7.35533L14.0223 6.87618L11.8136 1.66405C11.4162 0.717452 10.0606 0.717452 9.66325 1.66405L7.45452 6.8645L1.81 7.34364C0.781593 7.42544 0.360883 8.71095 1.14387 9.38876L5.43278 13.105L4.14728 18.621C3.91355 19.626 5.00038 20.4207 5.88855 19.8831L10.7384 16.9615Z"
+                                fill={levelColor}
+                                stroke={levelColor !== 'white' ? '' : '#8C8C8C'}
+                              />
+                            </svg>
+                          )}{' '}
+                          <h2 className="text-lg font-semibold">{postTitle}</h2>
+                        </div>
                       </div>
                       <div className="flex gap-2 mt-2">
                         <p className="text-xs text-gray-400">{userNickname || '익명'}</p>
