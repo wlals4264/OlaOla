@@ -3,11 +3,18 @@ import ChooseLevel from '../../MyFeed/AddFeed/ChooseLevel';
 import PostingButtons from './PostingButtons';
 import QuillEditor from './QuillEditor';
 
+enum PostCategory {
+  FREETALK = '재잘재잘',
+  NEWSETTING = '뉴셋소식',
+  CENTERREVIEW = '암장후기',
+  CREWRECRUIT = '크루모집',
+}
+
 const AddPost: React.FC = () => {
   const [currentClimbingLevel, setCurrentClimbingLevel] = useState<string>('');
   const [centerName, setCenterName] = useState<string>('');
   const [postTitle, setPostTitle] = useState<string>('');
-  const [postCategory, setPostCategory] = useState<string>('재잘재잘');
+  const [postCategory, setPostCategory] = useState<PostCategory>(PostCategory.FREETALK);
   const [fileList, setFileList] = useState<File[]>([]);
 
   // ChooseLevel의 onClimbingLevelChange 핸들러
@@ -27,10 +34,10 @@ const AddPost: React.FC = () => {
         <div className="flex gap-4 mb-4">
           {/* 타입 input */}
           <select onChange={(e) => setPostCategory(e.target.value)} className="w-28 h-12 focus:outline-none">
-            <option value="재잘재잘">재잘재잘</option>
-            <option value="뉴셋소식">뉴셋소식</option>
-            <option value="암장후기">암장후기</option>
-            <option value="크루모집">크루모집</option>
+            <option value={PostCategory.FREETALK}>{PostCategory.FREETALK}</option>
+            <option value={PostCategory.NEWSETTING}>{PostCategory.NEWSETTING}</option>
+            <option value={PostCategory.CENTERREVIEW}>{PostCategory.CENTERREVIEW}</option>
+            <option value={PostCategory.CREWRECRUIT}>{PostCategory.CREWRECRUIT}</option>
           </select>
           {/* 제목 input */}
           <input
@@ -63,10 +70,12 @@ const AddPost: React.FC = () => {
           </div>
 
           {/* 난이도 선택창 */}
-          <ChooseLevel
-            currentClimbingLevel={currentClimbingLevel} // 빈 값으로 전달
-            onClimbingLevelChange={handleClimbingLevelChange} // 상태 변경 핸들러 전달
-          />
+          {postCategory === PostCategory.NEWSETTING && (
+            <ChooseLevel
+              currentClimbingLevel={currentClimbingLevel}
+              onClimbingLevelChange={handleClimbingLevelChange}
+            />
+          )}
 
           {/* 게시글 버튼 */}
           <div className="flex items-end mb-5">

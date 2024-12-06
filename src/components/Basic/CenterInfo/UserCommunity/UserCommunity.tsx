@@ -76,7 +76,7 @@ const UserCommunity: React.FC = () => {
         {/* 커뮤니티 컴포넌트 */}
         <div className="w-[80%] flex flex-col gap-4 mt-10 items-center font-noto shrink-0 ">
           <h1 className="font-bold text-2xl cursor-default text-indigo-500 mb-2">
-            유저들과 흥미로운 이야기를 나눠보세요! 😀
+            ✨ 유저들과 흥미로운 이야기를 나눠보세요! 😀
           </h1>
           {postList.length === 0 ? (
             <div className="flex w-full h-48 items-center justify-center font-bold text-3xl">게시글 없음</div>
