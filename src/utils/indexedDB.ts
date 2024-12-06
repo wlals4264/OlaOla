@@ -563,12 +563,14 @@ export function getPostListFromDB(): Promise<File[]> {
 export function updatePostInDB(
   postId: number,
   updatedData: {
-    centerName: string;
-    attachments?: File;
-    viewCount?: number;
-    likeCount?: number;
-    content?: string;
+    postTitle?: string;
     level?: string;
+    content?: string;
+    likeCount?: number;
+    viewCount?: number;
+    updatedAt: string;
+    centerName?: string;
+    postCategory?: string | null;
   }
 ): Promise<void> {
   return getDB().then((db) => {

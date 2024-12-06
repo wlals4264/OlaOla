@@ -25,7 +25,10 @@ const PostItem: React.FC = () => {
   const [likeCount, setLikeCount] = useState<number>('');
   const [viewCount, setViewCount] = useState<number>('');
   const [createdAt, setCreatedAt] = useState<string>('');
+  const [userUID, setUserUID] = useState<string>('');
   const levelColor = levelOptions.find((option) => option.value === level)?.color || 'white';
+
+  const isMyPost = userUID === localStorage.getItem('userUID') ? true : false;
 
   console.log('게시글 ID:', postId);
 
@@ -43,7 +46,8 @@ const PostItem: React.FC = () => {
         let updatedContent = postData.content;
         setContent(updatedContent);
 
-        const { createdAt, userNickName, postTitle, centerName, level, postCategory, likeCount, viewCount } = postData;
+        const { userUID, createdAt, userNickName, postTitle, centerName, level, postCategory, likeCount, viewCount } =
+          postData;
 
         setCreatedAt(createdAt);
         setUserNickName(userNickName);
@@ -53,6 +57,7 @@ const PostItem: React.FC = () => {
         setPostCategory(postCategory);
         setLikeCount(likeCount);
         setViewCount(viewCount);
+        setUserUID(userUID);
 
         const processImages = async (content: string, postId: number): Promise<string> => {
           const parser = new DOMParser();
@@ -118,16 +123,35 @@ const PostItem: React.FC = () => {
           )}{' '}
           <h1 className="font-extrabold text-4xl mt-4">{postTitle}</h1>
         </div>
-        <div className="my-6 flex items-center gap-1">
-          <span className="font-semibold text-sm">{userNickName}</span>
-          <span>·</span>
-          <span className="text-gray-800 text-sm">{formatDate(createdAt)}</span>
+        <div className="my-6 flex justify-between items-center gap-1">
+          <div>
+            <span className="font-semibold text-sm">{userNickName}</span>
+            <span>·</span>
+            <span className="text-gray-600 text-sm">{formatDate(createdAt)}</span>
+          </div>
+          <div>
+            {isMyPost && (
+              // 수정 및 삭제 버튼
+              <div className="flex gap-2">
+                {/* 수정하기 버튼 */}
+                <button type="button" className="text-gray-600 text-sm">
+                  수정
+                </button>
+                {/* 삭제하기 버튼 */}
+                <button type="button" className="text-gray-600 text-sm">
+                  삭제
+                </button>
+              </div>
+            )}
+          </div>
         </div>
         <div className="flex mt-4 items-center">
           <span className="text-xs w-fit h-fit py-1 px-2 rounded-xl bg-gray-100 text-gray-500 hover:bg-gray-500 hover:text-white cursor-pointer">
             # {centerName}
           </span>
         </div>
+
+        {/* 게시글 내용 */}
         <div
           dangerouslySetInnerHTML={{
             __html: content,
