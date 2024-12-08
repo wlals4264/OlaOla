@@ -24,6 +24,7 @@ const UserCommunity: React.FC = () => {
 
   const fetchData = async (currentPage: number) => {
     if (loading) return;
+    // if (postList.length === 0) return;
 
     setLoading(true);
 

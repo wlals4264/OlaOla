@@ -40,10 +40,8 @@ export function initDB() {
         db.createObjectStore('postData', { keyPath: 'id', autoIncrement: true });
       }
       if (!db.objectStoreNames.contains('postImgData')) {
-        db.createObjectStore('postImgData', { keyPath: 'id', autoIncrement: true });
-      }
-      if (!db.objectStoreNames.contains('postImageRelation')) {
-        db.createObjectStore('postImageRelation', { keyPath: 'id', autoIncrement: true });
+        const objectStore = db.createObjectStore('postImgData', { keyPath: 'id', autoIncrement: true });
+        objectStore.createIndex('postIdIndex', 'postId', { unique: false });
       }
     }
   });
@@ -82,12 +80,7 @@ export const getDB = (): Promise<IDBDatabase | null> => {
         db.createObjectStore('postData', { keyPath: 'id', autoIncrement: true });
       }
       if (!db.objectStoreNames.contains('postImgData')) {
-        const objectStore = db.createObjectStore('postImgData', { keyPath: 'id', autoIncrement: true });
-
-        objectStore.createIndex('postIdIndex', 'postId', { unique: false });
-      }
-      if (!db.objectStoreNames.contains('postImageRelation')) {
-        db.createObjectStore('postImageRelation', { keyPath: 'id', autoIncrement: true });
+        db.createObjectStore('postImgData', { keyPath: 'id', autoIncrement: true });
       }
     };
   });

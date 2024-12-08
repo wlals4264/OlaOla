@@ -105,6 +105,7 @@ const PostItem: React.FC = () => {
     const confirmDelete = window.confirm('정말 삭제하시겠습니까?');
     if (confirmDelete) {
       deletePostInDB(Number(postId));
+      deleteImageInDB(Number(postId));
       navigate(-1);
     }
   };
