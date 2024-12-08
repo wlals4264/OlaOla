@@ -75,10 +75,6 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ content, setContent, fileList
     }
   };
 
-  // if(content) {
-
-  // }
-
   useEffect(() => {
     resetEditor();
   }, []);

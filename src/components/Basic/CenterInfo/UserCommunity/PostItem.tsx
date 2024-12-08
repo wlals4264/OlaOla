@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getPostFromDB, getImageByPostId, deletePostInDB } from '../../../../utils/indexedDB';
+import { getPostFromDB, getImageByPostId, deletePostInDB, deleteImageInDB } from '../../../../utils/indexedDB';
 import Spinner from '../../../Spinner/Spinner';
 import { levelOptions } from '../../../../datas/levelOptions';
 import { PostCategory } from '../../../Types/postCategory';
+import { v4 as uuidv4 } from 'uuid';
 
 const PostItem: React.FC = () => {
   const { postId } = useParams<{ postId: string }>();
@@ -25,15 +26,18 @@ const PostItem: React.FC = () => {
 
   const navigate = useNavigate();
 
+  // 날짜 포매팅 함수
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
     return date.toLocaleString();
   };
 
+  // postData 요청
   useEffect(() => {
-    // 비동기 함수 정의
+    // postData 요청
     const fetchPost = async () => {
       try {
+        // 데이터 받아와서 상태 저장
         const postData = await getPostFromDB(Number(postId));
         setPost(postData);
         let updatedContent = postData.content;
@@ -52,6 +56,7 @@ const PostItem: React.FC = () => {
         setViewCount(viewCount);
         setUserUID(userUID);
 
+        // 이미지태그에 Blob URL을 새로 생성하여 처리하는 부분
         const processImages = async (content: string, postId: number): Promise<string> => {
           const parser = new DOMParser();
           const doc = parser.parseFromString(content, 'text/html');
@@ -70,6 +75,7 @@ const PostItem: React.FC = () => {
           return doc.body.innerHTML;
         };
 
+        // content HTML에 Blob URL 적용해서 update
         updatedContent = await processImages(updatedContent, Number(postId));
         setContent(updatedContent);
       } catch (error) {
@@ -96,11 +102,13 @@ const PostItem: React.FC = () => {
     return <div className="font-noto font-bold text-center text-3xl mt-20">게시글을 찾을 수 없습니다.</div>;
   }
 
+  // 게시글 수정하기 버튼 함수
+  // modify-post로 props 전달
   const handleOpenModifyComponent = () => {
     navigate('modify-post', { state: { post, postId } });
   };
 
-  // 게시글 삭제 함수
+  // 게시글 삭제 버튼 함수
   const handleDeleteButtonClick = () => {
     const confirmDelete = window.confirm('정말 삭제하시겠습니까?');
     if (confirmDelete) {

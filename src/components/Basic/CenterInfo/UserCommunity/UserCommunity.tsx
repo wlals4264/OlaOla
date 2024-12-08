@@ -61,6 +61,9 @@ const UserCommunity: React.FC = () => {
         setTotalPages(Math.ceil(sortedPosts.length / pageSize));
       }
     } catch (error) {
+      if (postList.length === 0) {
+        if (postList.length === 0) return;
+      }
       console.error('파일을 가져오는 도중 오류 발생:', error.message);
       setLoading(false);
     } finally {
