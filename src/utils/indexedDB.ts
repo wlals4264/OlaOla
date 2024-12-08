@@ -463,6 +463,46 @@ export function deleteImageInDB(postId: number): Promise<void> {
   });
 }
 
+// DB 이미지데이터 수정 함수
+export function updateImageInDB(postId: number, updatedData: { imgId: string }): Promise<void> {
+  return getDB().then((db) => {
+    if (!db) {
+      return Promise.reject('DB not available');
+    }
+
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction('postImgData', 'readwrite');
+      const objectStore = transaction.objectStore('postImgData');
+      const request = objectStore.get(postId);
+
+      request.onsuccess = () => {
+        const fileData = request.result;
+        if (fileData) {
+          const updatedFileData = { ...fileData, ...updatedData };
+          const updateReq = objectStore.put(updatedFileData);
+
+          updateReq.onsuccess = () => {
+            console.log('이미지가 성공적으로 업데이트되었습니다.');
+            resolve();
+          };
+
+          updateReq.onerror = (event) => {
+            console.error('이미지 데이터 수정 오류', event);
+            reject(event);
+          };
+        } else {
+          reject('이미지 데이터를 찾을 수 없습니다.');
+        }
+      };
+
+      request.onerror = (event) => {
+        console.error('이미지 데이터 가져오기 오류', event);
+        reject(event);
+      };
+    });
+  });
+}
+
 // ---------------------------
 // postData store 접근 함수들
 // ---------------------------

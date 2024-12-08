@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getPostFromDB, getImageByPostId, deletePostInDB, deleteImageInDB } from '../../../../utils/indexedDB';
+import {
+  getPostFromDB,
+  getImageByPostId,
+  deletePostInDB,
+  deleteImageInDB,
+  updateImageInDB,
+} from '../../../../utils/indexedDB';
 import Spinner from '../../../Spinner/Spinner';
 import { levelOptions } from '../../../../datas/levelOptions';
 import { PostCategory } from '../../../Types/postCategory';
@@ -66,9 +72,12 @@ const PostItem: React.FC = () => {
 
           // 이미지 태그에 Blob URL 적용
           imgTags.forEach((img, index) => {
+            const imgId = uuidv4();
             if (blobs[index]) {
               const newBlobUrl = URL.createObjectURL(blobs[index]);
               img.setAttribute('src', newBlobUrl);
+              img.setAttribute('data-img-id', imgId);
+              updateImageInDB(Number(postId), { imgId: imgId });
             }
           });
 
@@ -76,7 +85,7 @@ const PostItem: React.FC = () => {
         };
 
         // content HTML에 Blob URL 적용해서 update
-        updatedContent = await processImages(updatedContent, Number(postId));
+        updatedContent = await processImages(updatedContent, Number(Number(postId)));
         setContent(updatedContent);
       } catch (error) {
         console.error('게시글을 가져오는 중 오류가 발생했습니다:', error);
