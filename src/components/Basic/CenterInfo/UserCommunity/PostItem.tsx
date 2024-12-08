@@ -18,14 +18,12 @@ const PostItem: React.FC = () => {
   const [likeCount, setLikeCount] = useState<number>('');
   const [viewCount, setViewCount] = useState<number>('');
   const [createdAt, setCreatedAt] = useState<string>('');
-  const [userUID, setUserUID] = useState<string>('');
+  const [userUID, setUserUID] = useState<string | null>('');
   const levelColor = levelOptions.find((option) => option.value === level)?.color || 'white';
 
   const isMyPost = userUID === localStorage.getItem('userUID') ? true : false;
 
   const navigate = useNavigate();
-
-  console.log('게시글 ID:', postId);
 
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);

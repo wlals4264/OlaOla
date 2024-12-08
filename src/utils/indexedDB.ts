@@ -40,7 +40,7 @@ export function initDB() {
         db.createObjectStore('postData', { keyPath: 'id', autoIncrement: true });
       }
       if (!db.objectStoreNames.contains('postImgData')) {
-        db.createObjectStore('postData', { keyPath: 'id', autoIncrement: true });
+        db.createObjectStore('postImgData', { keyPath: 'id', autoIncrement: true });
       }
       if (!db.objectStoreNames.contains('postImageRelation')) {
         db.createObjectStore('postImageRelation', { keyPath: 'id', autoIncrement: true });
@@ -444,6 +444,31 @@ export const getImageByPostId = async (postId: number) => {
     };
   });
 };
+
+// 이미지 삭제 함수
+export function deleteImageInDB(postId: number): Promise<void> {
+  return getDB().then((db) => {
+    if (!db) {
+      return Promise.reject('DB not available');
+    }
+
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction('postImgData', 'readwrite');
+      const objectStore = transaction.objectStore('postImgData');
+      const request = objectStore.delete(postId);
+
+      request.onsuccess = () => {
+        console.log('이미지가 성공적으로 삭제되었습니다.');
+        resolve();
+      };
+
+      request.onerror = (event) => {
+        console.error('이미지 삭제 오류', event);
+        reject(event);
+      };
+    });
+  });
+}
 
 // ---------------------------
 // postData store 접근 함수들

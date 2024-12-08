@@ -44,7 +44,7 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ content, setContent, fileList
   }, []);
 
   // 이미지 sanitize 함수 설정
-  const Image = ReactQuill.Quill.import('formats/image');
+  const Image: any = ReactQuill.Quill.import('formats/image');
   Image.sanitize = (url: string) => {
     if (url.startsWith('blob:')) {
       return url;
@@ -73,27 +73,11 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ content, setContent, fileList
       // 초기화
       fileInputRef.current.value = '';
     }
-
-    // DB에 file 업로드
-    // if (file) {
-    //   try {
-    //     const imageId = await saveImageToIndexedDB(file);
-    //     const savedImage = await getImageFromIndexedDB(imageId);
-
-    //     if (savedImage instanceof Blob) {
-    //       const blobUrl = URL.createObjectURL(savedImage);
-    //       const editor = quillRef.current.getEditor();
-    //       const range = editor.getSelection();
-    //       if (range) {
-    //         editor.insertEmbed(range.index, 'image', blobUrl);
-    //         editor.setSelection(range.index + 1);
-    //       }
-    //     }
-    //   } catch (error) {
-    //     console.error('이미지 처리 오류:', error);
-    //   }
-    // }
   };
+
+  // if(content) {
+
+  // }
 
   useEffect(() => {
     resetEditor();

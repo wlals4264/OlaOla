@@ -53,8 +53,15 @@ const PostingButtons: React.FC<PostingButtonsProps> = ({
       postCategory,
     };
 
+    // editorValue에서 이미지 태그를 찾아 id를 추가
+    const updatedEditorValue = editorValue.replace(/<img([^>]*)>/g, (match) => {
+      const imageId = `img-${Date.now()}`; // 간단한 고유 ID 생성
+      return match.replace(/<img([^>]*)>/, `<img$1 id="${imageId}">`); // 이미지에 ID 추가
+    });
+
+    newPost.content = updatedEditorValue;
+
     const postId = await addPostToDB(newPost);
-    // addPostToDB(newPost);
 
     // DB에 file 업로드
     if (fileList) {

@@ -34,7 +34,9 @@ const AddPost: React.FC = () => {
         </h1>
         <div className="flex gap-4 mb-4">
           {/* 타입 input */}
-          <select onChange={(e) => setPostCategory(e.target.value)} className="w-28 h-12 focus:outline-none">
+          <select
+            onChange={(e) => setPostCategory(e.target.value as PostCategory)}
+            className="w-28 h-12 focus:outline-none">
             <option value={PostCategory.FREETALK}>{PostCategory.FREETALK}</option>
             <option value={PostCategory.NEWSETTING}>{PostCategory.NEWSETTING}</option>
             <option value={PostCategory.CENTERREVIEW}>{PostCategory.CENTERREVIEW}</option>
