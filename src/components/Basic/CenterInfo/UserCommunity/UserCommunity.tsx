@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { getPostListFromDB } from '../../../../utils/indexedDB';
 import { PostCategory } from '../../../Types/postCategory';
 import { levelOptions } from '../../../../datas/levelOptions';
+import { formatTimeDifference } from '../../../../utils/formatTimeDifference';
 
 interface PostItem {
   userNickname?: string;
@@ -12,6 +13,7 @@ interface PostItem {
   createdAt: Date;
   postCategory: string | null;
   level: string;
+  updatedAt: Date;
 }
 
 const UserCommunity: React.FC = () => {
@@ -50,6 +52,7 @@ const UserCommunity: React.FC = () => {
             postCategory: postData.postCategory,
             level: postData.level,
             id: postData.id, // DB id
+            updatedAt: postData.updatedAt,
           };
         });
         setPostList(postContents);
@@ -89,7 +92,7 @@ const UserCommunity: React.FC = () => {
             <div className="flex w-full h-48 items-center justify-center font-bold text-3xl">게시글 없음</div>
           ) : (
             postList.map((item) => {
-              const { level, postCategory, postTitle, userNickname, createdAt, id } = item;
+              const { level, postCategory, postTitle, userNickname, createdAt, id, updatedAt } = item;
               const levelColor = levelOptions.find((option) => option.value === level)?.color || 'white';
 
               return (
@@ -125,6 +128,9 @@ const UserCommunity: React.FC = () => {
                       <div className="flex gap-2 mt-2">
                         <p className="text-xs text-gray-400">{userNickname || '익명'}</p>
                         <span className="text-xs text-gray-400">{new Date(createdAt).toLocaleDateString()}</span>
+                        {createdAt !== updatedAt && (
+                          <span className="text-xs text-gray-400">{formatTimeDifference(updatedAt)} 수정</span>
+                        )}
                       </div>
                     </li>
                   </Link>
