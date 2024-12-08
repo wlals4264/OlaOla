@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getPostFromDB, getImageByPostId } from '../../../../utils/indexedDB';
+import { getPostFromDB, getImageByPostId, deletePostInDB } from '../../../../utils/indexedDB';
 import Spinner from '../../../Spinner/Spinner';
 import { levelOptions } from '../../../../datas/levelOptions';
 import { PostCategory } from '../../../Types/postCategory';
@@ -100,6 +100,15 @@ const PostItem: React.FC = () => {
     navigate('modify-post', { state: { post, postId } });
   };
 
+  // 게시글 삭제 함수
+  const handleDeleteButtonClick = () => {
+    const confirmDelete = window.confirm('정말 삭제하시겠습니까?');
+    if (confirmDelete) {
+      deletePostInDB(Number(postId));
+      navigate(-1);
+    }
+  };
+
   return (
     <div className="font-noto w-[760px] flex flex-col justify-center m-auto mb-4">
       <div className="">
@@ -135,7 +144,7 @@ const PostItem: React.FC = () => {
                   수정
                 </button>
                 {/* 삭제하기 버튼 */}
-                <button type="button" className="text-gray-600 text-sm">
+                <button onClick={handleDeleteButtonClick} type="button" className="text-gray-600 text-sm">
                   삭제
                 </button>
               </div>
