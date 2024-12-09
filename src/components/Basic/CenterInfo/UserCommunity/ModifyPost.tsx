@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ChooseLevel from '../../MyFeed/AddFeed/ChooseLevel';
 import PostingButtons from './PostingButtons';
 import QuillEditor from './QuillEditor';
-import { PostCategory } from '../../../Types/postCategory';
+import { PostCategory } from '../../../Types/PostCategory';
 import { updatePostInDB } from '../../../../utils/indexedDB';
 import { useLocation } from 'react-router-dom';
 

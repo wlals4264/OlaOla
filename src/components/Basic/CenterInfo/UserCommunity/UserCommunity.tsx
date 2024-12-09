@@ -3,7 +3,7 @@ import CenterHeader from '../CenterHeader';
 import Sidebar from '../Sidebar';
 import { Link } from 'react-router-dom';
 import { getPostListFromDB } from '../../../../utils/indexedDB';
-import { PostCategory } from '../../../Types/postCategory';
+import { PostCategory } from '../../../Types/PostCategory';
 import { levelOptions } from '../../../../datas/levelOptions';
 import { formatTimeDifference } from '../../../../utils/formatTimeDifference';
 
@@ -14,6 +14,7 @@ interface PostItem {
   postCategory: string | null;
   level: string;
   updatedAt: Date;
+  id: number;
 }
 
 const UserCommunity: React.FC = () => {
@@ -22,17 +23,17 @@ const UserCommunity: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
+  // 게시글 리스트 요청
   const fetchData = async (currentPage: number) => {
     if (loading) return;
-    // if (postList.length === 0) return;
 
     setLoading(true);
 
     try {
       // DB에서 게시글 리스트 가져오기
       const posts = await getPostListFromDB();
+      console.log('UserCommunity DB 연결 성공');
       console.log(posts);
-      console.log('DB 연결 성공');
 
       // 받아온 파일 리스트를 id 내림차순으로 정렬해서 최신값부터 정렬
       const sortedPosts = posts.sort((a, b) => b.id - a.id);
@@ -41,18 +42,16 @@ const UserCommunity: React.FC = () => {
       const startIndex = (currentPage - 1) * pageSize;
       const pagedPosts = sortedPosts.slice(startIndex, startIndex + pageSize);
 
-      // console.log('현재 페이지:', currentPage, '로딩할 파일들:', pagedPosts);
-
       if (pagedPosts.length > 0) {
         const postContents = pagedPosts.map((postData: any) => {
-          console.log(postData);
+          console.log('게시글 리스트 아이템', postData);
           return {
             createdAt: postData.createdAt,
             userNickname: postData.userNickName,
             postTitle: postData.postTitle,
             postCategory: postData.postCategory,
             level: postData.level,
-            id: postData.id, // DB id
+            id: postData.id,
             updatedAt: postData.updatedAt,
           };
         });
@@ -60,7 +59,7 @@ const UserCommunity: React.FC = () => {
 
         setTotalPages(Math.ceil(sortedPosts.length / pageSize));
       }
-    } catch (error) {
+    } catch (error: any) {
       if (postList.length === 0) {
         if (postList.length === 0) return;
       }
@@ -71,12 +70,14 @@ const UserCommunity: React.FC = () => {
     }
   };
 
+  // pageNumber change event
   const handlePageChange = (pageNumber: number) => {
     if (pageNumber > 0 && pageNumber <= totalPages) {
       setCurrentPage(pageNumber);
     }
   };
 
+  // 현재 페이지값이 변하면 데이터 요청
   useEffect(() => {
     fetchData(currentPage);
   }, [currentPage]);
@@ -92,6 +93,8 @@ const UserCommunity: React.FC = () => {
           <h1 className="font-bold text-2xl cursor-default text-indigo-500 mb-2">
             ✨ 유저들과 흥미로운 이야기를 나눠보세요! 😀
           </h1>
+
+          {/* 게시글 리스트 */}
           {postList.length === 0 ? (
             <div className="flex w-full h-48 items-center justify-center font-bold text-3xl">게시글 없음</div>
           ) : (
@@ -129,6 +132,8 @@ const UserCommunity: React.FC = () => {
                           <h2 className="text-lg font-semibold">{postTitle}</h2>
                         </div>
                       </div>
+
+                      {/* 닉네임 & 작성일 & 게시 및 수정 정보 */}
                       <div className="flex gap-2 mt-2">
                         <p className="text-xs text-gray-400">{userNickname || '익명'}</p>
                         <span className="text-xs text-gray-400">{new Date(createdAt).toLocaleDateString()}</span>
@@ -143,7 +148,9 @@ const UserCommunity: React.FC = () => {
             })
           )}
 
+          {/* page Buttons */}
           <div className="flex items-center gap-4 font-noto">
+            {/* prev page button */}
             <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
@@ -152,6 +159,7 @@ const UserCommunity: React.FC = () => {
                 />
               </svg>
             </button>
+            {/* page's number button */}
             {Array.from({ length: totalPages }, (_, i) => (
               <button
                 key={i + 1}
@@ -161,6 +169,7 @@ const UserCommunity: React.FC = () => {
                 {i + 1}
               </button>
             ))}
+            {/* next page button */}
             <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
@@ -170,9 +179,9 @@ const UserCommunity: React.FC = () => {
               </svg>
             </button>
           </div>
-          <div className="flex justify-center w-full mt-10 font-noto text-sm">
-            {/* 필터링 버튼들 */}
 
+          {/* 필터링 버튼들 */}
+          <div className="flex justify-center w-full mt-10 font-noto text-sm">
             <div className="flex justify-between items-center shrink-0 w-[645px] m-auto">
               <div className="flex gap-3">
                 <button className="shrink-0" type="button">

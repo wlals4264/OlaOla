@@ -24,6 +24,7 @@ const PostingButtons: React.FC<PostingButtonsProps> = ({
   const userNickName = useRecoilValue(userNicknameState);
   const editorValue = useRecoilValue(editorValueState);
 
+  // 취소하기
   const handleCancel = (): void => {
     navigate(-1);
   };
@@ -39,29 +40,21 @@ const PostingButtons: React.FC<PostingButtonsProps> = ({
   // 게시글 올리기 & db에 이미지 저장
   const handlePost = async (): Promise<void> => {
     // 게시글 DB에 저장
-    const newPost = {
+    const post = {
       userUID,
       userNickName,
       postTitle,
       content: editorValue,
       level: climbingLevel,
-      likeCount: 0,
-      viewCount: 0,
+      likeCount: 0, // 기본값
+      viewCount: 0, // 기본값
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       centerName,
       postCategory,
     };
 
-    // editorValue에서 이미지 태그를 찾아 id를 추가
-    const updatedEditorValue = editorValue.replace(/<img([^>]*)>/g, (match) => {
-      const imageId = `img-${Date.now()}`; // 간단한 고유 ID 생성
-      return match.replace(/<img([^>]*)>/, `<img$1 id="${imageId}">`); // 이미지에 ID 추가
-    });
-
-    newPost.content = updatedEditorValue;
-
-    const postId = await addPostToDB(newPost);
+    const postId = await addPostToDB(post);
 
     // DB에 file 업로드
     if (fileList) {

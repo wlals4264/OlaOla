@@ -6,10 +6,11 @@ import {
   deletePostInDB,
   deleteImageInDB,
   updateImageInDB,
+  updatePostInDB,
 } from '../../../../utils/indexedDB';
 import Spinner from '../../../Spinner/Spinner';
 import { levelOptions } from '../../../../datas/levelOptions';
-import { PostCategory } from '../../../Types/postCategory';
+import { PostCategory } from '../../../Types/PostCategory';
 import { v4 as uuidv4 } from 'uuid';
 
 const PostItem: React.FC = () => {
@@ -22,8 +23,8 @@ const PostItem: React.FC = () => {
   const [centerName, setCenterName] = useState<string>('');
   const [level, setLevel] = useState<string>('');
   const [postCategory, setPostCategory] = useState<string | null>('');
-  const [likeCount, setLikeCount] = useState<number>('');
-  const [viewCount, setViewCount] = useState<number>('');
+  const [likeCount, setLikeCount] = useState<number>(0);
+  const [viewCount, setViewCount] = useState<number>(0);
   const [createdAt, setCreatedAt] = useState<string>('');
   const [userUID, setUserUID] = useState<string | null>('');
   const levelColor = levelOptions.find((option) => option.value === level)?.color || 'white';
@@ -32,26 +33,19 @@ const PostItem: React.FC = () => {
 
   const navigate = useNavigate();
 
-  // 날짜 포매팅 함수
-  const formatDate = (dateString: string): string => {
-    const date = new Date(dateString);
-    return date.toLocaleString();
-  };
-
-  // postData 요청
+  // postId에 따라 postData 요청
   useEffect(() => {
-    // postData 요청
     const fetchPost = async () => {
       try {
-        // 데이터 받아와서 상태 저장
         const postData = await getPostFromDB(Number(postId));
         setPost(postData);
+
         let updatedContent = postData.content;
         setContent(updatedContent);
 
+        // 받아온 데이터를 통해 게시글에 필요한 상태 저장
         const { userUID, createdAt, userNickName, postTitle, centerName, level, postCategory, likeCount, viewCount } =
           postData;
-
         setCreatedAt(createdAt);
         setUserNickName(userNickName);
         setPostTitle(postTitle);
@@ -62,20 +56,24 @@ const PostItem: React.FC = () => {
         setViewCount(viewCount);
         setUserUID(userUID);
 
-        // 이미지태그에 Blob URL을 새로 생성하여 처리하는 부분
+        // 저장되어 있는 이미지 데이터를 불러와 이미지태그에 Blob URL을 생성하여 처리하는 함수
         const processImages = async (content: string, postId: number): Promise<string> => {
+          // HTML 문서를 파싱하여 DOM 조작 가능하도록 셋팅, img 태그들 선택
           const parser = new DOMParser();
           const doc = parser.parseFromString(content, 'text/html');
           const imgTags = Array.from(doc.querySelectorAll('img[src^="blob:"]')) as HTMLImageElement[];
-
+          // postId로 DB에서 이미지를 찾아 Blob 객체를 받아오기
           const blobs = (await getImageByPostId(Number(postId))) as Blob[];
 
           // 이미지 태그에 Blob URL 적용
           imgTags.forEach((img, index) => {
+            // uuid : 고유한 id 값 생성을 위해 사용
             const imgId = uuidv4();
+
             if (blobs[index]) {
               const newBlobUrl = URL.createObjectURL(blobs[index]);
               img.setAttribute('src', newBlobUrl);
+              // id 생성해서 img태그와 Image에 같은 id로 매핑
               img.setAttribute('data-img-id', imgId);
               updateImageInDB(Number(postId), { imgId: imgId });
             }
@@ -84,9 +82,11 @@ const PostItem: React.FC = () => {
           return doc.body.innerHTML;
         };
 
-        // content HTML에 Blob URL 적용해서 update
-        updatedContent = await processImages(updatedContent, Number(Number(postId)));
+        // content HTML에 Blob URL 적용한 content를 update
+        updatedContent = await processImages(updatedContent, Number(postId));
         setContent(updatedContent);
+        setPost({ ...postData, content: updatedContent });
+        updatePostInDB(Number(postId), post);
       } catch (error) {
         console.error('게시글을 가져오는 중 오류가 발생했습니다:', error);
       } finally {
@@ -127,8 +127,15 @@ const PostItem: React.FC = () => {
     }
   };
 
+  // 날짜 포매팅 함수
+  const formatDate = (dateString: string): string => {
+    const date = new Date(dateString);
+    return date.toLocaleString();
+  };
+
   return (
     <div className="font-noto w-[760px] flex flex-col justify-center m-auto mb-4">
+      {/* category & title & level & nickName & createAt & 수정, 삭제 buttons */}
       <div className="">
         <div className="flex mt-10 items-center">
           <span className="text-xs w-fit h-fit py-1 px-2 rounded-2xl bg-primary font-semibold text-white cursor-default">
@@ -170,9 +177,11 @@ const PostItem: React.FC = () => {
           </div>
         </div>
         <div className="flex mt-4 items-center">
-          <span className="text-xs w-fit h-fit py-1 px-2 rounded-xl bg-gray-100 text-gray-500 hover:bg-gray-500 hover:text-white cursor-pointer">
-            # {centerName}
-          </span>
+          {centerName && (
+            <span className="text-xs w-fit h-fit py-1 px-2 rounded-xl bg-gray-100 text-gray-500 hover:bg-gray-500 hover:text-white cursor-pointer">
+              # {centerName}
+            </span>
+          )}
         </div>
 
         {/* 게시글 내용 */}

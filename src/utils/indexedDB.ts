@@ -519,6 +519,7 @@ interface Post {
   updatedAt: string;
   centerName: string;
   postCategory: string | null;
+  id?: number;
 }
 
 // DB에 게시글 올리기

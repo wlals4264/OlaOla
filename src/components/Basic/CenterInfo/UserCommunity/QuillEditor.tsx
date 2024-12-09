@@ -1,10 +1,10 @@
 import React, { useMemo, useEffect, useRef } from 'react';
 import ReactQuill from 'react-quill-new';
 import 'react-quill/dist/quill.snow.css';
-// import { saveImageToIndexedDB, getImageFromIndexedDB } from '../../../../utils/indexedDB';
 import { useRecoilState } from 'recoil';
 import { editorValueState } from '../../../../datas/recoilData';
 
+// QuillEditor formats 정의
 const formats = ['font', 'header', 'bold', 'italic', 'strike', 'indent', 'link', 'color', 'image', 'align'];
 
 interface QuillEditorProps {
@@ -26,6 +26,7 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ content, setContent, fileList
     setFileList([]);
   };
 
+  // QuillEditor modules 설정, useMemo로 불필요한 렌더링 제거
   const modules = useMemo(() => {
     return {
       toolbar: {
@@ -52,6 +53,7 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ content, setContent, fileList
     return '';
   };
 
+  // 이미지 미리보기
   const handleImageUpload = async () => {
     if (!fileInputRef.current || !quillRef.current) return;
 
@@ -72,9 +74,11 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ content, setContent, fileList
 
       // 초기화
       fileInputRef.current.value = '';
+      // URL.revokeObjectURL(blobUrl);
     }
   };
 
+  // 첫 렌더링 시 초기화 함수 실행
   useEffect(() => {
     resetEditor();
   }, []);

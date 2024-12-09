@@ -2,16 +2,10 @@ import React, { useState } from 'react';
 import ChooseLevel from '../../MyFeed/AddFeed/ChooseLevel';
 import PostingButtons from './PostingButtons';
 import QuillEditor from './QuillEditor';
-import { PostCategory } from '../../../Types/postCategory';
-
-// enum PostCategory {
-//   FREETALK = '재잘재잘',
-//   NEWSETTING = '뉴셋소식',
-//   CENTERREVIEW = '암장후기',
-//   CREWRECRUIT = '크루모집',
-// }
+import { PostCategory } from '../../../Types/PostCategory';
 
 const AddPost: React.FC = () => {
+  const [content, setContent] = useState<string>('');
   const [currentClimbingLevel, setCurrentClimbingLevel] = useState<string>('');
   const [centerName, setCenterName] = useState<string>('');
   const [postTitle, setPostTitle] = useState<string>('');
@@ -22,8 +16,6 @@ const AddPost: React.FC = () => {
   const handleClimbingLevelChange = (newClimbingLevel: string): void => {
     setCurrentClimbingLevel(newClimbingLevel);
   };
-
-  console.log(fileList);
 
   return (
     <div>
@@ -42,6 +34,7 @@ const AddPost: React.FC = () => {
             <option value={PostCategory.CENTERREVIEW}>{PostCategory.CENTERREVIEW}</option>
             <option value={PostCategory.CREWRECRUIT}>{PostCategory.CREWRECRUIT}</option>
           </select>
+
           {/* 제목 input */}
           <input
             type="text"
@@ -53,7 +46,7 @@ const AddPost: React.FC = () => {
 
         {/* 텍스트 편집기 */}
         <div className="mb-12">
-          <QuillEditor fileList={fileList} setFileList={setFileList} />
+          <QuillEditor content={content} setContent={setContent} fileList={fileList} setFileList={setFileList} />
         </div>
 
         {/* 암장명 & 난이도 선택창 & buttons */}
@@ -81,6 +74,7 @@ const AddPost: React.FC = () => {
           )}
 
           {/* 게시글 버튼 */}
+          {/* QuillEditor로 부터 받은 fileList를 넘겨줌 */}
           <div className="flex items-end mb-5">
             <PostingButtons
               fileList={fileList}
