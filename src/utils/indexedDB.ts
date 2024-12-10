@@ -340,7 +340,7 @@ export function getCommentsListFromDB(storeName: string): Promise<Comment[]> {
 }
 
 // DB 파일 수정 함수
-export function updateCommentInDB(postId: number, storeName: string, updatedData: { comment: Comment }): Promise<void> {
+export function updateCommentInDB(postId: number, storeName: string, updatedData: { comment: string }): Promise<void> {
   return getDB().then((db) => {
     if (!db) {
       return Promise.reject('DB not available');

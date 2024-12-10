@@ -17,7 +17,11 @@ interface FeedItem {
   userUID?: string;
 }
 
-const BrowsingFeedComponent: React.FC = () => {
+interface BrowsingFeedComponentProps {
+  isScrollSnap: boolean;
+}
+
+const BrowsingFeedComponent: React.FC<BrowsingFeedComponentProps> = ({ isScrollSnap }) => {
   const [feedItems, setFeedItems] = useState<FeedItem[]>([]);
   const [selectedFeedItem, setSelectedFeedItem] = useState<any | null>(null);
   const [isFeedItemModalOpen, setFeedItemModalOpen] = useRecoilState(isFeedItemModalOpenState);
@@ -47,11 +51,10 @@ const BrowsingFeedComponent: React.FC = () => {
       // 받아온 파일리스트를 id 내림차순으로 정렬해서 최신값부터 정렬
       const sortedFiles = files.sort((a, b) => b.id - a.id);
 
-      const pageSize = 9;
+      const pageSize = isScrollSnap ? 6 : 9;
       const startIndex = page * pageSize;
       const pagedFiles = sortedFiles.slice(startIndex, startIndex + pageSize);
 
-      console.log('현재 페이지:', page, '로딩할 파일들:', pagedFiles);
       if (sortedFiles.length > 0) {
         if (pagedFiles.length > 0) {
           const fileUrls = pagedFiles.map((fileData: any) => {
@@ -70,11 +73,10 @@ const BrowsingFeedComponent: React.FC = () => {
 
           setFeedItems((prevItems) => [...prevItems, ...fileUrls]);
           setPageParams((prev) => [...prev, page]);
-          setHasMore(pagedFiles.length === pageSize);
+          setHasMore(!isScrollSnap && pagedFiles.length === pageSize);
           setLoading(false);
         } else {
           setHasMore(false);
-          // setError('게시물 없음');
         }
       } else {
         setError('게시물 없음');

@@ -19,7 +19,11 @@ const SearchResultList = styled.ul`
   z-index: 10;
 `;
 
-const FindCenter: React.FC = () => {
+interface FindCenterProps {
+  isScrollSnap: boolean;
+}
+
+const FindCenter: React.FC<FindCenterProps> = ({ isScrollSnap }) => {
   const { kakao } = window as any;
 
   const [searchText, setSearchText] = useState('');
@@ -82,11 +86,12 @@ const FindCenter: React.FC = () => {
 
   return (
     <div>
-      <CenterHeader />
+      {!isScrollSnap && <CenterHeader />}
       <div className="flex m-auto w-[95%]">
-        <Sidebar />
+        {!isScrollSnap && <Sidebar />}
 
         {/* 암장 찾기 컴포넌트 */}
+
         <div className="w-[80%] flex flex-col gap-10 mt-10 items-center font-noto shrink-0">
           {/* 검색창 */}
           <form

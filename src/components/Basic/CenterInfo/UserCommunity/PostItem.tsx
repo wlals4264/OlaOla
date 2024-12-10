@@ -145,7 +145,7 @@ const PostItem: React.FC = () => {
         <div className="my-6 flex justify-between items-center gap-1">
           <div>
             <span className="font-semibold text-sm">{userNickName}</span>
-            <span>·</span>
+            <span> · </span>
             <span className="text-gray-600 text-sm">{formatDate(createdAt)}</span>
           </div>
           <div>

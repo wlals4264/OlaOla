@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import Nav from '../components/Basic/Nav';
-import Carousel from '../components/Basic/Carousel';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../Firebase/firebase';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { userNicknameState } from '../datas/recoilData';
+import { isLoginUserState, userNicknameState } from '../datas/recoilData';
+import Nav from '../components/Basic/Nav';
+import Carousel from '../components/Basic/Carousel';
 import LoginNav from '../components/Basic/LoginNav';
+import ScrollSnap from '../components/Basic/ScrollSnap';
 import Spinner from '../components/Spinner/Spinner';
-import { isLoginUserState } from '../datas/recoilData';
 
 const StartPage: React.FC = () => {
   const setNickname = useSetRecoilState(userNicknameState);
@@ -38,6 +38,7 @@ const StartPage: React.FC = () => {
       {isLoginUser ? <LoginNav /> : <Nav />}
 
       <Carousel />
+      <ScrollSnap />
     </>
   );
 };
