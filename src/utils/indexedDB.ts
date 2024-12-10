@@ -374,7 +374,7 @@ interface imageData {
 }
 
 // 이미지 추가
-export const saveImageToIndexedDB = async (file: File, postId: number) => {
+export const saveImageToIndexedDB = async (file: File, postId: number, imgId: string) => {
   const db = await getDB();
 
   return new Promise<string>((resolve, reject) => {
@@ -385,7 +385,7 @@ export const saveImageToIndexedDB = async (file: File, postId: number) => {
 
     const imageBlob = file.slice(0, file.size, file.type);
 
-    const addReq = store.add({ imageData: imageBlob, postId: postId });
+    const addReq = store.add({ imageData: imageBlob, postId: postId, imgId: imgId });
 
     addReq.addEventListener('success', function (event: Event) {
       const target = event.target as IDBRequest;

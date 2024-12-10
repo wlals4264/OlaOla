@@ -1,17 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import {
-  getPostFromDB,
-  getImageByPostId,
-  deletePostInDB,
-  deleteImageInDB,
-  updateImageInDB,
-  updatePostInDB,
-} from '../../../../utils/indexedDB';
+import { getPostFromDB, getImageByPostId, deletePostInDB, deleteImageInDB } from '../../../../utils/indexedDB';
 import Spinner from '../../../Spinner/Spinner';
 import { levelOptions } from '../../../../datas/levelOptions';
 import { PostCategory } from '../../../Types/PostCategory';
-import { v4 as uuidv4 } from 'uuid';
 
 const PostItem: React.FC = () => {
   const { postId } = useParams<{ postId: string }>();
@@ -62,20 +54,15 @@ const PostItem: React.FC = () => {
           const parser = new DOMParser();
           const doc = parser.parseFromString(content, 'text/html');
           const imgTags = Array.from(doc.querySelectorAll('img[src^="blob:"]')) as HTMLImageElement[];
+
           // postId로 DB에서 이미지를 찾아 Blob 객체를 받아오기
           const blobs = (await getImageByPostId(Number(postId))) as Blob[];
 
           // 이미지 태그에 Blob URL 적용
           imgTags.forEach((img, index) => {
-            // uuid : 고유한 id 값 생성을 위해 사용
-            const imgId = uuidv4();
-
             if (blobs[index]) {
               const newBlobUrl = URL.createObjectURL(blobs[index]);
               img.setAttribute('src', newBlobUrl);
-              // id 생성해서 img태그와 Image에 같은 id로 매핑
-              img.setAttribute('data-img-id', imgId);
-              updateImageInDB(Number(postId), { imgId: imgId });
             }
           });
 
@@ -85,12 +72,12 @@ const PostItem: React.FC = () => {
         // content HTML에 Blob URL 적용한 content를 update
         updatedContent = await processImages(updatedContent, Number(postId));
         setContent(updatedContent);
-        setPost({ ...postData, content: updatedContent });
-        updatePostInDB(Number(postId), post);
+        // setPost({ ...postData, content: updatedContent });
+        // updatePostInDB(Number(postId), post);
       } catch (error) {
         console.error('게시글을 가져오는 중 오류가 발생했습니다:', error);
       } finally {
-        setLoading(false); // 로딩 상태 해제
+        setLoading(false);
       }
     };
 
