@@ -1,13 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import ChooseLevel from '../../MyFeed/AddFeed/ChooseLevel';
 import PostingButtons from './PostingButtons';
 import QuillEditor from './QuillEditor';
-import { v4 as uuidv4 } from 'uuid';
 import { PostCategory } from '../../../Types/PostCategory';
-import { updatePostInDB, saveImageToIndexedDB, getImageIdByPostId, deleteImageInDB } from '../../../../utils/indexedDB';
+import { updatePostInDB } from '../../../../utils/indexedDB';
 import { useLocation } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
-import { editorValueState } from '../../../../datas/recoilData';
 
 const ModifyPost: React.FC = () => {
   const location = useLocation();
@@ -22,7 +19,6 @@ const ModifyPost: React.FC = () => {
   const [fileList, setFileList] = useState<File[]>([]);
   const [content, setContent] = useState<string>(post.content);
   const [climbingLevel, setClimbingLevel] = useState<string>(post.level);
-  const editorValue = useRecoilValue(editorValueState);
 
   // 난이도 변경 시 상태 업데이트 함수
   const handleClimbingLevelChange = (newClimbingLevel: string) => {
