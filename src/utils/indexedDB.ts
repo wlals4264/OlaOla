@@ -97,7 +97,8 @@ export function addFileToDB(
   userUID: string | null,
   level: string,
   centerName: string,
-  niceCount: number = 0
+  niceCount: number = 0,
+  niceUser: string[] = []
 ): void {
   getDB()
     .then((db) => {
@@ -118,6 +119,7 @@ export function addFileToDB(
         centerName: centerName,
         niceCount: niceCount,
         createdAt: new Date().toISOString(),
+        niceUser: niceUser,
       };
 
       const addReq = store.add(fileData);
@@ -199,7 +201,7 @@ export function getFileListFromDB(): Promise<File[]> {
 // DB 파일 수정 함수
 export function updateFileInDB(
   fileId: number,
-  updatedData: { niceCount: number; describe?: string; level?: string; centerName?: string }
+  updatedData: { niceCount: number; describe?: string; level?: string; centerName?: string; niceUser?: string[] }
 ): Promise<void> {
   return getDB().then((db) => {
     if (!db) {
