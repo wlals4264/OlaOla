@@ -4,6 +4,7 @@ import { getPostFromDB, getImageByPostId, deletePostInDB, deleteImageInDB } from
 import Spinner from '../../../Spinner/Spinner';
 import { levelOptions } from '../../../../datas/levelOptions';
 import { PostCategory } from '../../../Types/PostCategory';
+import CommunityComment from './CommunityComment';
 
 const PostItem: React.FC = () => {
   const { postId } = useParams<{ postId: string }>();
@@ -185,7 +186,8 @@ const PostItem: React.FC = () => {
       </div>
 
       {/* 댓글창 */}
-      <form
+      <CommunityComment postId={Number(postId)} />
+      {/* <form
         className="w-full mt-10"
         // onSubmit={handleCommentSubmit}
       >
@@ -200,7 +202,7 @@ const PostItem: React.FC = () => {
             댓글 작성
           </button>
         </div>
-      </form>
+      </form> */}
     </div>
   );
 };

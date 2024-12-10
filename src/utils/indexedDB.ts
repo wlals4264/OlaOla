@@ -339,6 +339,46 @@ export function getCommentsListFromDB(storeName: string): Promise<Comment[]> {
   });
 }
 
+// DB 파일 수정 함수
+export function updateCommentInDB(postId: number, storeName: string, updatedData: { comment: Comment }): Promise<void> {
+  return getDB().then((db) => {
+    if (!db) {
+      return Promise.reject('DB not available');
+    }
+
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(storeName, 'readwrite');
+      const objectStore = transaction.objectStore(storeName);
+      const request = objectStore.get(postId);
+
+      request.onsuccess = () => {
+        const commentData = request.result;
+        if (commentData) {
+          const updatedFileData = { ...commentData, ...updatedData };
+          const updateReq = objectStore.put(updatedFileData);
+
+          updateReq.onsuccess = () => {
+            console.log('댓글이 성공적으로 업데이트되었습니다.');
+            resolve();
+          };
+
+          updateReq.onerror = (event) => {
+            console.error('댓글 수정 오류', event);
+            reject(event);
+          };
+        } else {
+          reject('댓글을 찾을 수 없습니다.');
+        }
+      };
+
+      request.onerror = (event) => {
+        console.error('댓글 데이터 가져오기 오류', event);
+        reject(event);
+      };
+    });
+  });
+}
+
 // DB에서 댓글 삭제하는 함수
 export function deleteCommentInDB(storeName: string, id: number): Promise<void> {
   return getDB().then((db) => {

@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ChooseLevel from '../../MyFeed/AddFeed/ChooseLevel';
 import PostingButtons from './PostingButtons';
 import QuillEditor from './QuillEditor';
+import { v4 as uuidv4 } from 'uuid';
 import { PostCategory } from '../../../Types/PostCategory';
-import { updatePostInDB } from '../../../../utils/indexedDB';
+import { updatePostInDB, saveImageToIndexedDB, getImageIdByPostId, deleteImageInDB } from '../../../../utils/indexedDB';
 import { useLocation } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { editorValueState } from '../../../../datas/recoilData';
 
 const ModifyPost: React.FC = () => {
   const location = useLocation();
@@ -19,6 +22,7 @@ const ModifyPost: React.FC = () => {
   const [fileList, setFileList] = useState<File[]>([]);
   const [content, setContent] = useState<string>(post.content);
   const [climbingLevel, setClimbingLevel] = useState<string>(post.level);
+  const editorValue = useRecoilValue(editorValueState);
 
   // 난이도 변경 시 상태 업데이트 함수
   const handleClimbingLevelChange = (newClimbingLevel: string) => {
@@ -27,19 +31,54 @@ const ModifyPost: React.FC = () => {
 
   // DB 수정 함수 호출
   const handleUpdate = async () => {
-    const updateData = {
-      postTitle: postTitle,
-      level: climbingLevel,
-      content: content,
-      updatedAt: new Date().toISOString(),
-      centerName: centerName,
-      postCategory: postCategory,
-    };
-
-    console.log(postTitle);
-
     try {
-      await updatePostInDB(Number(postId), updateData);
+      // DOMParser를 이용해 editorValue 파싱
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(editorValue, 'text/html');
+
+      // blob URL이 포함된 img 태그 추출
+      const imgTags = Array.from(doc.querySelectorAll('img[src^="blob:"]')) as HTMLImageElement[];
+
+      // 이미지 태그에 고유 ID 추가
+      imgTags.forEach((img) => {
+        const imgId = uuidv4();
+        img.setAttribute('data-img-id', imgId);
+      });
+
+      const updatedContent = doc.body.innerHTML;
+
+      // 게시글 DB에 저장
+      const updateData = {
+        postTitle: postTitle,
+        level: climbingLevel,
+        content: updatedContent,
+        updatedAt: new Date().toISOString(),
+        centerName: centerName,
+        postCategory: postCategory,
+      };
+
+      const updatePostId = await await updatePostInDB(Number(postId), updateData);
+
+      // DB에 file 업로드 및 id 매핑
+      if (fileList) {
+        const imgToFileMap = new Map();
+
+        // imgTags와 fileList 매핑 (순서에 따라 매핑)
+        imgTags.forEach((img, index) => {
+          const imgId = img.getAttribute('data-img-id');
+          if (imgId && fileList[index]) {
+            imgToFileMap.set(imgId, fileList[index]); // imgId와 file을 매핑
+          }
+        });
+
+        // deleteImageInDB(updatePostId);
+
+        // IndexedDB에 저장
+        for (const [imgId, file] of imgToFileMap.entries()) {
+          await saveImageToIndexedDB(file, postId, imgId); // imgId와 함께 저장
+        }
+      }
+
       console.log('파일이 성공적으로 수정되었습니다!');
     } catch (error) {
       console.log('파일 수정 실패: ' + error);
