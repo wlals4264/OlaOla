@@ -187,22 +187,6 @@ const PostItem: React.FC = () => {
 
       {/* 댓글창 */}
       <CommunityComment postId={Number(postId)} />
-      {/* <form
-        className="w-full mt-10"
-        // onSubmit={handleCommentSubmit}
-      >
-        <textarea
-          // onChange={handleCommentChange}
-          // type="text"
-          placeholder="댓글을 남겨주세요!"
-          // value={comment}
-          className="w-full h-20 px-4 py-3 rounded-xl text-sm outline-none resize-none border-gray-100 border-[1px]"></textarea>
-        <div className="flex justify-end items-center my-4">
-          <button type="submit" className="bg-primary rounded-md px-4 py-1 font-bold text-white">
-            댓글 작성
-          </button>
-        </div>
-      </form> */}
     </div>
   );
 };
