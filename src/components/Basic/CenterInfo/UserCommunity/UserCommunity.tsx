@@ -26,6 +26,8 @@ const UserCommunity: React.FC<UserCommunityProps> = ({ isScrollSnap }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [searchText, setSearchText] = useState('');
+  const [filteredPostList, setFilteredPostList] = useState<PostItem[]>([]);
 
   // 게시글 리스트 요청
   const fetchData = async (currentPage: number) => {
@@ -44,7 +46,7 @@ const UserCommunity: React.FC<UserCommunityProps> = ({ isScrollSnap }) => {
 
       const pageSize = 5;
       const startIndex = (currentPage - 1) * pageSize;
-      const pagedPosts = sortedPosts.slice(startIndex, startIndex + pageSize);
+      const pagedPosts = (searchText ? filteredPostList : sortedPosts).slice(startIndex, startIndex + pageSize);
 
       if (pagedPosts.length > 0) {
         const postContents = pagedPosts.map((postData: any) => {
@@ -60,13 +62,13 @@ const UserCommunity: React.FC<UserCommunityProps> = ({ isScrollSnap }) => {
           };
         });
         setPostList(postContents);
-
-        setTotalPages(Math.ceil(sortedPosts.length / pageSize));
+        setTotalPages(
+          searchText ? Math.ceil(filteredPostList.length / pageSize) : Math.ceil(sortedPosts.length / pageSize)
+        );
       }
     } catch (error: any) {
-      if (postList.length === 0) {
-        if (postList.length === 0) return;
-      }
+      if (postList.length === 0) return;
+
       console.error('파일을 가져오는 도중 오류 발생:', error.message);
       setLoading(false);
     } finally {
@@ -84,7 +86,14 @@ const UserCommunity: React.FC<UserCommunityProps> = ({ isScrollSnap }) => {
   // 현재 페이지값이 변하면 데이터 요청
   useEffect(() => {
     fetchData(currentPage);
-  }, [currentPage]);
+  }, [currentPage, searchText]);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const searchText = e.target.value.toLowerCase();
+    setSearchText(searchText);
+    const filteredPosts = postList.filter((item) => item.postTitle?.toLowerCase().includes(searchText));
+    setFilteredPostList(filteredPosts);
+  };
 
   return (
     <>
@@ -218,8 +227,8 @@ const UserCommunity: React.FC<UserCommunityProps> = ({ isScrollSnap }) => {
               <form className="relative flex items-center w-[645px] h-[40px] border border-gray-300 rounded-xl mt-2 mb-8">
                 <input
                   type="text"
-                  // value={searchText}
-                  // onChange={handleSearchChange}
+                  value={searchText}
+                  onChange={handleSearchChange}
                   className="w-full h-full px-3 py-[6px] rounded-xl text-sm items-center outline-none focus:ring-2 focus:ring-primary"
                   placeholder="검색어를 입력해주세요."
                 />
