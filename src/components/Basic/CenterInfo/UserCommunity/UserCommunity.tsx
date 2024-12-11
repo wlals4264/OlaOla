@@ -198,9 +198,6 @@ const UserCommunity: React.FC<UserCommunityProps> = ({ isScrollSnap }) => {
                 <div className="flex justify-between items-center shrink-0 w-[645px] m-auto">
                   <div className="flex gap-3">
                     <button className="shrink-0" type="button">
-                      최신순
-                    </button>
-                    <button className="shrink-0" type="button">
                       댓글순
                     </button>
                     <button className="shrink-0" type="button">

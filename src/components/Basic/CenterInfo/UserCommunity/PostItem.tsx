@@ -6,6 +6,7 @@ import {
   deletePostInDB,
   updatePostInDB,
   deleteImageInDB,
+  deleteCommentInDB,
 } from '../../../../utils/indexedDB';
 import Spinner from '../../../Spinner/Spinner';
 import { levelOptions } from '../../../../datas/levelOptions';
@@ -119,6 +120,7 @@ const PostItem: React.FC = () => {
     if (confirmDelete) {
       deletePostInDB(Number(postId));
       deleteImageInDB(Number(postId));
+      deleteCommentInDB('postCommentData', Number(postId));
       navigate(-1);
     }
   };

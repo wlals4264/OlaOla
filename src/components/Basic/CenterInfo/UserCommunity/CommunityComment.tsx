@@ -97,25 +97,25 @@ const CommunityComment: React.FC<CommentProps> = ({ postId }) => {
 
   return (
     <>
-      <div className="h-16 mt-10 mb-2 p-2">
-        <div className="max-h-[60px] overflow-y-auto scrollbar-hide">
+      <div className="space-y-2 mt-10 mb-1 p-2">
+        {/* 댓글 리스트 컨테이너 */}
+        <div>
           {commentsList.map((comment, index) => {
             return (
               <div key={index} className="flex items-center justify-between">
-                <div className="flex items-center">
+                <div className="flex items-start">
                   <span className="font-semibold text-sm mr-2">{comment.userNickName}</span>
                   {isEditing && editingCommentId === comment.id ? (
                     <textarea
-                      className="w-[400px] h-[16px] font-normal text-xs outline-none resize-none"
+                      className="min-w-[640px] h-[16px] font-normal text-xs outline-none resize-none mt-[1px]"
                       value={editedComment}
                       onChange={(e) => setEditedComment(e.target.value)}
                     />
                   ) : (
-                    <p className="font-normal text-xs flex-1">{comment.comment}</p>
+                    <p className="font-normal text-xs flex-1 mt-[1px] ">{comment.comment}</p>
                   )}
                 </div>
 
-                {/* <p className="font-normal text-xs flex-1">{comment.comment}</p> */}
                 {nowLoginUserUID === comment.userUID ? (
                   <div className="flex gap-1">
                     {isEditing && editingCommentId === comment.id ? (
@@ -166,7 +166,7 @@ const CommunityComment: React.FC<CommentProps> = ({ postId }) => {
       </div>
 
       {/* 댓글창 */}
-      <form className="w-full mt-10" onSubmit={handleCommentSubmit}>
+      <form className="w-full mt-1" onSubmit={handleCommentSubmit}>
         <textarea
           onChange={(e) => setComment(e.target.value)}
           placeholder="댓글을 남겨주세요!"
