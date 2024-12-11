@@ -4,17 +4,18 @@ import PostingButtons from './PostingButtons';
 import QuillEditor from './QuillEditor';
 import { PostCategory } from '../../../Types/PostCategory';
 
-interface FileWithId {
-  file: File;
-  imgId: string;
-}
+// interface FileWithId {
+//   file: File;
+//   imgId: string;
+// }
 
 const AddPost: React.FC = () => {
   const [currentClimbingLevel, setCurrentClimbingLevel] = useState<string>('');
   const [centerName, setCenterName] = useState<string>('');
   const [postTitle, setPostTitle] = useState<string>('');
   const [postCategory, setPostCategory] = useState<PostCategory>(PostCategory.FREETALK);
-  const [fileList, setFileList] = useState<FileWithId[]>([]);
+  // const [fileList, setFileList] = useState<FileWithId[]>([]);
+  const [fileList, setFileList] = useState<File[]>([]);
 
   // ChooseLevel의 onClimbingLevelChange 핸들러
   const handleClimbingLevelChange = (newClimbingLevel: string): void => {

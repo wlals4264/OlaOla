@@ -38,8 +38,6 @@ const UserCommunity: React.FC<UserCommunityProps> = ({ isScrollSnap }) => {
     try {
       // DB에서 게시글 리스트 가져오기
       const posts = await getPostListFromDB();
-      console.log('UserCommunity DB 연결 성공');
-      console.log(posts);
 
       // 받아온 파일 리스트를 id 내림차순으로 정렬해서 최신값부터 정렬
       const sortedPosts = posts.sort((a, b) => b.id - a.id);

@@ -5,13 +5,14 @@ import { v4 as uuidv4 } from 'uuid'; //
 import { climbingLevelState, editorValueState, userNicknameState, userUIDState } from '../../../../datas/recoilData';
 import { addPostToDB, saveImageToIndexedDB } from '../../../../utils/indexedDB';
 
-interface FileWithId {
-  file: File;
-  imgId: string;
-}
+// interface FileWithId {
+//   file: File;
+//   imgId: string;
+// }
 
 interface PostingButtonsProps {
-  fileList: FileWithId[] | null; // 타입 변경
+  // fileList: FileWithId[] | null; // 타입 변경
+  fileList: File[];
   postTitle: string;
   centerName: string;
   postCategory: string;
@@ -73,17 +74,35 @@ const PostingButtons: React.FC<PostingButtonsProps> = ({
 
       const postId = await addPostToDB(post);
 
-      if (fileList) {
-        const imgToFileMap = new Map<string, File>();
+      // if (fileList) {
+      //   const imgToFileMap = new Map<string, File>();
 
-        // imgTags와 fileList 매핑
-        imgTags.forEach((img) => {
+      //   // imgTags와 fileList 매핑
+      //   imgTags.forEach((img) => {
+      //     const imgId = img.getAttribute('data-img-id');
+      //     if (imgId) {
+      //       const fileWithId = fileList.find((item) => item.imgId === imgId); // imgId 기반 매핑
+      //       if (fileWithId) {
+      //         imgToFileMap.set(imgId, fileWithId.file);
+      //       }
+      //     }
+      //   });
+
+      //   // IndexedDB에 저장
+      //   for (const [imgId, file] of imgToFileMap.entries()) {
+      //     await saveImageToIndexedDB(file, postId, imgId); // imgId와 함께 저장
+      //   }
+      // }
+      // DB에 file 업로드 및 id 매핑
+
+      if (fileList) {
+        const imgToFileMap = new Map();
+
+        // imgTags와 fileList 매핑 (순서에 따라 매핑)
+        imgTags.forEach((img, index) => {
           const imgId = img.getAttribute('data-img-id');
-          if (imgId) {
-            const fileWithId = fileList.find((item) => item.imgId === imgId); // imgId 기반 매핑
-            if (fileWithId) {
-              imgToFileMap.set(imgId, fileWithId.file);
-            }
+          if (imgId && fileList[index]) {
+            imgToFileMap.set(imgId, fileList[index]); // imgId와 file을 매핑
           }
         });
 

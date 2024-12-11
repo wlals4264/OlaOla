@@ -9,14 +9,16 @@ import { getImageItemListByPostId } from '../../../../utils/indexedDB';
 // QuillEditor formats 정의
 const formats = ['font', 'header', 'bold', 'italic', 'strike', 'indent', 'link', 'color', 'image', 'align'];
 
-interface FileWithId {
-  file: File;
-  imgId: string;
-}
+// interface FileWithId {
+//   file: File;
+//   imgId: string;
+// }
 
 interface QuillEditorProps {
-  fileList: FileWithId[];
-  setFileList: React.Dispatch<React.SetStateAction<FileWithId[]>>;
+  // fileList: FileWithId[];
+  fileList: File[];
+  // setFileList: React.Dispatch<React.SetStateAction<FileWithId[]>>;
+  setFileList: React.Dispatch<React.SetStateAction<File[]>>;
   postId?: number;
 }
 
@@ -67,23 +69,17 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ fileList, setFileList, postId
     const file = fileInputRef.current.files?.[0];
 
     if (file) {
-      const imgId = uuidv4();
-
-      // 파일 목록 업데이트, imgId를 file 객체에 추가
-      setFileList((prevFileList) => [
-        ...prevFileList,
-        { file: file, imgId: imgId }, // imgId와 함께 file 객체를 저장
-      ]);
+      // 파일 목록 업데이트
+      setFileList((prevFileList) => [...prevFileList, file]);
 
       // 에디터에 이미지 삽입
       const blobUrl = URL.createObjectURL(file);
       const editor = quillRef.current.getEditor();
       const range = editor.getSelection();
-
+      const imgId = uuidv4();
       if (range) {
         editor.insertEmbed(range.index, 'image', blobUrl);
         editor.setSelection(range.index + 1);
-
         // DOM 직접 수정
         setTimeout(() => {
           const imgNode = editor.root.querySelector(`[src="${blobUrl}"]`);
@@ -91,15 +87,48 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ fileList, setFileList, postId
             imgNode.setAttribute('data-img-id', String(imgId));
           }
         }, 10);
-
         setTimeout(() => {
           const imageNode = editor.root.querySelector(`[src="${blobUrl}"]`);
-          const updatedContent = editor.root.innerHTML;
-          setEditorValue(updatedContent);
-          console.log(imageNode?.outerHTML);
+          console.log(imageNode?.outerHTML); // HTML 코드를 출력
           console.log(editor.getContents());
         }, 100);
       }
+      // if (file) {
+      //   const imgId = uuidv4();
+
+      //   // 파일 목록 업데이트, imgId를 file 객체에 추가
+      //   setFileList((prevFileList) => [
+      //     ...prevFileList,
+      //     { file: file, imgId: imgId }, // imgId와 함께 file 객체를 저장
+      //   ]);
+
+      //   console.log(fileList);
+
+      //   // 에디터에 이미지 삽입
+      //   const blobUrl = URL.createObjectURL(file);
+      //   const editor = quillRef.current.getEditor();
+      //   const range = editor.getSelection();
+
+      //   if (range) {
+      //     editor.insertEmbed(range.index, 'image', blobUrl);
+      //     editor.setSelection(range.index + 1);
+
+      //     // DOM 직접 수정
+      //     setTimeout(() => {
+      //       const imgNode = editor.root.querySelector(`[src="${blobUrl}"]`);
+      //       if (imgNode) {
+      //         imgNode.setAttribute('data-img-id', String(imgId));
+      //       }
+      //     }, 10);
+
+      //     setTimeout(() => {
+      //       const imageNode = editor.root.querySelector(`[src="${blobUrl}"]`);
+      //       const updatedContent = editor.root.innerHTML;
+      //       setEditorValue(updatedContent);
+      //       console.log(imageNode?.outerHTML);
+      //       console.log(editor.getContents());
+      //     }, 100);
+      //   }
 
       // 초기화
       fileInputRef.current.value = '';
@@ -151,7 +180,6 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ fileList, setFileList, postId
   }, []);
 
   console.log('Editor Value:', editorValue);
-  // console.log('Content:', content);
 
   return (
     <div>

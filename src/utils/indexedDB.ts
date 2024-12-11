@@ -432,7 +432,7 @@ export const saveImageToIndexedDB = async (file: File, postId: number, imgId: st
 
     addReq.addEventListener('success', function (event: Event) {
       const target = event.target as IDBRequest;
-      console.log('파일이 DB에 추가되었습니다.');
+      console.log('이미지가 DB에 추가되었습니다.');
       console.log('저장된 이미지 ID:', target.result); // 여기서 ID 확인
       resolve(target.result as string); // ID 값을 resolve
     });

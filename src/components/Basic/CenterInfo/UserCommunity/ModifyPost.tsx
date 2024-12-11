@@ -8,10 +8,10 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { editorValueState } from '../../../../datas/recoilData';
 
-interface FileWithId {
-  file: File;
-  imgId: string;
-}
+// interface FileWithId {
+//   file: File;
+//   imgId: string;
+// }
 
 const ModifyPost: React.FC = () => {
   const location = useLocation();
@@ -24,7 +24,8 @@ const ModifyPost: React.FC = () => {
   const [centerName, setCenterName] = useState<string>(post.centerName);
   const [postTitle, setPostTitle] = useState<string>(post.postTitle);
   const [postCategory, setPostCategory] = useState<PostCategory>(post.postCategory);
-  const [fileList, setFileList] = useState<FileWithId[]>([]);
+  // const [fileList, setFileList] = useState<FileWithId[]>([]);
+  const [fileList, setFileList] = useState<File[]>([]);
   const [climbingLevel, setClimbingLevel] = useState<string>(post.level);
   const [editorValue, setEditorValue] = useRecoilState<string>(editorValueState);
 
@@ -33,48 +34,48 @@ const ModifyPost: React.FC = () => {
     setClimbingLevel(newClimbingLevel);
   };
 
-  // 이미지 파일 DB 업로드
-  const handleImageUpdate = async () => {
-    try {
-      if (fileList) {
-        console.log('fileList:', fileList);
-        const imgToFileMap = new Map<string, File>();
+  // // 이미지 파일 DB 업로드
+  // const handleImageUpdate = async () => {
+  //   try {
+  //     if (fileList) {
+  //       console.log('fileList:', fileList);
+  //       const imgToFileMap = new Map<string, File>();
 
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(editorValue, 'text/html');
+  //       const parser = new DOMParser();
+  //       const doc = parser.parseFromString(editorValue, 'text/html');
 
-        const imgTags = Array.from(doc.querySelectorAll('img[src^="blob:"]')) as HTMLImageElement[];
-        console.log('imgTags:', imgTags); // imgTags 출력
+  //       const imgTags = Array.from(doc.querySelectorAll('img[src^="blob:"]')) as HTMLImageElement[];
+  //       console.log('imgTags:', imgTags); // imgTags 출력
 
-        imgTags.forEach((img) => {
-          const imgId = img.getAttribute('data-img-id');
-          console.log('imgId:', imgId); // imgId 출력
-          if (imgId) {
-            const fileWithId = fileList.find((item) => item.imgId === imgId);
-            if (fileWithId) {
-              console.log('fileWithId:', fileWithId); // fileWithId 출력
-              imgToFileMap.set(imgId, fileWithId.file);
-            }
-          }
-        });
+  //       imgTags.forEach((img) => {
+  //         const imgId = img.getAttribute('data-img-id');
+  //         console.log('imgId:', imgId); // imgId 출력
+  //         if (imgId) {
+  //           const fileWithId = fileList.find((item) => item.imgId === imgId);
+  //           if (fileWithId) {
+  //             console.log('fileWithId:', fileWithId); // fileWithId 출력
+  //             imgToFileMap.set(imgId, fileWithId.file);
+  //           }
+  //         }
+  //       });
 
-        for (const [imgId, file] of imgToFileMap.entries()) {
-          console.log(`Saving image with imgId: ${imgId}`); // 이미지 저장 로그
-          await saveImageToIndexedDB(file, postId, imgId);
-        }
+  //       for (const [imgId, file] of imgToFileMap.entries()) {
+  //         console.log(`Saving image with imgId: ${imgId}`); // 이미지 저장 로그
+  //         await saveImageToIndexedDB(file, postId, imgId);
+  //       }
 
-        console.log('이미지 저장이 완료되었습니다!');
-      }
-    } catch (error) {
-      console.error('이미지 업데이트 중 오류 발생:', error);
-    }
-  };
+  //       console.log('이미지 저장이 완료되었습니다!');
+  //     }
+  //   } catch (error) {
+  //     console.error('이미지 업데이트 중 오류 발생:', error);
+  //   }
+  // };
 
   // DB 수정 함수 호출
   const handleUpdate = async () => {
     try {
       // 이미지 업데이트 호출
-      await handleImageUpdate();
+      // await handleImageUpdate();
 
       // 게시글 업데이트 데이터
       const updateData = {
