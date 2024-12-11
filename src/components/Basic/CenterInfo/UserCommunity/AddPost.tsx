@@ -4,12 +4,17 @@ import PostingButtons from './PostingButtons';
 import QuillEditor from './QuillEditor';
 import { PostCategory } from '../../../Types/PostCategory';
 
+interface FileWithId {
+  file: File;
+  imgId: string;
+}
+
 const AddPost: React.FC = () => {
   const [currentClimbingLevel, setCurrentClimbingLevel] = useState<string>('');
   const [centerName, setCenterName] = useState<string>('');
   const [postTitle, setPostTitle] = useState<string>('');
   const [postCategory, setPostCategory] = useState<PostCategory>(PostCategory.FREETALK);
-  const [fileList, setFileList] = useState<File[]>([]);
+  const [fileList, setFileList] = useState<FileWithId[]>([]);
 
   // ChooseLevel의 onClimbingLevelChange 핸들러
   const handleClimbingLevelChange = (newClimbingLevel: string): void => {
@@ -45,7 +50,7 @@ const AddPost: React.FC = () => {
 
         {/* 텍스트 편집기 */}
         <div className="mb-12">
-          <QuillEditor content={''} fileList={fileList} setFileList={setFileList} />
+          <QuillEditor fileList={fileList} setFileList={setFileList} />
         </div>
 
         {/* 암장명 & 난이도 선택창 & buttons */}

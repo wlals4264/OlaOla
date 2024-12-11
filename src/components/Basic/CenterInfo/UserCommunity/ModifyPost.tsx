@@ -3,20 +3,19 @@ import ChooseLevel from '../../MyFeed/AddFeed/ChooseLevel';
 import PostingButtons from './PostingButtons';
 import QuillEditor from './QuillEditor';
 import { PostCategory } from '../../../Types/PostCategory';
-import {
-  updatePostInDB,
-  deletePrevImageInDB,
-  saveImageToIndexedDB,
-  getImageByPostId,
-} from '../../../../utils/indexedDB';
+import { updatePostInDB, saveImageToIndexedDB, getImageByPostId } from '../../../../utils/indexedDB';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
 import { editorValueState } from '../../../../datas/recoilData';
-import { useRecoilValue } from 'recoil';
+
+interface FileWithId {
+  file: File;
+  imgId: string;
+}
 
 const ModifyPost: React.FC = () => {
   const location = useLocation();
   const { post, postId } = location.state;
-  console.log(post);
   const navigate = useNavigate();
 
   console.log('post', post);
@@ -25,94 +24,83 @@ const ModifyPost: React.FC = () => {
   const [centerName, setCenterName] = useState<string>(post.centerName);
   const [postTitle, setPostTitle] = useState<string>(post.postTitle);
   const [postCategory, setPostCategory] = useState<PostCategory>(post.postCategory);
-  const [fileList, setFileList] = useState<File[]>([]);
-  const [content, setContent] = useState<string>(post.content);
+  const [fileList, setFileList] = useState<FileWithId[]>([]);
   const [climbingLevel, setClimbingLevel] = useState<string>(post.level);
-  const editorValue = useRecoilValue(editorValueState);
+  const [editorValue, setEditorValue] = useRecoilState<string>(editorValueState);
 
   // 난이도 변경 시 상태 업데이트 함수
   const handleClimbingLevelChange = (newClimbingLevel: string) => {
     setClimbingLevel(newClimbingLevel);
   };
-  // DB 수정 함수 호출
-  const handleUpdate = async () => {
-    const updateData = {
-      postTitle: postTitle,
-      level: climbingLevel,
-      content: content,
-      updatedAt: new Date().toISOString(),
-      centerName: centerName,
-      postCategory: postCategory,
-    };
-    console.log(postTitle);
+
+  // 이미지 파일 DB 업로드
+  const handleImageUpdate = async () => {
     try {
-      await updatePostInDB(Number(postId), updateData);
-      console.log('파일이 성공적으로 수정되었습니다!');
+      if (fileList) {
+        console.log('fileList:', fileList);
+        const imgToFileMap = new Map<string, File>();
+
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(editorValue, 'text/html');
+
+        const imgTags = Array.from(doc.querySelectorAll('img[src^="blob:"]')) as HTMLImageElement[];
+        console.log('imgTags:', imgTags); // imgTags 출력
+
+        imgTags.forEach((img) => {
+          const imgId = img.getAttribute('data-img-id');
+          console.log('imgId:', imgId); // imgId 출력
+          if (imgId) {
+            const fileWithId = fileList.find((item) => item.imgId === imgId);
+            if (fileWithId) {
+              console.log('fileWithId:', fileWithId); // fileWithId 출력
+              imgToFileMap.set(imgId, fileWithId.file);
+            }
+          }
+        });
+
+        for (const [imgId, file] of imgToFileMap.entries()) {
+          console.log(`Saving image with imgId: ${imgId}`); // 이미지 저장 로그
+          await saveImageToIndexedDB(file, postId, imgId);
+        }
+
+        console.log('이미지 저장이 완료되었습니다!');
+      }
     } catch (error) {
-      console.log('파일 수정 실패: ' + error);
+      console.error('이미지 업데이트 중 오류 발생:', error);
     }
   };
 
-  console.log(content);
+  // DB 수정 함수 호출
+  const handleUpdate = async () => {
+    try {
+      // 이미지 업데이트 호출
+      await handleImageUpdate();
 
-  // const handlePostUpdate = async () => {
-  //   try {
-  //     const parser = new DOMParser();
-  //     const doc = parser.parseFromString(content, 'text/html');
-  //     const imgTags = Array.from(doc.querySelectorAll('img[src^="blob:"]')) as HTMLImageElement[];
+      // 게시글 업데이트 데이터
+      const updateData = {
+        postTitle,
+        level: climbingLevel,
+        content: editorValue,
+        updatedAt: new Date().toISOString(),
+        centerName,
+        postCategory,
+      };
 
-  //     // 기존 이미지 ID 추출
-  //     const existingImageIds = imgTags.map((img) => img.getAttribute('data-img-id'));
+      // 게시글 수정 API 호출
+      await updatePostInDB(Number(postId), updateData);
 
-  //     // 편집된 editorValue에서 이미지 태그 추출
-  //     const newDoc = parser.parseFromString(editorValue, 'text/html');
-  //     const newImgTags = Array.from(newDoc.querySelectorAll('img[src^="blob:"]')) as HTMLImageElement[];
+      console.log('게시글 수정 및 이미지 업데이트 완료');
+      navigate('/center-info/user-community');
+    } catch (error) {
+      console.error('게시글 수정 중 오류 발생:', error);
+    }
+  };
 
-  //     // 새로 추가된 이미지 ID 추출
-  //     const newContentsImageIds = newImgTags.map((img) => img.getAttribute('data-img-id'));
+  useEffect(() => {
+    setEditorValue(post.content);
+  }, []);
 
-  //     // 삭제할 이미지 ID 추출 (기존 이미지 중 새로 업데이트된 이미지에 없는 것)
-  //     const deletedImgIds = existingImageIds.filter((imgId) => !newContentsImageIds.includes(imgId));
-
-  //     // 새로 추가된 이미지 처리 (기존 이미지에 없는 새 이미지)
-  //     const newImgToFileMap = new Map();
-  //     newImgTags.forEach((img, index) => {
-  //       const imgId = img.getAttribute('data-img-id');
-  //       if (imgId && !existingImageIds.includes(imgId)) {
-  //         // 새로운 이미지 ID가 기존 이미지 목록에 없다면 새로운 이미지 처리
-  //         if (fileList[index]) {
-  //           newImgToFileMap.set(imgId, fileList[index]); // 새 이미지 파일 매핑
-  //         }
-  //       }
-  //     });
-
-  //     // 삭제된 이미지 처리
-  //     for (const imgId of deletedImgIds) {
-  //       await deletePrevImageInDB(postId, imgId as string); // 이미지를 삭제하는 API 호출
-  //     }
-
-  //     // 새 이미지 저장 (IndexedDB 등에 저장)
-  //     for (const [imgId, file] of newImgToFileMap.entries()) {
-  //       await saveImageToIndexedDB(file, postId, imgId); // 새 이미지 저장 API 호출
-  //     }
-
-  //     // DB에 수정된 게시글 저장
-  //     const updatedPost = {
-  //       postTitle,
-  //       level: climbingLevel,
-  //       content: editorValue, // 업데이트된 콘텐츠
-  //       updatedAt: new Date().toISOString(),
-  //       centerName,
-  //       postCategory,
-  //     };
-
-  //     await updatePostInDB(Number(postId), updatedPost); // DB 업데이트 API 호출
-  //     console.log('게시글 수정 완료');
-  //     navigate('/center-info/user-community');
-  //   } catch (error) {
-  //     console.error('게시글 수정 중 오류 발생:', error);
-  //   }
-  // };
+  console.log(editorValue);
 
   return (
     <div>
@@ -143,12 +131,7 @@ const ModifyPost: React.FC = () => {
 
         {/* 텍스트 편집기 */}
         <div className="mb-12">
-          <QuillEditor
-            content={content} // content 값 전달
-            setContent={setContent} // 수정된 content 값을 부모 컴포넌트로 전달하는 함수
-            fileList={fileList}
-            setFileList={setFileList}
-          />
+          <QuillEditor fileList={fileList} setFileList={setFileList} postId={postId ? postId : null} />
         </div>
 
         {/* 암장명 & 난이도 선택창 & buttons */}

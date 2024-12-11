@@ -5,8 +5,13 @@ import { v4 as uuidv4 } from 'uuid'; //
 import { climbingLevelState, editorValueState, userNicknameState, userUIDState } from '../../../../datas/recoilData';
 import { addPostToDB, saveImageToIndexedDB } from '../../../../utils/indexedDB';
 
+interface FileWithId {
+  file: File;
+  imgId: string;
+}
+
 interface PostingButtonsProps {
-  fileList: File[] | null;
+  fileList: FileWithId[] | null; // 타입 변경
   postTitle: string;
   centerName: string;
   postCategory: string;
@@ -49,12 +54,6 @@ const PostingButtons: React.FC<PostingButtonsProps> = ({
       // blob URL이 포함된 img 태그 추출
       const imgTags = Array.from(doc.querySelectorAll('img[src^="blob:"]')) as HTMLImageElement[];
 
-      // 이미지 태그에 고유 ID 추가
-      // imgTags.forEach((img) => {
-      //   const imgId = uuidv4();
-      //   img.setAttribute('data-img-id', imgId);
-      // });
-
       const updatedContent = doc.body.innerHTML;
 
       // 게시글 DB에 저장
@@ -74,15 +73,17 @@ const PostingButtons: React.FC<PostingButtonsProps> = ({
 
       const postId = await addPostToDB(post);
 
-      // DB에 file 업로드 및 id 매핑
       if (fileList) {
-        const imgToFileMap = new Map();
+        const imgToFileMap = new Map<string, File>();
 
-        // imgTags와 fileList 매핑 (순서에 따라 매핑)
-        imgTags.forEach((img, index) => {
+        // imgTags와 fileList 매핑
+        imgTags.forEach((img) => {
           const imgId = img.getAttribute('data-img-id');
-          if (imgId && fileList[index]) {
-            imgToFileMap.set(imgId, fileList[index]); // imgId와 file을 매핑
+          if (imgId) {
+            const fileWithId = fileList.find((item) => item.imgId === imgId); // imgId 기반 매핑
+            if (fileWithId) {
+              imgToFileMap.set(imgId, fileWithId.file);
+            }
           }
         });
 

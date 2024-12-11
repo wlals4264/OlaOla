@@ -413,6 +413,7 @@ export function deleteCommentInDB(storeName: string, id: number): Promise<void> 
 interface imageData {
   imageData: Blob;
   postId: number;
+  imgId?: string;
 }
 
 // 이미지 추가
@@ -467,6 +468,40 @@ export const getImageByPostId = async (postId: number) => {
         const blobs = results.map((item: imageData) => item.imageData);
         resolve(blobs); // Blob 배열 반환
         console.log(blobs);
+      } else {
+        reject('해당 postId에 해당하는 데이터가 없습니다.');
+      }
+    };
+
+    getReq.onerror = (event) => {
+      const target = event.target as IDBRequest;
+      console.error('postId로 데이터 검색 중 오류:', target?.error);
+      reject(target?.error);
+    };
+  });
+};
+
+// 이미지 리스트 가져오기
+export const getImageItemListByPostId = async (postId: number) => {
+  const db = await getDB();
+
+  return new Promise<imageData[]>((resolve, reject) => {
+    if (!db) return;
+
+    const transaction = db.transaction('postImgData', 'readonly');
+    const store = transaction.objectStore('postImgData');
+
+    // postIdIndex 인덱스를 사용하여 검색
+    const index = store.index('postIdIndex');
+    const getReq = index.getAll(postId);
+
+    getReq.onsuccess = (event: Event) => {
+      const target = event.target as IDBRequest;
+      const results = target.result;
+
+      if (results && results.length > 0) {
+        console.log('postId로 데이터 검색 성공:', results);
+        resolve(results);
       } else {
         reject('해당 postId에 해당하는 데이터가 없습니다.');
       }
