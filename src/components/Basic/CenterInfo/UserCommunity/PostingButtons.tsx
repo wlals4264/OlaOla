@@ -50,10 +50,10 @@ const PostingButtons: React.FC<PostingButtonsProps> = ({
       const imgTags = Array.from(doc.querySelectorAll('img[src^="blob:"]')) as HTMLImageElement[];
 
       // 이미지 태그에 고유 ID 추가
-      imgTags.forEach((img) => {
-        const imgId = uuidv4();
-        img.setAttribute('data-img-id', imgId);
-      });
+      // imgTags.forEach((img) => {
+      //   const imgId = uuidv4();
+      //   img.setAttribute('data-img-id', imgId);
+      // });
 
       const updatedContent = doc.body.innerHTML;
 

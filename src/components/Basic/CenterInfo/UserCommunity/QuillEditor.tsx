@@ -1,6 +1,7 @@
 import React, { useMemo, useEffect, useRef } from 'react';
 import ReactQuill from 'react-quill-new';
 import 'react-quill/dist/quill.snow.css';
+import { v4 as uuidv4 } from 'uuid'; //
 import { useRecoilState } from 'recoil';
 import { editorValueState } from '../../../../datas/recoilData';
 
@@ -67,9 +68,24 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ content, setContent, fileList
       const blobUrl = URL.createObjectURL(file);
       const editor = quillRef.current.getEditor();
       const range = editor.getSelection();
+      const imgId = uuidv4();
       if (range) {
         editor.insertEmbed(range.index, 'image', blobUrl);
         editor.setSelection(range.index + 1);
+
+        // DOM 직접 수정
+        setTimeout(() => {
+          const imgNode = editor.root.querySelector(`[src="${blobUrl}"]`);
+          if (imgNode) {
+            imgNode.setAttribute('data-img-id', String(imgId));
+          }
+        }, 10);
+
+        setTimeout(() => {
+          const imageNode = editor.root.querySelector(`[src="${blobUrl}"]`);
+          console.log(imageNode?.outerHTML); // HTML 코드를 출력
+          console.log(editor.getContents());
+        }, 100);
       }
 
       // 초기화
@@ -84,6 +100,7 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ content, setContent, fileList
   }, []);
 
   console.log('Editor Value:', editorValue);
+  console.log('Content:', content);
 
   return (
     <div>

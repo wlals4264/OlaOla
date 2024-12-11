@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getPostFromDB, getImageByPostId, deletePostInDB, deleteImageInDB } from '../../../../utils/indexedDB';
+import {
+  getPostFromDB,
+  getImageByPostId,
+  deletePostInDB,
+  updatePostInDB,
+  deleteImageInDB,
+} from '../../../../utils/indexedDB';
 import Spinner from '../../../Spinner/Spinner';
 import { levelOptions } from '../../../../datas/levelOptions';
 import { PostCategory } from '../../../Types/PostCategory';
@@ -32,6 +38,7 @@ const PostItem: React.FC = () => {
       try {
         const postData = await getPostFromDB(Number(postId));
         setPost(postData);
+        console.log(postData);
 
         let updatedContent = postData.content;
         setContent(updatedContent);
@@ -49,7 +56,7 @@ const PostItem: React.FC = () => {
         setViewCount(viewCount);
         setUserUID(userUID);
 
-        // 저장되어 있는 이미지 데이터를 불러와 이미지태그에 Blob URL을 생성하여 처리하는 함수
+        // // 저장되어 있는 이미지 데이터를 불러와 이미지태그에 Blob URL을 생성하여 처리하는 함수
         const processImages = async (content: string, postId: number): Promise<string> => {
           // HTML 문서를 파싱하여 DOM 조작 가능하도록 셋팅, img 태그들 선택
           const parser = new DOMParser();
@@ -73,8 +80,9 @@ const PostItem: React.FC = () => {
         // content HTML에 Blob URL 적용한 content를 update
         updatedContent = await processImages(updatedContent, Number(postId));
         setContent(updatedContent);
-        // setPost({ ...postData, content: updatedContent });
-        // updatePostInDB(Number(postId), post);
+        setPost({ ...postData, content: updatedContent });
+        updatePostInDB(Number(postId), { ...postData, content: updatedContent });
+        console.log(updatedContent);
       } catch (error) {
         console.error('게시글을 가져오는 중 오류가 발생했습니다:', error);
       } finally {

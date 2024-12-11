@@ -5,7 +5,6 @@ import QuillEditor from './QuillEditor';
 import { PostCategory } from '../../../Types/PostCategory';
 
 const AddPost: React.FC = () => {
-  const [content, setContent] = useState<string>('');
   const [currentClimbingLevel, setCurrentClimbingLevel] = useState<string>('');
   const [centerName, setCenterName] = useState<string>('');
   const [postTitle, setPostTitle] = useState<string>('');
@@ -46,7 +45,7 @@ const AddPost: React.FC = () => {
 
         {/* 텍스트 편집기 */}
         <div className="mb-12">
-          <QuillEditor content={content} setContent={setContent} fileList={fileList} setFileList={setFileList} />
+          <QuillEditor content={''} fileList={fileList} setFileList={setFileList} />
         </div>
 
         {/* 암장명 & 난이도 선택창 & buttons */}
