@@ -5,7 +5,6 @@ import FindCenter from './CenterInfo/FindCenter/FindCenter';
 
 const ScrollSnap: React.FC = () => {
   const section1Ref = useRef<HTMLDivElement | null>(null);
-  const [currentSection, setCurrentSection] = useState(0);
   const [isButtonVisible, setIsButtonVisible] = useState(true);
 
   // 스크롤 이벤트 핸들러
@@ -34,9 +33,9 @@ const ScrollSnap: React.FC = () => {
   };
 
   const scrollToTop = () => {
+    if (window.scrollY === 0) return;
     window.scrollTo({ top: 0, behavior: 'smooth' });
     section1Ref.current?.scrollIntoView({ behavior: 'smooth' });
-    setCurrentSection(0);
   };
 
   return (
