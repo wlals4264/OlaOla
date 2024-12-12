@@ -3,15 +3,16 @@ import ChooseLevel from '../../MyFeed/AddFeed/ChooseLevel';
 import PostingButtons from './PostingButtons';
 import QuillEditor from './QuillEditor';
 import { PostCategory } from '../../../Types/PostCategory';
-import { updatePostInDB, saveImageToIndexedDB, getImageByPostId } from '../../../../utils/indexedDB';
+import { updatePostInDB, saveImageToIndexedDB, getImageItemListByPostId } from '../../../../utils/indexedDB';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { editorValueState } from '../../../../datas/recoilData';
 
-// interface FileWithId {
-//   file: File;
-//   imgId: string;
-// }
+interface imageData {
+  imageData: Blob;
+  postId: number;
+  imgId?: string;
+}
 
 const ModifyPost: React.FC = () => {
   const location = useLocation();
@@ -24,58 +25,61 @@ const ModifyPost: React.FC = () => {
   const [centerName, setCenterName] = useState<string>(post.centerName);
   const [postTitle, setPostTitle] = useState<string>(post.postTitle);
   const [postCategory, setPostCategory] = useState<PostCategory>(post.postCategory);
-  // const [fileList, setFileList] = useState<FileWithId[]>([]);
   const [fileList, setFileList] = useState<File[]>([]);
   const [climbingLevel, setClimbingLevel] = useState<string>(post.level);
   const [editorValue, setEditorValue] = useRecoilState<string>(editorValueState);
+  const [existingImages, setExistingImages] = useState<imageData[]>([]);
+
+  // 기존 이미지 불러오기
+  useEffect(() => {
+    const fetchImages = async () => {
+      try {
+        const images = await getImageItemListByPostId(Number(postId));
+        setExistingImages(images);
+      } catch (error) {
+        console.error('이미지 불러오기 실패:', error);
+      }
+    };
+
+    fetchImages();
+  }, [postId]);
 
   // 난이도 변경 시 상태 업데이트 함수
   const handleClimbingLevelChange = (newClimbingLevel: string) => {
     setClimbingLevel(newClimbingLevel);
   };
 
-  // // 이미지 파일 DB 업로드
-  // const handleImageUpdate = async () => {
-  //   try {
-  //     if (fileList) {
-  //       console.log('fileList:', fileList);
-  //       const imgToFileMap = new Map<string, File>();
-
-  //       const parser = new DOMParser();
-  //       const doc = parser.parseFromString(editorValue, 'text/html');
-
-  //       const imgTags = Array.from(doc.querySelectorAll('img[src^="blob:"]')) as HTMLImageElement[];
-  //       console.log('imgTags:', imgTags); // imgTags 출력
-
-  //       imgTags.forEach((img) => {
-  //         const imgId = img.getAttribute('data-img-id');
-  //         console.log('imgId:', imgId); // imgId 출력
-  //         if (imgId) {
-  //           const fileWithId = fileList.find((item) => item.imgId === imgId);
-  //           if (fileWithId) {
-  //             console.log('fileWithId:', fileWithId); // fileWithId 출력
-  //             imgToFileMap.set(imgId, fileWithId.file);
-  //           }
-  //         }
-  //       });
-
-  //       for (const [imgId, file] of imgToFileMap.entries()) {
-  //         console.log(`Saving image with imgId: ${imgId}`); // 이미지 저장 로그
-  //         await saveImageToIndexedDB(file, postId, imgId);
-  //       }
-
-  //       console.log('이미지 저장이 완료되었습니다!');
-  //     }
-  //   } catch (error) {
-  //     console.error('이미지 업데이트 중 오류 발생:', error);
-  //   }
-  // };
-
   // DB 수정 함수 호출
   const handleUpdate = async () => {
     try {
-      // 이미지 업데이트 호출
-      // await handleImageUpdate();
+      // DOMParser를 이용해 editorValue 파싱
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(editorValue, 'text/html');
+
+      // blob URL이 포함된 img 태그 추출
+      const imgTags = Array.from(doc.querySelectorAll('img[src^="blob:"]')) as HTMLImageElement[];
+
+      // 이미지 태그와 fileList를 매핑하여 imgId가 이미 존재하는 경우 스킵, 없는 경우 새로 설정
+      const imgToFileMap = new Map<string, File>();
+
+      imgTags.forEach((img) => {
+        const imgId = img.getAttribute('data-img-id');
+        if (imgId) {
+          // 기존 이미지인 경우
+          const existingImage = existingImages.find((image) => image.imgId === imgId);
+          if (existingImage) {
+            // 기존 이미지는 imgId를 그대로 사용
+            imgToFileMap.set(imgId, existingImage.imageData as File); // 기존 파일을 Map에 추가
+          } else {
+            // 새 이미지인 경우 (imgId가 없거나 새로운 파일)
+            const newFile = fileList.shift(); // 새로운 파일을 fileList에서 가져옴
+            if (newFile) {
+              img.setAttribute('data-img-id', imgId); // 기존 imgId 그대로 유지
+              imgToFileMap.set(imgId, newFile); // 새 파일을 Map에 추가
+            }
+          }
+        }
+      });
 
       // 게시글 업데이트 데이터
       const updateData = {
@@ -89,6 +93,11 @@ const ModifyPost: React.FC = () => {
 
       // 게시글 수정 API 호출
       await updatePostInDB(Number(postId), updateData);
+
+      // IndexedDB에 이미지 저장
+      for (const [imgId, file] of imgToFileMap.entries()) {
+        await saveImageToIndexedDB(file, Number(postId), imgId); // imgId와 함께 저장
+      }
 
       console.log('게시글 수정 및 이미지 업데이트 완료');
       navigate('/center-info/user-community');

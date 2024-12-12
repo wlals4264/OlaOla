@@ -75,27 +75,6 @@ const PostingButtons: React.FC<PostingButtonsProps> = ({
 
       const postId = await addPostToDB(post);
 
-      // if (fileList) {
-      //   const imgToFileMap = new Map<string, File>();
-
-      //   // imgTags와 fileList 매핑
-      //   imgTags.forEach((img) => {
-      //     const imgId = img.getAttribute('data-img-id');
-      //     if (imgId) {
-      //       const fileWithId = fileList.find((item) => item.imgId === imgId); // imgId 기반 매핑
-      //       if (fileWithId) {
-      //         imgToFileMap.set(imgId, fileWithId.file);
-      //       }
-      //     }
-      //   });
-
-      //   // IndexedDB에 저장
-      //   for (const [imgId, file] of imgToFileMap.entries()) {
-      //     await saveImageToIndexedDB(file, postId, imgId); // imgId와 함께 저장
-      //   }
-      // }
-      // DB에 file 업로드 및 id 매핑
-
       if (fileList) {
         const imgToFileMap = new Map();
 

@@ -13,6 +13,7 @@ interface PostItem {
   postTitle: string;
   createdAt: Date;
   postCategory: string | null;
+  likeCount: number;
   level: string;
   updatedAt: Date;
   id: number;
@@ -29,8 +30,6 @@ const UserCommunity: React.FC<UserCommunityProps> = ({ isScrollSnap }) => {
   const [totalPages, setTotalPages] = useState(1);
   const [searchText, setSearchText] = useState('');
   const [sortedBy, setSortedBy] = useState('default');
-  const [filteredPostList, setFilteredPostList] = useState<PostItem[]>([]);
-  const [sortedItemIds, setSortedItemIds] = useState<string[]>([]);
 
   // 게시글 리스트 요청
   const fetchData = async (currentPage: number) => {
@@ -65,6 +64,7 @@ const UserCommunity: React.FC<UserCommunityProps> = ({ isScrollSnap }) => {
           level: postData.level,
           id: postData.id,
           updatedAt: postData.updatedAt,
+          likeCount: postData.likeCount,
         };
       });
 
@@ -100,7 +100,7 @@ const UserCommunity: React.FC<UserCommunityProps> = ({ isScrollSnap }) => {
     setSearchText(searchText);
   };
 
-  // 코멘트 필터링 함수
+  // 코멘트 순 정렬
   const handleFilteringCommentCount = async () => {
     const postComments = await getCommentsListFromDB('postCommentData');
 
@@ -124,9 +124,17 @@ const UserCommunity: React.FC<UserCommunityProps> = ({ isScrollSnap }) => {
     }
   };
 
+  // 최신순 정렬
   const handleLatestPosts = () => {
     setSortedBy('default');
     const sortedPosts = [...postList].sort((a, b) => b.id - a.id);
+    setPostList(sortedPosts);
+  };
+
+  // 좋아요 순 정렬
+  const handleSortingByLikes = () => {
+    const sortedPosts = [...postList].sort((a, b) => (b.likeCount || 0) - (a.likeCount || 0));
+    setSortedBy('likes');
     setPostList(sortedPosts);
   };
 
@@ -234,13 +242,22 @@ const UserCommunity: React.FC<UserCommunityProps> = ({ isScrollSnap }) => {
               <div className="flex justify-center w-full mt-10 font-noto text-sm">
                 <div className="flex justify-between items-center shrink-0 w-[645px] m-auto">
                   <div className="flex gap-3">
-                    <button className="shrink-0" type="button" onClick={handleLatestPosts}>
+                    <button
+                      className={sortedBy === 'default' ? 'font-bold' : ''}
+                      type="button"
+                      onClick={handleLatestPosts}>
                       최신순
                     </button>
-                    <button className="shrink-0" type="button" onClick={handleFilteringCommentCount}>
+                    <button
+                      className={sortedBy === 'comment' ? 'font-bold' : ''}
+                      type="button"
+                      onClick={handleFilteringCommentCount}>
                       댓글순
                     </button>
-                    <button className="shrink-0" type="button">
+                    <button
+                      className={sortedBy === 'likes' ? 'font-bold' : ''}
+                      type="button"
+                      onClick={handleSortingByLikes}>
                       좋아요순
                     </button>
                   </div>
