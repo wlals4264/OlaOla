@@ -9,7 +9,7 @@ const AddFeed: React.FC = () => {
   const [fileType, setFileType] = useState<string>('');
   const [describe, setDescribe] = useState<string>('');
   const [centerName, setCenterName] = useState<string>('');
-  const [currentClimbingLevel, setCurrentClimbingLevel] = useState<string>(''); // 빈 값으로 초기화
+  const [currentClimbingLevel, setCurrentClimbingLevel] = useState<string>('');
 
   // 업로드된 파일 URL 생성 & 파일 타입(image/video) 설정
   const saveFileImage = (fileBlob: File | null): void => {
