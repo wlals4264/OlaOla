@@ -97,6 +97,7 @@ interface FeedItem {
   niceCount: number;
   niceUser: string[];
   id: number;
+  UID?: string;
 }
 
 // ---------------------------

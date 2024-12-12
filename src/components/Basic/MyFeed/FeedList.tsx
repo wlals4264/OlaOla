@@ -15,6 +15,7 @@ interface FeedItem {
   niceCount?: number;
   centerName?: string;
   userUID?: string;
+  UID?: string;
 }
 
 const FeedList: React.FC = () => {
@@ -54,7 +55,7 @@ const FeedList: React.FC = () => {
 
       // 받아온 파일리스트에서 UID와 같은 데이터만 필터링 & id 내림차순 정렬해서 최신값부터 정렬
       const filteredFiles = files
-        .filter((fileData) => fileData.userUID === userUID)
+        .filter((fileData) => fileData.UID === userUID)
         .sort((a, b) => Number(b.id) - Number(a.id));
 
       const pageSize = 6;
@@ -74,7 +75,7 @@ const FeedList: React.FC = () => {
               fileDescribe: fileData.describe,
               niceCount: fileData.niceCount || 0,
               centerName: fileData.centerName,
-              userUID: fileData.userUID,
+              userUID: fileData.UID,
             };
           });
 
