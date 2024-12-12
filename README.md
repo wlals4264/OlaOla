@@ -20,7 +20,7 @@
 <br>
 이후 프로젝트 리팩토링 예정...🐜
 
-배포 주소 : https://ola-i10mjpz6m-bluemins-projects.vercel.app/
+배포 주소 : https://ola-ola-nine.vercel.app/
 
 ~~👷🏻 현재 배포중 오류가 많아 수정중!! 👷🏻~~
 
@@ -32,7 +32,7 @@
 
 ## 기술 스택
 
-<img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=white"> <img src="https://img.shields.io/badge/React--Router-CA4245?style=for-the-badge&logo=React-Router&logoColor=white"> <img src="https://img.shields.io/badge/Recoil-3578E5?style=for-the-badge&logo=Recoil&logoColor=white"> <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=Vite&logoColor=white"> <img src="https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white"> <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=TypeScript&logoColor=white"> <img src="https://img.shields.io/badge/Firebase-DD2C00?style=for-the-badge&logo=Firebase&logoColor=white"> <img src="https://img.shields.io/badge/Styled--Components-DB7093?style=for-the-badge&logo=Styled-Components&logoColor=white"> <img src="https://img.shields.io/badge/TailWind-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white"> <img src="https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white"> <img src="https://img.shields.io/badge/React Quill-9e9e9e?style=for-the-badge&logo=reactquill&logoColor=white"> <img src="https://img.shields.io/badge/UUID-00AA45?style=for-the-badge&logo=reactquill&logoColor=white">
+<img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=white"> <img src="https://img.shields.io/badge/React--Router-CA4245?style=for-the-badge&logo=React-Router&logoColor=white"> <img src="https://img.shields.io/badge/Recoil-3578E5?style=for-the-badge&logo=Recoil&logoColor=white"> <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=Vite&logoColor=white"> <img src="https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white"> <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=TypeScript&logoColor=white"> <img src="https://img.shields.io/badge/Firebase-DD2C00?style=for-the-badge&logo=Firebase&logoColor=white"> <img src="https://img.shields.io/badge/Styled--Components-DB7093?style=for-the-badge&logo=Styled-Components&logoColor=white"> <img src="https://img.shields.io/badge/TailWind-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white"> <img src="https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white"> <img src="https://img.shields.io/badge/React Quill-9e9e9e?style=for-the-badge&logo=reactquill&logoColor=white"> <img src="https://img.shields.io/badge/UUID-00AA45?style=for-the-badge&logo=reactquill&logoColor=white"> <img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=Vercel&logoColor=white">
 
 <br>
 
