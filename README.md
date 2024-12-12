@@ -26,7 +26,7 @@ Carousel & ScrollSnap & 사이트 주요 기능들 미리보기
 
 ### ✨ 회원가입 및 로그인
 
-![회원가입](https://github.com/user-attachments/assets/b4d4da54-9fbc-46f7-bf82-6995ec7481cb)
+![ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/6badc08e-3420-492e-b2b0-e034c9d6900f)
 
 ![로그인](https://github.com/user-attachments/assets/a7d496ec-7f21-4802-9952-1e61dd69c42b)
 
