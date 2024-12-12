@@ -1,10 +1,10 @@
 <div align=center>
 
-# 🧗🏻‍♀️ 클라이밍 커뮤니티 플랫폼 ‘OlaOla’
-
 ![header](https://capsule-render.vercel.app/api?type=wave&color=A5E1FF&height=300&section=header&text=Ola%20Ola&fontSize=90)
 
-## 'OlaOla'에서
+<br>
+
+## 🧗🏻‍♀️ 클라이밍 커뮤니티 플랫폼 ‘OlaOla’
 
 📸 클라이밍 등반 영상을 올려 기록하고 유저들과 공유해보세요!
 <br>
