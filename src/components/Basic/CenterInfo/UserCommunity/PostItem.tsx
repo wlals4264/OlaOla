@@ -26,7 +26,6 @@ const PostItem: React.FC = () => {
   const [postCategory, setPostCategory] = useState<string | null>('');
   const [likeCount, setLikeCount] = useState<number>(0);
   const [likeUser, setLikeUser] = useState<string[]>([]);
-  const [viewCount, setViewCount] = useState<number>(0);
   const [createdAt, setCreatedAt] = useState<string>('');
 
   // 로그인 상태와 userUID 가져오기
@@ -54,18 +53,8 @@ const PostItem: React.FC = () => {
         setContent(updatedContent);
 
         // 받아온 데이터를 통해 게시글에 필요한 상태 저장
-        const {
-          userUID,
-          createdAt,
-          userNickName,
-          postTitle,
-          centerName,
-          level,
-          postCategory,
-          likeCount,
-          likeUser,
-          viewCount,
-        } = postData;
+        const { userUID, createdAt, userNickName, postTitle, centerName, level, postCategory, likeCount, likeUser } =
+          postData;
         setCreatedAt(createdAt);
         setUserNickName(userNickName);
         setPostTitle(postTitle);
@@ -73,7 +62,6 @@ const PostItem: React.FC = () => {
         setLevel(level);
         setPostCategory(postCategory);
         setLikeCount(likeCount);
-        setViewCount(viewCount);
         setPostUserUID(userUID);
         setLikeUser(likeUser);
 

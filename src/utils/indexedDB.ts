@@ -591,7 +591,6 @@ interface Post {
   content: string;
   level: string;
   likeCount: number | 0;
-  viewCount: number | 0;
   likeUser: string[];
   createdAt: string;
   updatedAt: string;
