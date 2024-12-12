@@ -127,7 +127,7 @@ export function addFileToDB(
         file: file,
         type: fileType,
         describe: describe,
-        UID: userUID,
+        userUID: userUID,
         level: level,
         centerName: centerName,
         niceCount: niceCount,
