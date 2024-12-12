@@ -621,7 +621,7 @@ interface Post {
   createdAt: string;
   updatedAt: string;
   centerName: string;
-  postCategory: string | null;
+  postCategory: string;
   id?: number;
 }
 
