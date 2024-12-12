@@ -36,14 +36,14 @@ const Map: React.FC<MapProps> = ({ searchText, showSearchResults }) => {
       };
 
       mapRef.current = new kakao.maps.Map(mapContainerRef.current, mapOption);
-      mapRef.current.setZoomable(false); // 줌 비활성화
+      mapRef.current?.setZoomable(false); // 줌 비활성화
     }
 
     // 검색 결과가 없거나 `showSearchResults`가 false인 경우 맵을 유지
     if (!showSearchResults || !searchText || !mapRef.current) return;
 
     const places = new kakao.maps.services.Places();
-    places.keywordSearch(searchText, (data, status) => {
+    places.keywordSearch(searchText, (data: any, status: any) => {
       if (status === kakao.maps.services.Status.OK) {
         const place = data[0];
 
@@ -51,7 +51,7 @@ const Map: React.FC<MapProps> = ({ searchText, showSearchResults }) => {
         if (place.category_name && place.category_name.includes('클라이밍')) {
           // 검색 결과를 바탕으로 맵 렌더링
           const latlng = new kakao.maps.LatLng(place.y, place.x);
-          mapRef.current.setCenter(latlng);
+          mapRef.current?.setCenter(latlng);
 
           // 장소 정보 상태 업데이트
           setPlaceInfo({
