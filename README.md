@@ -20,9 +20,13 @@
 <br>
 이후 프로젝트 리팩토링 예정...🐜
 
-🚧 배포 주소 : https://ola-a5fw9oyv4-bluemins-projects.vercel.app/
+배포 주소 : https://ola-i10mjpz6m-bluemins-projects.vercel.app/
 
-👷🏻 현재 배포중 오류가 많아 수정중!! 👷🏻
+~~👷🏻 현재 배포중 오류가 많아 수정중!! 👷🏻~~
+
+**🚒 급한불 진화 완료 🚒**
+<br>
+앞으로 계속해서 수정해 나갈 예정입니다..💭
 
 <br>
 
