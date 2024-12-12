@@ -69,7 +69,7 @@ const FeedList: React.FC = () => {
             const fileUrl = URL.createObjectURL(fileData.file);
             return {
               fileUrl,
-              fileType: fileData.fileType,
+              fileType: fileData.type,
               fileID: fileData.id,
               level: fileData.level,
               fileDescribe: fileData.describe,

@@ -89,7 +89,7 @@ export const getDB = (): Promise<IDBDatabase | null> => {
 
 interface FeedItem {
   file: File;
-  fileType: string;
+  type: string;
   describe: string;
   userUID: string;
   level: string;
