@@ -91,7 +91,7 @@ interface FeedItem {
   file: File;
   fileType: string;
   describe: string;
-  userUID: string | null;
+  userUID: string;
   level: string;
   centerName: string;
   niceCount: number;
