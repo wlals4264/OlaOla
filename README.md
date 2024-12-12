@@ -1,6 +1,9 @@
+<div align=center>
 # 🧗🏻‍♀️ 클라이밍 커뮤니티 플랫폼 ‘OlaOla’
 
-## 'OlaOla'에서 우리는 이런 것을 할 수 있어요!
+![header](https://capsule-render.vercel.app/api?type=wave&color=A5E1FF&height=300&section=header&text=Ola%20Ola&fontSize=90)
+
+## 'OlaOla'에서
 
 📸 클라이밍 등반 영상을 올려 기록하고 유저들과 공유해보세요!
 <br>
@@ -30,6 +33,8 @@
 
 Carousel & ScrollSnap & 사이트 주요 기능들 미리보기
 
+<br>
+
 ![ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/538d6fdf-edee-482c-bb52-c52cacd479f8)
 
 <br>
@@ -42,7 +47,7 @@ Carousel & ScrollSnap & 사이트 주요 기능들 미리보기
 
 <br>
 
-### ✨ 소셜 로그인
+### ✨ Google 소셜 로그인
 
 ![소셜 로그인](https://github.com/user-attachments/assets/bfc9de41-fec0-4868-9235-58900f8dd2f9)
 
@@ -52,6 +57,8 @@ Carousel & ScrollSnap & 사이트 주요 기능들 미리보기
 
 피드 올리기 & 수정 & 삭제, 피드 댓글 기능
 
+<br>
+
 ![피드 올리기](https://github.com/user-attachments/assets/b54ff01a-dcdb-47c1-be75-544b277af220)
 
 <br>
@@ -59,6 +66,8 @@ Carousel & ScrollSnap & 사이트 주요 기능들 미리보기
 ### ✨ 피드 둘러보기
 
 무한 스크롤 + nice 기능
+
+<br>
 
 ![피드 둘러보기](https://github.com/user-attachments/assets/a26ef0c0-50db-44f7-a4bf-e5d856283dfd)
 
@@ -74,6 +83,8 @@ kakao 지도 API 연동
 
 페이지네이션, 검색, 필터링 기능
 
+<br>
+
 ![커뮤니티](https://github.com/user-attachments/assets/44cca265-27c9-42d3-a9c6-a01338ad2a1b)
 
 ![검색](https://github.com/user-attachments/assets/59ac61b6-1b42-4f2f-aa94-68900c3b512e)
@@ -82,4 +93,6 @@ kakao 지도 API 연동
 
 ## 전체 개발 기획 & 회고 및 트러블 슈팅 Notion Link
 
-<a ref="https://www.notion.so/OlaOla-13b9b3c1166f8066a841e1fb5dbb4ead">📝 'OlaOla' 전체 기획 & 회고 및 트러블 슈팅 Notion Link </a>
+<a href="https://www.notion.so/OlaOla-13b9b3c1166f8066a841e1fb5dbb4ead)"> **📝 'OlaOla' 전체 기획 & 회고 및 트러블 슈팅 Notion Link** </a>
+
+</div>
