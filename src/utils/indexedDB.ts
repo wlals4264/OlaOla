@@ -24,7 +24,7 @@ export function initDB() {
     const target = event.target as IDBOpenDBRequest;
     console.log('Upgrading database');
     db = target.result;
-    const oldVersion = event.oldVersion;
+    const oldVersion = (event as IDBVersionChangeEvent).oldVersion;
 
     if (oldVersion < 1) {
       if (!db.objectStoreNames.contains('mediaData')) {
@@ -634,7 +634,7 @@ interface Post {
   updatedAt: string;
   centerName: string;
   postCategory: string;
-  id: number;
+  id?: number;
 }
 
 // DB에 게시글 올리기

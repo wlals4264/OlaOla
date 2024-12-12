@@ -4,11 +4,6 @@ import { useRecoilValue } from 'recoil';
 import { climbingLevelState, editorValueState, userNicknameState, userUIDState } from '../../../../datas/recoilData';
 import { addPostToDB, saveImageToIndexedDB } from '../../../../utils/indexedDB';
 
-// interface FileWithId {
-//   file: File;
-//   imgId: string;
-// }
-
 interface PostingButtonsProps {
   // fileList: FileWithId[] | null; // 타입 변경
   fileList: File[];

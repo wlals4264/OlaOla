@@ -42,7 +42,7 @@ const UserCommunity: React.FC<UserCommunityProps> = ({ isScrollSnap }) => {
       const posts = await getPostListFromDB();
 
       // 받아온 파일 리스트를 id 내림차순으로 정렬해서 최신값부터 정렬
-      const sortedPosts = posts.sort((a, b) => b.id - a.id);
+      const sortedPosts = posts.sort((a, b) => (b.id as number) - (a.id as number));
 
       // 검색 기능이 활성화 될 때 리스트 처리
       const filteredPosts = searchText

@@ -52,7 +52,7 @@ const FeedList: React.FC = () => {
       }
 
       // 받아온 파일리스트에서 UID와 같은 데이터만 필터링 & id 내림차순 정렬해서 최신값부터 정렬
-      const filteredFiles = files.filter((fileData) => fileData.UID === userUID).sort((a, b) => b.id - a.id);
+      const filteredFiles = files.filter((fileData) => fileData.userUID === userUID).sort((a, b) => b.id - a.id);
 
       const pageSize = 6;
       const startIndex = page * pageSize;

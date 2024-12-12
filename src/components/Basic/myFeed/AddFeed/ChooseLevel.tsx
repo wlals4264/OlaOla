@@ -1,4 +1,4 @@
-import { useRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { climbingLevelState } from '../../../../datas/recoilData';
 import { levelOptions } from '../../../../datas/levelOptions';
 
@@ -8,7 +8,7 @@ interface ChooseLevelProps {
 }
 
 const ChooseLevel: React.FC<ChooseLevelProps> = ({ currentClimbingLevel, onClimbingLevelChange }) => {
-  const [climbingLevel, setClimbingLevel] = useRecoilState<string>(climbingLevelState);
+  const setClimbingLevel = useSetRecoilState<string>(climbingLevelState);
   const levelToUse = currentClimbingLevel || '';
 
   const handleSelectedLevel = (level: string) => {

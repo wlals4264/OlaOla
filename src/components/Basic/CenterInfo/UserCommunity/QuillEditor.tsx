@@ -27,6 +27,7 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ fileList, setFileList, postId
   const resetEditor = () => {
     setEditorValue('');
     setFileList([]);
+    console.log(fileList);
   };
 
   const imageHandler = () => {
