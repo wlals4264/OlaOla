@@ -42,6 +42,7 @@ export function initDB() {
       if (!db.objectStoreNames.contains('postImgData')) {
         const objectStore = db.createObjectStore('postImgData', { keyPath: 'id', autoIncrement: true });
         objectStore.createIndex('postIdIndex', 'postId', { unique: false });
+        objectStore.createIndex('imgIdIndex', 'imgId', { unique: false });
       }
     }
   });
@@ -445,7 +446,7 @@ export const saveImageToIndexedDB = async (file: File, postId: number, imgId: st
   });
 };
 
-// 이미지 리스트 가져오기
+// 이미지 Blob 리스트 가져오기
 export const getImageByPostId = async (postId: number) => {
   const db = await getDB();
 
@@ -526,6 +527,31 @@ export function deleteImageInDB(postId: number): Promise<void> {
       const transaction = db.transaction('postImgData', 'readwrite');
       const objectStore = transaction.objectStore('postImgData');
       const request = objectStore.delete(postId);
+
+      request.onsuccess = () => {
+        console.log('이미지가 성공적으로 삭제되었습니다.');
+        resolve();
+      };
+
+      request.onerror = (event) => {
+        console.error('이미지 삭제 오류', event);
+        reject(event);
+      };
+    });
+  });
+}
+
+// 이미지 삭제 함수 (imgId 기반으로)
+export function deleteImageInDBByImgId(imgId: string): Promise<void> {
+  return getDB().then((db) => {
+    if (!db) {
+      return Promise.reject('DB not available');
+    }
+
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction('postImgData', 'readwrite');
+      const objectStore = transaction.objectStore('postImgData');
+      const request = objectStore.delete(imgId);
 
       request.onsuccess = () => {
         console.log('이미지가 성공적으로 삭제되었습니다.');

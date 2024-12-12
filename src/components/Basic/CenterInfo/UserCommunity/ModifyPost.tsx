@@ -3,7 +3,12 @@ import ChooseLevel from '../../MyFeed/AddFeed/ChooseLevel';
 import PostingButtons from './PostingButtons';
 import QuillEditor from './QuillEditor';
 import { PostCategory } from '../../../Types/PostCategory';
-import { updatePostInDB, saveImageToIndexedDB, getImageItemListByPostId } from '../../../../utils/indexedDB';
+import {
+  updatePostInDB,
+  saveImageToIndexedDB,
+  getImageItemListByPostId,
+  deleteImageInDBByImgId,
+} from '../../../../utils/indexedDB';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { editorValueState } from '../../../../datas/recoilData';
@@ -80,6 +85,15 @@ const ModifyPost: React.FC = () => {
           }
         }
       });
+
+      // 이미지 삭제 처리: 기존 이미지 중 현재 editorValue에서 존재하지 않는 이미지는 삭제
+      const currentImgIds = imgTags.map((img) => img.getAttribute('data-img-id'));
+      const deletedImages = existingImages.filter((image) => !currentImgIds.includes(image.imgId || ''));
+
+      for (const deletedImage of deletedImages) {
+        await deleteImageInDBByImgId(String(deletedImage.imgId)); // IndexedDB에서 삭제
+        console.log(`이미지 삭제됨: ${deletedImage.imgId}`);
+      }
 
       // 게시글 업데이트 데이터
       const updateData = {
