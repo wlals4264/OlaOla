@@ -2,8 +2,6 @@ import React from 'react';
 const ModalTitle = () => {
   return (
     <>
-      {/* 닫힘 버튼 */}
-
       {/* title */}
       <div className="flex items-center justify-center gap-2">
         <svg width="45" height="45" viewBox="0 0 45 45" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -13,7 +11,7 @@ const ModalTitle = () => {
             fill="black"
           />
         </svg>
-        <h2 className="text-3xl font-itim ext-center">OlaOla</h2>
+        <h2 className="text-3xl font-itim text-center">OlaOla</h2>
       </div>
     </>
   );
