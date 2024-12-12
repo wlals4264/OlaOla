@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
-import { v4 as uuidv4 } from 'uuid'; //
 import { climbingLevelState, editorValueState, userNicknameState, userUIDState } from '../../../../datas/recoilData';
 import { addPostToDB, saveImageToIndexedDB } from '../../../../utils/indexedDB';
 

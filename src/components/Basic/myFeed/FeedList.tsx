@@ -53,13 +53,10 @@ const FeedList: React.FC = () => {
 
       // 받아온 파일리스트에서 UID와 같은 데이터만 필터링 & id 내림차순 정렬해서 최신값부터 정렬
       const filteredFiles = files.filter((fileData) => fileData.UID === userUID).sort((a, b) => b.id - a.id);
-      console.log('필터링된 파일들:', filteredFiles);
 
       const pageSize = 6;
       const startIndex = page * pageSize;
       const pagedFiles = filteredFiles.slice(startIndex, startIndex + pageSize);
-
-      console.log('현재 페이지:', page, '로딩할 파일들:', pagedFiles);
 
       // fileUrl 생성
       if (filteredFiles.length > 0) {

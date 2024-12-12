@@ -7,6 +7,7 @@ import {
   updatePostInDB,
   deleteImageInDB,
   deleteCommentInDB,
+  getImageItemListByPostId,
 } from '../../../../utils/indexedDB';
 import Spinner from '../../../Spinner/Spinner';
 import { levelOptions } from '../../../../datas/levelOptions';
@@ -47,7 +48,6 @@ const PostItem: React.FC = () => {
       try {
         const postData = await getPostFromDB(Number(postId));
         setPost(postData);
-        console.log(postData);
 
         let updatedContent = postData.content;
         setContent(updatedContent);
@@ -65,10 +65,35 @@ const PostItem: React.FC = () => {
         setPostUserUID(userUID);
         setLikeUser(likeUser);
 
+        // // 저장되어 있는 이미지 데이터를 불러와 이미지태그에 Blob URL을 생성하여 처리하는 함수
+        const processImages = async (content: string, postId: number): Promise<string> => {
+          // HTML 문서를 파싱하여 DOM 조작 가능하도록 셋팅, img 태그들 선택
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(content, 'text/html');
+          const imgTags = Array.from(doc.querySelectorAll('img[data-img-id]')) as HTMLImageElement[];
+
+          // postId로 DB에서 이미지를 찾아 Blob 객체를 받아오기
+          const imageData = await getImageItemListByPostId(Number(postId));
+
+          imgTags.forEach((img) => {
+            const imgId = Number(img.getAttribute('data-img-id')); // img-data-id 값 가져오기
+            const matchedImage = imageData.find((data) => data.imgId === String(imgId)); // imgId와 일치하는 Blob 찾기
+
+            if (matchedImage) {
+              const newBlobUrl = URL.createObjectURL(matchedImage.imageData);
+              img.setAttribute('src', newBlobUrl);
+            }
+          });
+
+          return doc.body.innerHTML;
+        };
+
+        // content HTML에 Blob URL 적용한 content를 update
+        updatedContent = await processImages(updatedContent, Number(postId));
+
         setContent(updatedContent);
         setPost({ ...postData, content: updatedContent });
         updatePostInDB(Number(postId), { ...postData, content: updatedContent });
-        console.log(updatedContent);
       } catch (error) {
         console.error('게시글을 가져오는 중 오류가 발생했습니다:', error);
       } finally {
@@ -133,11 +158,9 @@ const PostItem: React.FC = () => {
 
     let updateLikeUser;
     if (likeUser && likeUser.includes(userUID)) {
-      // Remove userUID from the array
       updateLikeUser = likeUser.filter((uid) => uid !== userUID);
       setLikeCount((prevCount) => prevCount - 1);
     } else {
-      // Add userUID to the array
       updateLikeUser = [...likeUser, userUID];
       setLikeCount((prevCount) => prevCount + 1);
     }
@@ -145,7 +168,6 @@ const PostItem: React.FC = () => {
     setHasClicked(!hasClicked);
     setLikeUser(updateLikeUser);
 
-    // Update in IndexedDB
     updatePostInDB(Number(postId), {
       likeCount: updateLikeUser.length,
       likeUser: updateLikeUser,

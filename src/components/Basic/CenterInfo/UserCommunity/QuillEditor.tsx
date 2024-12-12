@@ -9,11 +9,6 @@ import { getImageItemListByPostId } from '../../../../utils/indexedDB';
 // QuillEditor formats 정의
 const formats = ['font', 'header', 'bold', 'italic', 'strike', 'indent', 'link', 'color', 'image', 'align'];
 
-// interface FileWithId {
-//   file: File;
-//   imgId: string;
-// }
-
 interface QuillEditorProps {
   // fileList: FileWithId[];
   fileList: File[];
@@ -87,11 +82,12 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ fileList, setFileList, postId
             imgNode.setAttribute('data-img-id', String(imgId));
           }
         }, 10);
-        setTimeout(() => {
-          const imageNode = editor.root.querySelector(`[src="${blobUrl}"]`);
-          console.log(imageNode?.outerHTML); // HTML 코드를 출력
-          console.log(editor.getContents());
-        }, 100);
+
+        // setTimeout(() => {
+        // const imageNode = editor.root.querySelector(`[src="${blobUrl}"]`);
+        // console.log(imageNode?.outerHTML); // HTML 코드를 출력
+        // console.log(editor.getContents());
+        // }, 100);
       }
 
       // 초기화
@@ -117,15 +113,15 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ fileList, setFileList, postId
             setTimeout(() => {
               if (imageNode) {
                 imageNode.setAttribute('data-img-id', String(imgId));
-                console.log(editor.getContents());
+                // console.log(editor.getContents());
               }
             }, 10);
 
-            setTimeout(() => {
-              const imageNode = editor.root.querySelectorAll('img')[index];
-              console.log(imageNode?.outerHTML); // HTML 코드를 출력
-              console.log(editor.getContents());
-            }, 100);
+            // setTimeout(() => {
+            // const imageNode = editor.root.querySelectorAll('img')[index];
+            // console.log(imageNode?.outerHTML); // HTML 코드를 출력
+            // console.log(editor.getContents());
+            // }, 100);
           });
         }
       } catch (error) {

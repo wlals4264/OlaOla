@@ -52,7 +52,7 @@ const UserStateView: React.FC = () => {
         </div>
         <div>
           <p className="mt-6 flex shrink-0 justify-center items-center font-semibold font-noto text-sm">팔로우</p>
-          <p className="mt-4 flex shrink-0 justify-center items-center font-semibold font-noto text-xs">2</p>
+          <p className="mt-4 flex shrink-0 justify-center items-center font-semibold font-noto text-xs">0</p>
         </div>
       </div>
     </div>

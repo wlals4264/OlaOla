@@ -27,7 +27,6 @@ interface FeedItemProps {
   };
 }
 const FeedItem: React.FC<FeedItemProps> = ({ feedItem }) => {
-  console.log(feedItem);
   const userImg = useRecoilValue(userImgState);
   const nickname = useRecoilValue(userNicknameState);
   const setFeedItemModalOpen = useSetRecoilState(isFeedItemModalOpenState);

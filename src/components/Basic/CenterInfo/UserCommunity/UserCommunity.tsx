@@ -12,7 +12,7 @@ interface PostItem {
   userNickname?: string;
   postTitle: string;
   createdAt: Date;
-  postCategory: string | null;
+  postCategory: string;
   likeCount: number;
   level: string;
   updatedAt: Date;
@@ -55,7 +55,6 @@ const UserCommunity: React.FC<UserCommunityProps> = ({ isScrollSnap }) => {
 
       // 필요한 데이터만 담은 postContents
       const postContents = pagedPosts.map((postData: any) => {
-        console.log('게시글 리스트 아이템', postData);
         return {
           createdAt: postData.createdAt,
           userNickname: postData.userNickName,
@@ -284,7 +283,7 @@ const UserCommunity: React.FC<UserCommunityProps> = ({ isScrollSnap }) => {
                   className="w-full h-full px-3 py-[6px] rounded-xl text-sm items-center outline-none focus:ring-2 focus:ring-primary"
                   placeholder="검색어를 입력해주세요."
                 />
-                <button className="absolute right-2 top-1/2 -translate-y-1/2">
+                <button type="button" className="absolute right-2 top-1/2 -translate-y-1/2">
                   <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g clipPath="url(#clip0_8_776)">
                       <path
