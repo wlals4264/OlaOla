@@ -28,6 +28,7 @@ const UserCommunity: React.FC<UserCommunityProps> = ({ isScrollSnap }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [searchText, setSearchText] = useState('');
+  const [sortedBy, setSortedBy] = useState('default');
   const [filteredPostList, setFilteredPostList] = useState<PostItem[]>([]);
   const [sortedItemIds, setSortedItemIds] = useState<string[]>([]);
 
@@ -101,23 +102,32 @@ const UserCommunity: React.FC<UserCommunityProps> = ({ isScrollSnap }) => {
 
   // 코멘트 필터링 함수
   const handleFilteringCommentCount = async () => {
-    const postComment = await getCommentsListFromDB('postCommentData');
+    const postComments = await getCommentsListFromDB('postCommentData');
 
-    if (postComment.length > 0) {
-      const itemCount: { [key: string]: number } = {};
-
-      postComment.forEach((comment) => {
-        const itemId = comment.ItemId;
-        itemCount[itemId] = (itemCount[itemId] || 0) + 1;
+    if (postComments.length > 0) {
+      // 댓글 수를 계산하여 각 게시글에 매핑
+      const commentCount: { [key: number]: number } = {};
+      postComments.forEach((comment) => {
+        const postId = comment.ItemId;
+        commentCount[postId] = (commentCount[postId] || 0) + 1;
       });
 
-      const sortedItemIds = Object.entries(itemCount)
-        .sort((a, b) => b[1] - a[1])
-        .map((entry) => entry[0]);
+      // 댓글 수를 기준으로 게시글 정렬
+      const sortedPosts = [...postList].sort((a, b) => {
+        const countA = commentCount[a.id] || 0;
+        const countB = commentCount[b.id] || 0;
+        return countB - countA;
+      });
 
-      console.log('sortedItemIds:  ', sortedItemIds);
-      setSortedItemIds(sortedItemIds);
+      setSortedBy('comment');
+      setPostList(sortedPosts);
     }
+  };
+
+  const handleLatestPosts = () => {
+    setSortedBy('default');
+    const sortedPosts = [...postList].sort((a, b) => b.id - a.id);
+    setPostList(sortedPosts);
   };
 
   return (
@@ -224,6 +234,9 @@ const UserCommunity: React.FC<UserCommunityProps> = ({ isScrollSnap }) => {
               <div className="flex justify-center w-full mt-10 font-noto text-sm">
                 <div className="flex justify-between items-center shrink-0 w-[645px] m-auto">
                   <div className="flex gap-3">
+                    <button className="shrink-0" type="button" onClick={handleLatestPosts}>
+                      최신순
+                    </button>
                     <button className="shrink-0" type="button" onClick={handleFilteringCommentCount}>
                       댓글순
                     </button>
