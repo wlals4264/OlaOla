@@ -44,6 +44,7 @@ const FeedList: React.FC = () => {
       // DB에서 파일 리스트 가져오기
       const files = await getFileListFromDB();
       console.log('DB 연결 성공');
+      console.log(files);
 
       // UID 체크
       if (!userUID) {
