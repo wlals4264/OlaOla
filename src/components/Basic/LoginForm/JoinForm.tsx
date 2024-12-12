@@ -4,7 +4,6 @@ import { auth } from '../../../Firebase/firebase';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import {
   isJoinModalOpenState,
-  isLoginUserState,
   isSuccessModalOpenState,
   updateLoginUserState,
   updateUserUIDState,

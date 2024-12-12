@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
-import { userImgState, userNicknameState, userUIDState, updateUserUIDState } from '../../../datas/recoilData';
+import { userImgState, userNicknameState, updateUserUIDState } from '../../../datas/recoilData';
 import profileDefaultImg from '../../../assets/svgs/profileDefaultImg.svg';
 import { getFileListFromDB } from '../../../utils/indexedDB';
 

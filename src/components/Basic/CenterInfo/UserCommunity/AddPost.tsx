@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ChooseLevel from '../../MyFeed/AddFeed/ChooseLevel';
 import PostingButtons from './PostingButtons';
 import QuillEditor from './QuillEditor';
-import { PostCategory } from '../../../Types/PostCategory';
+import { PostCategory } from '../../../../types/PostCategory';
 
 // interface FileWithId {
 //   file: File;

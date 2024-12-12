@@ -13,6 +13,7 @@ interface CommentType {
   comment: string;
   userUID: string | null;
   ItemId: number;
+  id?: number;
 }
 
 const Comment: React.FC<CommentProps> = ({ feedItemId }) => {
@@ -87,7 +88,7 @@ const Comment: React.FC<CommentProps> = ({ feedItemId }) => {
                   <button
                     type="button"
                     onClick={() => {
-                      handleCommentDelete(comment.id);
+                      handleCommentDelete(Number(comment.id));
                     }}>
                     <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path

@@ -12,7 +12,7 @@ import {
 import Spinner from '../../../Spinner/Spinner';
 import { levelOptions } from '../../../../datas/levelOptions';
 import { isLoginUserState, userUIDState } from '../../../../datas/recoilData';
-import { PostCategory } from '../../../Types/PostCategory';
+import { PostCategory } from '../../../../types/PostCategory';
 import CommunityComment from './CommunityComment';
 
 const PostItem: React.FC = () => {

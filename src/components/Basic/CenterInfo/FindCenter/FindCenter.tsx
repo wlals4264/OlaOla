@@ -20,7 +20,7 @@ const SearchResultList = styled.ul`
 `;
 
 interface FindCenterProps {
-  isScrollSnap: boolean;
+  isScrollSnap?: boolean;
 }
 
 const FindCenter: React.FC<FindCenterProps> = ({ isScrollSnap }) => {
@@ -55,7 +55,7 @@ const FindCenter: React.FC<FindCenterProps> = ({ isScrollSnap }) => {
     }
 
     const places = new kakao.maps.services.Places();
-    places.keywordSearch(searchText, (data, status) => {
+    places.keywordSearch(searchText, (data: any, status: any) => {
       if (status === kakao.maps.services.Status.OK) {
         const filtered = data.filter((place: any) => place.category_name && place.category_name.includes('클라이밍'));
         setFilteredSearchTextList(filtered);

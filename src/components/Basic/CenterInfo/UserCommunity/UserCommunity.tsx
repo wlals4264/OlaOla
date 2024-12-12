@@ -3,7 +3,7 @@ import CenterHeader from '../CenterHeader';
 import Sidebar from '../Sidebar';
 import { Link } from 'react-router-dom';
 import { getPostListFromDB } from '../../../../utils/indexedDB';
-import { PostCategory } from '../../../Types/PostCategory';
+import { PostCategory } from '../../../../types/PostCategory';
 import { levelOptions } from '../../../../datas/levelOptions';
 import { getCommentsListFromDB } from '../../../../utils/indexedDB';
 import { formatTimeDifference } from '../../../../utils/formatTimeDifference';
@@ -20,7 +20,7 @@ interface PostItem {
 }
 
 interface UserCommunityProps {
-  isScrollSnap: boolean;
+  isScrollSnap?: boolean;
 }
 
 const UserCommunity: React.FC<UserCommunityProps> = ({ isScrollSnap }) => {

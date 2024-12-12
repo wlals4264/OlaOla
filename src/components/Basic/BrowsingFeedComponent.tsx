@@ -18,7 +18,7 @@ interface FeedItem {
 }
 
 interface BrowsingFeedComponentProps {
-  isScrollSnap: boolean;
+  isScrollSnap?: boolean;
 }
 
 const BrowsingFeedComponent: React.FC<BrowsingFeedComponentProps> = ({ isScrollSnap }) => {

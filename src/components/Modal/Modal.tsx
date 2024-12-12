@@ -1,5 +1,4 @@
 import React from 'react';
-import ModalTitle from './ModalTitle';
 
 interface ModalProps {
   isOpen: boolean;
@@ -24,7 +23,6 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
           </svg>
         </button>
 
-        {/* form tag 불러와서 넣기 */}
         {children}
       </div>
     </div>

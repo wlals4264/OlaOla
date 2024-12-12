@@ -87,6 +87,18 @@ export const getDB = (): Promise<IDBDatabase | null> => {
   });
 };
 
+interface FeedItem {
+  file: File;
+  fileType: string;
+  describe: string;
+  userUID: string | null;
+  level: string;
+  centerName: string;
+  niceCount: number;
+  niceUser: string[];
+  id: number;
+}
+
 // ---------------------------
 // mediaData store 접근 함수들
 // ---------------------------
@@ -171,7 +183,7 @@ export function getFileFromDB(fileId: number): Promise<File | null> {
 }
 
 // DB에서 모든 파일 리스트를 가져오기
-export function getFileListFromDB(): Promise<File[]> {
+export function getFileListFromDB(): Promise<FeedItem[]> {
   return getDB().then((db) => {
     if (!db) {
       return Promise.reject('DB not available');
@@ -622,7 +634,7 @@ interface Post {
   updatedAt: string;
   centerName: string;
   postCategory: string;
-  id?: number;
+  id: number;
 }
 
 // DB에 게시글 올리기

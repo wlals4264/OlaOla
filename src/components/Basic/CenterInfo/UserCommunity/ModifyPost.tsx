@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ChooseLevel from '../../MyFeed/AddFeed/ChooseLevel';
 import PostingButtons from './PostingButtons';
 import QuillEditor from './QuillEditor';
-import { PostCategory } from '../../../Types/PostCategory';
+import { PostCategory } from '../../../../types/PostCategory';
 import {
   updatePostInDB,
   saveImageToIndexedDB,
