@@ -1,14 +1,24 @@
 # 🧗🏻‍♀️ 클라이밍 커뮤니티 플랫폼 ‘OlaOla’
 
-<br>
+## 'OlaOla'에서 우리는 이런 것을 할 수 있어요!
 
 📸 클라이밍 등반 영상을 올려 기록하고 유저들과 공유해보세요!
 <br>
 🥳 다양한 암장 정보를 공유하고 크루원을 모집하는 등 자유로운 커뮤니티 활동을 즐겨보세요!
+<br>
+🔥 서로의 무브를 보며 실력을 키워봐요!
 
 <br>
 
-## 사용 기술
+## 개발기간
+
+💻 1차 프로젝트 구현 기간 : 2024.11.18 ~ 2024.12.12
+<br>
+이후 프로젝트 리팩토링 예정...🐜
+
+<br>
+
+## 기술 스택
 
 <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=white"> <img src="https://img.shields.io/badge/React--Router-CA4245?style=for-the-badge&logo=React-Router&logoColor=white"> <img src="https://img.shields.io/badge/Recoil-3578E5?style=for-the-badge&logo=Recoil&logoColor=white"> <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=Vite&logoColor=white"> <img src="https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white"> <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=TypeScript&logoColor=white"> <img src="https://img.shields.io/badge/Firebase-DD2C00?style=for-the-badge&logo=Firebase&logoColor=white"> <img src="https://img.shields.io/badge/Styled--Components-DB7093?style=for-the-badge&logo=Styled-Components&logoColor=white"> <img src="https://img.shields.io/badge/TailWind-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white"> <img src="https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white"> <img src="https://img.shields.io/badge/React Quill-9e9e9e?style=for-the-badge&logo=reactquill&logoColor=white"> <img src="https://img.shields.io/badge/UUID-00AA45?style=for-the-badge&logo=reactquill&logoColor=white">
 
@@ -67,3 +77,9 @@ kakao 지도 API 연동
 ![커뮤니티](https://github.com/user-attachments/assets/44cca265-27c9-42d3-a9c6-a01338ad2a1b)
 
 ![검색](https://github.com/user-attachments/assets/59ac61b6-1b42-4f2f-aa94-68900c3b512e)
+
+<br>
+
+## 전체 개발 기획 & 회고 및 트러블 슈팅 Notion Link
+
+<a ref="https://www.notion.so/OlaOla-13b9b3c1166f8066a841e1fb5dbb4ead">📝 'OlaOla' 전체 기획 & 회고 및 트러블 슈팅 Notion Link </a>
