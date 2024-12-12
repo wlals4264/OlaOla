@@ -10,9 +10,9 @@ const ScrollSnap: React.FC = () => {
   // 스크롤 이벤트 핸들러
   const handleScroll = () => {
     if (window.scrollY > 500) {
-      setIsButtonVisible(false); // 스크롤이 561px 이상이면 버튼 숨기기
+      setIsButtonVisible(false);
     } else {
-      setIsButtonVisible(true); // 그렇지 않으면 버튼 보이기
+      setIsButtonVisible(true);
     }
   };
 
@@ -41,14 +41,26 @@ const ScrollSnap: React.FC = () => {
   return (
     <>
       <div className="h-[100vh] overflow-y-scroll snap-y snap-mandatory">
+        {/* TOP 버튼 */}
         <button
           type="button"
           onClick={scrollToTop}
           className="fixed right-6 bottom-6 w-12 h-12 rounded-full bg-primary text-white">
           TOP
         </button>
+
+        {/* 스크롤 스냅 진입 버튼 */}
         {isButtonVisible && (
-          <div className="absolute top-[572px] left-[50%] z-10 transform -translate-x-1/2">
+          <div
+            className="absolute 
+         top-[calc(100vh/3 + 500px)] 
+         left-[50%] 
+         z-10 
+         transform 
+         -translate-x-1/2 
+         sm:top-[calc(100vh/4 + 500px)] 
+         md:top-[calc(100vh/5 + 500px)] 
+         lg:top-[calc(100vh/6 + 500px)]">
             <button type="button" onClick={handleScrollDown}>
               <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
