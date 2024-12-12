@@ -157,7 +157,6 @@ const FeedItem: React.FC<FeedItemProps> = ({ feedItem }) => {
         <div className="w-[360px] flex flex-col justify-between">
           <div className="w-[360px] mt-2 flex gap-4 items-center justify-between">
             {/* 나이스 버튼 */}
-
             <div className="flex items-center gap-4">
               <svg
                 onClick={handleNiceButtonClick}

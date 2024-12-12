@@ -66,6 +66,7 @@ const PostingButtons: React.FC<PostingButtonsProps> = ({
         level: climbingLevel,
         likeCount: 0, // 기본값
         viewCount: 0, // 기본값
+        likeUser: [],
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         centerName,

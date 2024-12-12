@@ -540,36 +540,6 @@ export function deleteImageInDB(postId: number): Promise<void> {
   });
 }
 
-// 이미지 수정을 위한 삭제 함수
-// export const deletePrevImageInDB = async (postId: number, imgId: string): Promise<void> => {
-//   try {
-//     const db = await getDB(); // getDB를 async/await 방식으로 처리
-//     if (!db) {
-//       throw new Error('DB not available');
-//     }
-
-//     const transaction = db.transaction('postImgData', 'readwrite');
-//     const objectStore = transaction.objectStore('postImgData');
-
-//     // 모든 이미지 항목을 가져오기
-//     const allImages = await objectStore.getAll();
-
-//     // 해당 postId와 imgId가 일치하는 이미지 항목 찾기
-//     const imageToDelete = allImages.find((img) => img.postId === postId && img.imgId === imgId);
-
-//     if (imageToDelete.length === 0) {
-//       console.log('삭제할 이미지가 없습니다.');
-//       return;
-//     }
-
-//     // 해당 이미지를 삭제
-//     await objectStore.delete(postId);
-//     console.log(`이미지(${imgId})가 삭제되었습니다.`);
-//   } catch (error) {
-//     console.error('이미지 삭제 중 오류 발생:', error);
-//   }
-// };
-
 // DB 이미지데이터 수정 함수
 export function updateImageInDB(postId: number, updatedData: { imgId: string }): Promise<void> {
   return getDB().then((db) => {
@@ -622,6 +592,7 @@ interface Post {
   level: string;
   likeCount: number | 0;
   viewCount: number | 0;
+  likeUser: string[];
   createdAt: string;
   updatedAt: string;
   centerName: string;
@@ -737,6 +708,7 @@ export function updatePostInDB(
     updatedAt: string;
     centerName?: string;
     postCategory?: string | null;
+    likeUser?: string[];
   }
 ): Promise<void> {
   return getDB().then((db) => {

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
 import {
   getPostFromDB,
   getImageByPostId,
@@ -10,6 +11,7 @@ import {
 } from '../../../../utils/indexedDB';
 import Spinner from '../../../Spinner/Spinner';
 import { levelOptions } from '../../../../datas/levelOptions';
+import { isLoginUserState, userUIDState } from '../../../../datas/recoilData';
 import { PostCategory } from '../../../Types/PostCategory';
 import CommunityComment from './CommunityComment';
 
@@ -24,12 +26,19 @@ const PostItem: React.FC = () => {
   const [level, setLevel] = useState<string>('');
   const [postCategory, setPostCategory] = useState<string | null>('');
   const [likeCount, setLikeCount] = useState<number>(0);
+  const [likeUser, setLikeUser] = useState<string[]>([]);
   const [viewCount, setViewCount] = useState<number>(0);
   const [createdAt, setCreatedAt] = useState<string>('');
-  const [userUID, setUserUID] = useState<string | null>('');
+
+  // 로그인 상태와 userUID 가져오기
+  const isLogin = useRecoilValue(isLoginUserState);
+  const userUID = useRecoilValue(userUIDState);
+
+  const [postUserUId, setPostUserUID] = useState<string | null>('');
+  const [hasClicked, setHasClicked] = useState(likeUser.includes(userUID as string));
   const levelColor = levelOptions.find((option) => option.value === level)?.color || 'white';
 
-  const isMyPost = userUID === localStorage.getItem('userUID') ? true : false;
+  const isMyPost = postUserUId === userUID ? true : false;
 
   const navigate = useNavigate();
 
@@ -45,8 +54,18 @@ const PostItem: React.FC = () => {
         setContent(updatedContent);
 
         // 받아온 데이터를 통해 게시글에 필요한 상태 저장
-        const { userUID, createdAt, userNickName, postTitle, centerName, level, postCategory, likeCount, viewCount } =
-          postData;
+        const {
+          userUID,
+          createdAt,
+          userNickName,
+          postTitle,
+          centerName,
+          level,
+          postCategory,
+          likeCount,
+          likeUser,
+          viewCount,
+        } = postData;
         setCreatedAt(createdAt);
         setUserNickName(userNickName);
         setPostTitle(postTitle);
@@ -55,31 +74,32 @@ const PostItem: React.FC = () => {
         setPostCategory(postCategory);
         setLikeCount(likeCount);
         setViewCount(viewCount);
-        setUserUID(userUID);
+        setPostUserUID(userUID);
+        setLikeUser(likeUser);
 
-        // // 저장되어 있는 이미지 데이터를 불러와 이미지태그에 Blob URL을 생성하여 처리하는 함수
-        const processImages = async (content: string, postId: number): Promise<string> => {
-          // HTML 문서를 파싱하여 DOM 조작 가능하도록 셋팅, img 태그들 선택
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(content, 'text/html');
-          const imgTags = Array.from(doc.querySelectorAll('img[src^="blob:"]')) as HTMLImageElement[];
+        // // // 저장되어 있는 이미지 데이터를 불러와 이미지태그에 Blob URL을 생성하여 처리하는 함수
+        // const processImages = async (content: string, postId: number): Promise<string> => {
+        //   // HTML 문서를 파싱하여 DOM 조작 가능하도록 셋팅, img 태그들 선택
+        //   const parser = new DOMParser();
+        //   const doc = parser.parseFromString(content, 'text/html');
+        //   const imgTags = Array.from(doc.querySelectorAll('img[src^="blob:"]')) as HTMLImageElement[];
 
-          // postId로 DB에서 이미지를 찾아 Blob 객체를 받아오기
-          const blobs = (await getImageByPostId(Number(postId))) as Blob[];
+        //   // postId로 DB에서 이미지를 찾아 Blob 객체를 받아오기
+        //   const blobs = (await getImageByPostId(Number(postId))) as Blob[];
 
-          // 이미지 태그에 Blob URL 적용
-          imgTags.forEach((img, index) => {
-            if (blobs[index]) {
-              const newBlobUrl = URL.createObjectURL(blobs[index]);
-              img.setAttribute('src', newBlobUrl);
-            }
-          });
+        //   // 이미지 태그에 Blob URL 적용
+        //   imgTags.forEach((img, index) => {
+        //     if (blobs[index]) {
+        //       const newBlobUrl = URL.createObjectURL(blobs[index]);
+        //       img.setAttribute('src', newBlobUrl);
+        //     }
+        //   });
 
-          return doc.body.innerHTML;
-        };
+        //   return doc.body.innerHTML;
+        // };
 
         // content HTML에 Blob URL 적용한 content를 update
-        updatedContent = await processImages(updatedContent, Number(postId));
+        // updatedContent = await processImages(updatedContent, Number(postId));
         setContent(updatedContent);
         setPost({ ...postData, content: updatedContent });
         updatePostInDB(Number(postId), { ...postData, content: updatedContent });
@@ -131,6 +151,35 @@ const PostItem: React.FC = () => {
     return date.toLocaleString();
   };
 
+  // 좋아요 버튼 핸들러 함수
+  const handleLikeButtonClick = () => {
+    if (!isLogin || !userUID) {
+      alert('로그인 후 이용해주세요.');
+      return;
+    }
+
+    let updateLikeUser;
+    if (likeUser && likeUser.includes(userUID)) {
+      // Remove userUID from the array
+      updateLikeUser = likeUser.filter((uid) => uid !== userUID);
+      setLikeCount((prevCount) => prevCount - 1);
+    } else {
+      // Add userUID to the array
+      updateLikeUser = [...likeUser, userUID];
+      setLikeCount((prevCount) => prevCount + 1);
+    }
+
+    setHasClicked(!hasClicked);
+    setLikeUser(updateLikeUser);
+
+    // Update in IndexedDB
+    updatePostInDB(Number(postId), {
+      likeCount: updateLikeUser.length,
+      likeUser: updateLikeUser,
+      updatedAt: new Date().toISOString(),
+    });
+  };
+
   return (
     <div className="font-noto w-[760px] flex flex-col justify-center m-auto mb-4">
       {/* category & title & level & nickName & createAt & 수정, 삭제 buttons */}
@@ -150,13 +199,51 @@ const PostItem: React.FC = () => {
               />
             </svg>
           )}{' '}
-          <h1 className="font-extrabold text-4xl mt-4">{postTitle}</h1>
+          <div className="w-full flex justify-between items-end">
+            {/* title */}
+            <h1 className="font-extrabold text-4xl mt-4">{postTitle}</h1>
+            {/* 좋아요 버튼 박스 */}
+            {!hasClicked ? (
+              <button type="button" onClick={handleLikeButtonClick}>
+                <svg width="41" height="41" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M15.5931 27.2742L15.591 27.2722C11.2691 23.3532 7.80369 20.207 5.40067 17.2691C3.01488 14.3523 1.83334 11.824 1.83334 9.16673C1.83334 4.86182 5.1951 1.50006 9.50001 1.50006C11.9458 1.50006 14.3167 2.64596 15.858 4.4559L17 5.797L18.142 4.4559C19.6833 2.64596 22.0542 1.50006 24.5 1.50006C28.8049 1.50006 32.1667 4.86182 32.1667 9.16673C32.1667 11.824 30.9851 14.3524 28.599 17.2716C26.196 20.2116 22.7309 23.3614 18.4095 27.2885C18.409 27.289 18.4084 27.2895 18.4079 27.29L17.0038 28.5584L15.5931 27.2742Z"
+                    stroke="#A5E1FF"
+                    stroke-width="3"
+                  />
+                </svg>
+              </button>
+            ) : (
+              <button type="button" onClick={handleLikeButtonClick}>
+                <svg width="41" height="41" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M17 30.5834L14.5833 28.3834C6.00001 20.6001 0.333344 15.4667 0.333344 9.16673C0.333344 4.03339 4.36668 6.10352e-05 9.50001 6.10352e-05C12.4 6.10352e-05 15.1833 1.35006 17 3.48339C18.8167 1.35006 21.6 6.10352e-05 24.5 6.10352e-05C29.6333 6.10352e-05 33.6667 4.03339 33.6667 9.16673C33.6667 15.4667 28 20.6001 19.4167 28.4001L17 30.5834Z"
+                    fill="#A5E1FF"
+                  />
+                </svg>
+              </button>
+            )}
+          </div>
         </div>
         <div className="my-6 flex justify-between items-center gap-1">
-          <div>
+          <div className="flex gap-1 items-center cursor-default">
             <span className="font-semibold text-sm">{userNickName}</span>
             <span> · </span>
             <span className="text-gray-600 text-sm">{formatDate(createdAt)}</span>
+            <span> · </span>
+            <svg
+              className="mt-[2px]"
+              width="11"
+              height="11"
+              viewBox="0 0 11 10"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M5.2047 9.48207L4.4797 8.82207C1.9047 6.48707 0.204697 4.94707 0.204697 3.05707C0.204697 1.51707 1.4147 0.307068 2.9547 0.307068C3.8247 0.307068 4.6597 0.712068 5.2047 1.35207C5.7497 0.712068 6.5847 0.307068 7.4547 0.307068C8.9947 0.307068 10.2047 1.51707 10.2047 3.05707C10.2047 4.94707 8.5047 6.48707 5.9297 8.82707L5.2047 9.48207Z"
+                fill="#4b5563"
+              />
+            </svg>
+            <span className="text-gray-600 text-sm">{likeCount}</span>
           </div>
           <div>
             {isMyPost && (
