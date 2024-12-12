@@ -1,7 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import ChooseLevel from '../../MyFeed/AddFeed/ChooseLevel';
-import PostingButtons from './PostingButtons';
-import QuillEditor from './QuillEditor';
 import { PostCategory } from '../../../../types/PostCategory';
 import {
   updatePostInDB,
@@ -12,6 +9,9 @@ import {
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { editorValueState } from '../../../../datas/recoilData';
+import QuillEditor from './QuillEditor';
+import ChooseLevel from '../../MyFeed/AddFeed/ChooseLevel';
+import PostingButtons from './PostingButtons';
 
 interface imageData {
   imageData: Blob;

@@ -1,8 +1,8 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
 import Modal from '../Modal/Modal';
-import LoginForm from '../Basic/LoginForm/LoginForm';
-import JoinForm from '../Basic/LoginForm/JoinForm';
+import LoginForm from './LoginForm/LoginForm';
+import JoinForm from './LoginForm/JoinForm';
 import { useRecoilState } from 'recoil';
 import { isJoinModalOpenState, isLoginModalOpenState } from '../../datas/recoilData';
 import { Link, useNavigate } from 'react-router-dom';

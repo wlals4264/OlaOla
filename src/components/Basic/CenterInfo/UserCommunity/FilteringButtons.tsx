@@ -1,5 +1,5 @@
 import React from 'react';
-import { getCommentsListFromDB } from '../../../../utils/indexedDB';
+import { getCommentsListFromDB } from '../../../../utils/indexedDB.ts';
 import { useSetRecoilState } from 'recoil';
 import { sortedPostIdsByCommentCountState } from '../../../../datas/recoilData.ts';
 
