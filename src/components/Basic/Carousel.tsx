@@ -1,8 +1,4 @@
 import { useState, useEffect } from 'react';
-import climb1 from 'src/assets/images/climb1.jpg';
-import climb2 from 'src/assets/images/climb2.jpg';
-import climb3 from 'src/assets/images/climb3.jpg';
-
 interface LocalImage {
   id: number;
   order: number;
@@ -11,9 +7,9 @@ interface LocalImage {
 
 // 로컬 이미지 리스트
 const localImages: LocalImage[] = [
-  { id: 1, order: 0, url: climb1 },
-  { id: 2, order: 1, url: climb2 },
-  { id: 3, order: 2, url: climb3 },
+  { id: 1, order: 0, url: '/assets/images/climb1.jpg' },
+  { id: 2, order: 1, url: '/assets/images/climb2.jpg' },
+  { id: 3, order: 2, url: '/assets/images/climb3.jpg' },
 ];
 
 export default function Carousel() {
