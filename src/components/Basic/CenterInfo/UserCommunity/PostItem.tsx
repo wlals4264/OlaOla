@@ -3,7 +3,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import {
   getPostFromDB,
-  getImageByPostId,
   deletePostInDB,
   updatePostInDB,
   deleteImageInDB,
@@ -35,7 +34,8 @@ const PostItem: React.FC = () => {
   const userUID = useRecoilValue(userUIDState);
 
   const [postUserUId, setPostUserUID] = useState<string | null>('');
-  const [hasClicked, setHasClicked] = useState(likeUser.includes(userUID as string));
+  const [hasClicked, setHasClicked] = useState(false);
+
   const levelColor = levelOptions.find((option) => option.value === level)?.color || 'white';
 
   const isMyPost = postUserUId === userUID ? true : false;
@@ -77,29 +77,6 @@ const PostItem: React.FC = () => {
         setPostUserUID(userUID);
         setLikeUser(likeUser);
 
-        // // // 저장되어 있는 이미지 데이터를 불러와 이미지태그에 Blob URL을 생성하여 처리하는 함수
-        // const processImages = async (content: string, postId: number): Promise<string> => {
-        //   // HTML 문서를 파싱하여 DOM 조작 가능하도록 셋팅, img 태그들 선택
-        //   const parser = new DOMParser();
-        //   const doc = parser.parseFromString(content, 'text/html');
-        //   const imgTags = Array.from(doc.querySelectorAll('img[src^="blob:"]')) as HTMLImageElement[];
-
-        //   // postId로 DB에서 이미지를 찾아 Blob 객체를 받아오기
-        //   const blobs = (await getImageByPostId(Number(postId))) as Blob[];
-
-        //   // 이미지 태그에 Blob URL 적용
-        //   imgTags.forEach((img, index) => {
-        //     if (blobs[index]) {
-        //       const newBlobUrl = URL.createObjectURL(blobs[index]);
-        //       img.setAttribute('src', newBlobUrl);
-        //     }
-        //   });
-
-        //   return doc.body.innerHTML;
-        // };
-
-        // content HTML에 Blob URL 적용한 content를 update
-        // updatedContent = await processImages(updatedContent, Number(postId));
         setContent(updatedContent);
         setPost({ ...postData, content: updatedContent });
         updatePostInDB(Number(postId), { ...postData, content: updatedContent });
@@ -113,6 +90,14 @@ const PostItem: React.FC = () => {
 
     fetchPost();
   }, [postId]);
+
+  useEffect(() => {
+    if (likeUser.includes(userUID as string)) {
+      setHasClicked(true);
+    } else {
+      setHasClicked(false);
+    }
+  }, [likeUser, userUID]);
 
   // 로딩 중 처리
   if (loading) {
@@ -176,7 +161,6 @@ const PostItem: React.FC = () => {
     updatePostInDB(Number(postId), {
       likeCount: updateLikeUser.length,
       likeUser: updateLikeUser,
-      updatedAt: new Date().toISOString(),
     });
   };
 

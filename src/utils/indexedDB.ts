@@ -705,7 +705,7 @@ export function updatePostInDB(
     content?: string;
     likeCount?: number;
     viewCount?: number;
-    updatedAt: string;
+    updatedAt?: string;
     centerName?: string;
     postCategory?: string | null;
     likeUser?: string[];
