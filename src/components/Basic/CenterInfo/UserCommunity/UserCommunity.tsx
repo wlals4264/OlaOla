@@ -5,11 +5,12 @@ import { Link } from 'react-router-dom';
 import { getPostListFromDB } from '../../../../utils/indexedDB';
 import { PostCategory } from '../../../Types/PostCategory';
 import { levelOptions } from '../../../../datas/levelOptions';
+import { getCommentsListFromDB } from '../../../../utils/indexedDB';
 import { formatTimeDifference } from '../../../../utils/formatTimeDifference';
 
 interface PostItem {
   userNickname?: string;
-  postTitle?: string;
+  postTitle: string;
   createdAt: Date;
   postCategory: string | null;
   level: string;
@@ -28,6 +29,7 @@ const UserCommunity: React.FC<UserCommunityProps> = ({ isScrollSnap }) => {
   const [totalPages, setTotalPages] = useState(1);
   const [searchText, setSearchText] = useState('');
   const [filteredPostList, setFilteredPostList] = useState<PostItem[]>([]);
+  const [sortedItemIds, setSortedItemIds] = useState<string[]>([]);
 
   // 게시글 리스트 요청
   const fetchData = async (currentPage: number) => {
@@ -42,28 +44,33 @@ const UserCommunity: React.FC<UserCommunityProps> = ({ isScrollSnap }) => {
       // 받아온 파일 리스트를 id 내림차순으로 정렬해서 최신값부터 정렬
       const sortedPosts = posts.sort((a, b) => b.id - a.id);
 
+      // 검색 기능이 활성화 될 때 리스트 처리
+      const filteredPosts = searchText
+        ? sortedPosts.filter((post: any) => post.postTitle.toLowerCase().includes(searchText))
+        : sortedPosts;
+
       const pageSize = 5;
       const startIndex = (currentPage - 1) * pageSize;
-      const pagedPosts = (searchText ? filteredPostList : sortedPosts).slice(startIndex, startIndex + pageSize);
+      const pagedPosts = filteredPosts.slice(startIndex, startIndex + pageSize);
 
-      if (pagedPosts.length > 0) {
-        const postContents = pagedPosts.map((postData: any) => {
-          console.log('게시글 리스트 아이템', postData);
-          return {
-            createdAt: postData.createdAt,
-            userNickname: postData.userNickName,
-            postTitle: postData.postTitle,
-            postCategory: postData.postCategory,
-            level: postData.level,
-            id: postData.id,
-            updatedAt: postData.updatedAt,
-          };
-        });
-        setPostList(postContents);
-        setTotalPages(
-          searchText ? Math.ceil(filteredPostList.length / pageSize) : Math.ceil(sortedPosts.length / pageSize)
-        );
-      }
+      // 필요한 데이터만 담은 postContents
+      const postContents = pagedPosts.map((postData: any) => {
+        console.log('게시글 리스트 아이템', postData);
+        return {
+          createdAt: postData.createdAt,
+          userNickname: postData.userNickName,
+          postTitle: postData.postTitle,
+          postCategory: postData.postCategory,
+          level: postData.level,
+          id: postData.id,
+          updatedAt: postData.updatedAt,
+        };
+      });
+
+      setPostList(postContents);
+
+      // 검색 여부에 따른 페이지 수 설정
+      setTotalPages(Math.ceil(filteredPosts.length / pageSize));
     } catch (error: any) {
       if (postList.length === 0) return;
 
@@ -86,11 +93,31 @@ const UserCommunity: React.FC<UserCommunityProps> = ({ isScrollSnap }) => {
     fetchData(currentPage);
   }, [currentPage, searchText]);
 
+  // 검색창 값 변경
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const searchText = e.target.value.toLowerCase();
     setSearchText(searchText);
-    const filteredPosts = postList.filter((item) => item.postTitle?.toLowerCase().includes(searchText));
-    setFilteredPostList(filteredPosts);
+  };
+
+  // 코멘트 필터링 함수
+  const handleFilteringCommentCount = async () => {
+    const postComment = await getCommentsListFromDB('postCommentData');
+
+    if (postComment.length > 0) {
+      const itemCount: { [key: string]: number } = {};
+
+      postComment.forEach((comment) => {
+        const itemId = comment.ItemId;
+        itemCount[itemId] = (itemCount[itemId] || 0) + 1;
+      });
+
+      const sortedItemIds = Object.entries(itemCount)
+        .sort((a, b) => b[1] - a[1])
+        .map((entry) => entry[0]);
+
+      console.log('sortedItemIds:  ', sortedItemIds);
+      setSortedItemIds(sortedItemIds);
+    }
   };
 
   return (
@@ -197,7 +224,7 @@ const UserCommunity: React.FC<UserCommunityProps> = ({ isScrollSnap }) => {
               <div className="flex justify-center w-full mt-10 font-noto text-sm">
                 <div className="flex justify-between items-center shrink-0 w-[645px] m-auto">
                   <div className="flex gap-3">
-                    <button className="shrink-0" type="button">
+                    <button className="shrink-0" type="button" onClick={handleFilteringCommentCount}>
                       댓글순
                     </button>
                     <button className="shrink-0" type="button">

@@ -99,3 +99,8 @@ export const updateLoginUserState = selector({
     localStorage.setItem('isLoginUser', newValue.toString());
   },
 });
+
+export const sortedPostIdsByCommentCountState = atom<string[]>({
+  key: 'sortedPostIdsByCommentCountState',
+  default: [],
+});
