@@ -20,6 +20,10 @@
 <br>
 이후 프로젝트 리팩토링 예정...🐜
 
+🚧 배포 주소 : https://ola-a5fw9oyv4-bluemins-projects.vercel.app/
+
+👷🏻 현재 배포중 오류가 많아 수정중!! 👷🏻
+
 <br>
 
 ## 기술 스택
