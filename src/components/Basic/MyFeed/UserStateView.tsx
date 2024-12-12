@@ -22,7 +22,7 @@ const UserStateView: React.FC = () => {
       try {
         const files = await getFileListFromDB();
         if (userUID) {
-          const filteredFiles = files.filter((fileData: any) => fileData.UID === userUID);
+          const filteredFiles = files.filter((fileData) => fileData.userUID === userUID);
           setPostCount(filteredFiles.length);
         }
       } catch (error) {

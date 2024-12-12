@@ -15,6 +15,7 @@ interface FeedItem {
   niceCount?: number;
   centerName?: string;
   userUID?: string;
+  // 로컬용
   UID?: string;
 }
 
