@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import { getDB, getFileListFromDB, getFileFromDB } from '../../utils/indexedDB';
 import { useRecoilState } from 'recoil';
 import { isFeedItemModalOpenState } from '../../datas/recoilData';
@@ -33,6 +34,8 @@ const BrowsingFeedComponent: React.FC<BrowsingFeedComponentProps> = ({ isScrollS
   const [pageParams, setPageParams] = useState<number[]>([]);
 
   const loaderRef = useRef<HTMLDivElement | null>(null);
+  const location = useLocation();
+  const isBrowsingFeedRoute = location.pathname === '/browsing-feed';
 
   // 데이터 불러오기
   const fetchData = async (page: number) => {
@@ -87,7 +90,7 @@ const BrowsingFeedComponent: React.FC<BrowsingFeedComponentProps> = ({ isScrollS
       } else {
         console.error('알 수 없는 오류 발생:', error);
       }
-      setError('게시글 없음');
+      setError('피드를 올려주세요!');
     } finally {
       setLoading(false);
     }
@@ -180,7 +183,19 @@ const BrowsingFeedComponent: React.FC<BrowsingFeedComponentProps> = ({ isScrollS
 
   // 에러처리
   if (error) {
-    return <div className="min-w-2xl m-auto mt-4 text-center font-noto font-bold text-3xl">{error}</div>;
+    return isBrowsingFeedRoute ? (
+      <div className="h-screen flex flex-col items-center justify-center pb-24">
+        <div className="text-center">
+          <p className="font-noto font-bold text-3xl">🥲</p>
+          <p className="font-noto font-bold text-3xl mt-4">{error}</p>
+        </div>
+      </div>
+    ) : (
+      <div className="flex flex-col justify-center items-center ">
+        <p className="min-w-2xl m-auto mt-4 text-center font-noto font-bold text-3xl">🥲</p>
+        <p className="min-w-2xl m-auto mt-4 text-center font-noto font-bold text-3xl">{error}</p>
+      </div>
+    );
   }
 
   // 로딩 보여주기

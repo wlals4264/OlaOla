@@ -73,7 +73,7 @@ const ScrollSnap: React.FC = () => {
         )}
 
         {/* 스크롤 컨텐츠들 */}
-        <div ref={section1Ref} className="w-full h-screen snap-start flex justify-center items-center p-2">
+        <div ref={section1Ref} className="w-full h-screen snap-start flex justify-center items-center ">
           <BrowsingFeedComponent isScrollSnap={true} />
         </div>
         <div className="w-full h-screen snap-start flex justify-center items-center">

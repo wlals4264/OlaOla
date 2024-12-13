@@ -304,58 +304,67 @@ const UserCommunity: React.FC<UserCommunityProps> = ({ isScrollSnap }) => {
         </div>
       ) : (
         <div className="w-[80%] flex flex-col gap-4 mt-10 items-center font-noto shrink-0 ">
-          <h1 className="font-bold text-2xl cursor-default text-indigo-500 mb-2">
-            ✨ 유저들과 흥미로운 이야기를 나눠보세요! 😀
-          </h1>
           {postList.length === 0 ? (
-            <div className="flex w-full h-48 items-center justify-center font-bold text-3xl">게시글 없음</div>
+            <div className="flex flex-col justify-start h-full">
+              <h1 className="font-bold text-2xl cursor-default text-indigo-500 mb-2">
+                ✨ 유저들과 흥미로운 이야기를 나눠보세요!
+              </h1>
+              <span className="flex w-full h-48 items-center justify-center font-bold text-3xl">
+                커뮤니티 탭에서 게시글을 올려보세요.
+              </span>
+            </div>
           ) : (
             postList.map((item) => {
               const { level, postCategory, postTitle, userNickname, createdAt, id, updatedAt } = item;
               const levelColor = levelOptions.find((option) => option.value === level)?.color || 'white';
 
               return (
-                <ul className="w-[645px] flex flex-col gap-2 mt-2 items-center" key={id}>
-                  <Link to={`/center-info/user-community/post/${id}`}>
-                    <li className="w-[645px] bg-white p-4 rounded-xl shadow-sm mb-2 hover:bg-gray-100 cursor-pointer">
-                      <div className="flex items-center gap-4">
-                        {postCategory ? (
-                          <span className="text-xs w-fit h-fit py-1 px-2 rounded-2xl bg-primary font-bold text-white">
-                            {postCategory}
-                          </span>
-                        ) : (
-                          ''
-                        )}
-                        <div className="flex gap-1 items-center">
-                          {postCategory === PostCategory.NEWSETTING && level && (
-                            <svg
-                              width="20"
-                              height="20"
-                              viewBox="0 0 20 20"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg">
-                              <path
-                                d="M10.7384 16.9615L15.5883 19.8948C16.4764 20.4324 17.5633 19.6377 17.3295 18.6327L16.044 13.1167L20.3329 9.40045C21.1159 8.72263 20.6952 7.43713 19.6668 7.35533L14.0223 6.87618L11.8136 1.66405C11.4162 0.717452 10.0606 0.717452 9.66325 1.66405L7.45452 6.8645L1.81 7.34364C0.781593 7.42544 0.360883 8.71095 1.14387 9.38876L5.43278 13.105L4.14728 18.621C3.91355 19.626 5.00038 20.4207 5.88855 19.8831L10.7384 16.9615Z"
-                                fill={levelColor}
-                                stroke={levelColor !== 'white' ? '' : '#8C8C8C'}
-                              />
-                            </svg>
-                          )}{' '}
-                          <h2 className="text-lg font-semibold">{postTitle}</h2>
+                <>
+                  <h1 className="font-bold text-2xl cursor-default text-indigo-500 mb-2">
+                    ✨ 유저들과 흥미로운 이야기를 나눠보세요! 😀
+                  </h1>
+                  <ul className="w-[645px] flex flex-col gap-2 mt-2 items-center" key={id}>
+                    <Link to={`/center-info/user-community/post/${id}`}>
+                      <li className="w-[645px] bg-white p-4 rounded-xl shadow-sm mb-2 hover:bg-gray-100 cursor-pointer">
+                        <div className="flex items-center gap-4">
+                          {postCategory ? (
+                            <span className="text-xs w-fit h-fit py-1 px-2 rounded-2xl bg-primary font-bold text-white">
+                              {postCategory}
+                            </span>
+                          ) : (
+                            ''
+                          )}
+                          <div className="flex gap-1 items-center">
+                            {postCategory === PostCategory.NEWSETTING && level && (
+                              <svg
+                                width="20"
+                                height="20"
+                                viewBox="0 0 20 20"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                  d="M10.7384 16.9615L15.5883 19.8948C16.4764 20.4324 17.5633 19.6377 17.3295 18.6327L16.044 13.1167L20.3329 9.40045C21.1159 8.72263 20.6952 7.43713 19.6668 7.35533L14.0223 6.87618L11.8136 1.66405C11.4162 0.717452 10.0606 0.717452 9.66325 1.66405L7.45452 6.8645L1.81 7.34364C0.781593 7.42544 0.360883 8.71095 1.14387 9.38876L5.43278 13.105L4.14728 18.621C3.91355 19.626 5.00038 20.4207 5.88855 19.8831L10.7384 16.9615Z"
+                                  fill={levelColor}
+                                  stroke={levelColor !== 'white' ? '' : '#8C8C8C'}
+                                />
+                              </svg>
+                            )}{' '}
+                            <h2 className="text-lg font-semibold">{postTitle}</h2>
+                          </div>
                         </div>
-                      </div>
 
-                      {/* 닉네임 & 작성일 & 게시 및 수정 정보 */}
-                      <div className="flex gap-2 mt-2">
-                        <p className="text-xs text-gray-400">{userNickname || '익명'}</p>
-                        <span className="text-xs text-gray-400">{new Date(createdAt).toLocaleDateString()}</span>
-                        {createdAt !== updatedAt && (
-                          <span className="text-xs text-gray-400">{formatTimeDifference(updatedAt)} 수정</span>
-                        )}
-                      </div>
-                    </li>
-                  </Link>
-                </ul>
+                        {/* 닉네임 & 작성일 & 게시 및 수정 정보 */}
+                        <div className="flex gap-2 mt-2">
+                          <p className="text-xs text-gray-400">{userNickname || '익명'}</p>
+                          <span className="text-xs text-gray-400">{new Date(createdAt).toLocaleDateString()}</span>
+                          {createdAt !== updatedAt && (
+                            <span className="text-xs text-gray-400">{formatTimeDifference(updatedAt)} 수정</span>
+                          )}
+                        </div>
+                      </li>
+                    </Link>
+                  </ul>
+                </>
               );
             })
           )}
