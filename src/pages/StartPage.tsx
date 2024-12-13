@@ -30,7 +30,11 @@ const StartPage: React.FC = () => {
   }, [auth]);
 
   if (isLoading) {
-    return <Spinner />;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spinner />
+      </div>
+    );
   }
 
   return (
