@@ -304,11 +304,11 @@ const UserCommunity: React.FC<UserCommunityProps> = ({ isScrollSnap }) => {
         </div>
       ) : (
         <div className="w-[80%] flex flex-col gap-4 mt-10 items-center font-noto shrink-0 ">
+          <h1 className="font-bold text-2xl cursor-default text-indigo-500 mb-2">
+            ✨ 유저들과 흥미로운 이야기를 나눠보세요!
+          </h1>
           {postList.length === 0 ? (
             <div className="flex flex-col justify-start h-full">
-              <h1 className="font-bold text-2xl cursor-default text-indigo-500 mb-2">
-                ✨ 유저들과 흥미로운 이야기를 나눠보세요!
-              </h1>
               <span className="flex w-full h-48 items-center justify-center font-bold text-3xl">
                 커뮤니티 탭에서 게시글을 올려보세요.
               </span>
@@ -320,9 +320,6 @@ const UserCommunity: React.FC<UserCommunityProps> = ({ isScrollSnap }) => {
 
               return (
                 <>
-                  <h1 className="font-bold text-2xl cursor-default text-indigo-500 mb-2">
-                    ✨ 유저들과 흥미로운 이야기를 나눠보세요! 😀
-                  </h1>
                   <ul className="w-[645px] flex flex-col gap-2 mt-2 items-center" key={id}>
                     <Link to={`/center-info/user-community/post/${id}`}>
                       <li className="w-[645px] bg-white p-4 rounded-xl shadow-sm mb-2 hover:bg-gray-100 cursor-pointer">
