@@ -61,11 +61,12 @@ const ScrollSnap: React.FC = () => {
          sm:top-[calc(100vh/4 + 500px)] 
          md:top-[calc(100vh/5 + 500px)] 
          lg:top-[calc(100vh/6 + 500px)]">
-            <button type="button" onClick={handleScrollDown}>
+            <button className="group" type="button" onClick={handleScrollDown}>
               <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
                   d="M18.6719 27.5234L8.04687 16.8984C7.3125 16.1641 7.3125 14.9766 8.04687 14.25L9.8125 12.4844C10.5469 11.75 11.7344 11.75 12.4609 12.4844L19.9922 20.0156L27.5234 12.4844C28.2578 11.75 29.4453 11.75 30.1719 12.4844L31.9375 14.25C32.6719 14.9844 32.6719 16.1719 31.9375 16.8984L21.3125 27.5234C20.5938 28.2578 19.4063 28.2578 18.6719 27.5234Z"
                   fill="black"
+                  className="fill-black group-hover:fill-[#A5E1FF]"
                 />
               </svg>
             </button>

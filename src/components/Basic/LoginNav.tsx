@@ -62,7 +62,7 @@ const LoginNav: React.FC = () => {
     <>
       <div className="font-noto flex gap-4 items-center p-2 w-auto">
         {/* logo & title */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center ml-1">
           <button className="flex items-center justify-center gap-4" onClick={goToHome}>
             <svg width="45" height="45" viewBox="0 0 45 45" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="22.5" cy="22.5" r="22.5" fill="#A5E1FF" />
@@ -99,10 +99,13 @@ const LoginNav: React.FC = () => {
           {/* welcome message & logout Button */}
           <div className="flex gap-4 items-center justify-center mr-2 flex-shrink-0">
             <p className="flex-shrink-0 cursor-default">
-              <span className="hover:text-primary text-lg font-semibold cursor-default">{nickname}</span>님 환영합니다!
+              <Link to="/my-feed">
+                <span className="hover:text-primary text-lg font-semibold cursor-pointer">{nickname}</span>
+              </Link>
+              님 환영합니다!
             </p>
             <button
-              className="flex-shrink-0 text-l font-semibold w-86px px-3 py-1 rounded-xl bg-gray-200 flex items-center justify-center hover:bg-primary hover:text-whi"
+              className="flex-shrink-0 text-l font-semibold w-86px px-3 py-1 rounded-xl bg-gray-200 flex items-center justify-center hover:bg-primary hover:text-white"
               onClick={onSignOut}>
               로그아웃
             </button>

@@ -62,7 +62,7 @@ const Nav: React.FC = () => {
           {/* Login Button & Join Button */}
           <div className="flex gap-4">
             <button
-              className="flex-shrink-0  text-l font-semibold w-86px px-3 py-1 rounded-xl bg-gray-200 flex items-center justify-center"
+              className="flex-shrink-0 text-l font-semibold w-86px px-3 py-1 rounded-xl bg-gray-200 flex items-center justify-center hover:bg-primary hover:text-white"
               onClick={handleOpenLoginModal}>
               로그인
             </button>
@@ -77,7 +77,7 @@ const Nav: React.FC = () => {
               )}
 
             <button
-              className="flex-shrink-0 text-l font-semibold w-110px px-3 py-1 rounded-xl bg-black text-white flex items-center justify-center"
+              className="flex-shrink-0 text-l font-semibold w-110px px-3 py-1 rounded-xl bg-black text-white flex items-center justify-center hover:bg-primary"
               onClick={handleOpenJoinModal}>
               가입하기
             </button>
