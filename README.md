@@ -90,11 +90,15 @@ kakao 지도 API 연동
 
 ### ✨ 커뮤니티 게시판
 
-페이지네이션, 검색, 필터링 기능
+게시글 올리기 기능 - React Quill로 텍스트 에디터 구현
+<br>
+페이지네이션, 검색, 필터링 기능 제공
 
 <br>
 
 ![커뮤니티](https://github.com/user-attachments/assets/44cca265-27c9-42d3-a9c6-a01338ad2a1b)
+
+<br>
 
 ![검색](https://github.com/user-attachments/assets/59ac61b6-1b42-4f2f-aa94-68900c3b512e)
 
