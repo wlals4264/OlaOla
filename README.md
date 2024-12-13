@@ -100,6 +100,16 @@ kakao 지도 API 연동
 
 <br>
 
+### ✨ 로그인 유저만 이용 가능한 기능들
+
+Protected Route 구현
+
+<br>
+
+![protectedRoute-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/4d7b3ca1-297e-4d83-944e-3e55e547939c)
+
+<br>
+
 ## 전체 개발 기획 & 회고 및 트러블 슈팅 Notion Link
 
 <a href="https://www.notion.so/OlaOla-13b9b3c1166f8066a841e1fb5dbb4ead)"> **📝 'OlaOla' 전체 기획 & 회고 및 트러블 슈팅 Notion Link** </a>
