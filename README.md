@@ -116,6 +116,6 @@ Protected Route 구현
 
 ## 전체 개발 기획 & 회고 및 트러블 슈팅 Notion Link
 
-<a href="https://www.notion.so/OlaOla-13b9b3c1166f8066a841e1fb5dbb4ead)"> **📝 'OlaOla' 전체 기획 & 회고 및 트러블 슈팅 Notion Link** </a>
+<a href="https://platinum-literature-af9.notion.site/OlaOla-13b9b3c1166f816ab8c1ef869977bfce"> **📝 'OlaOla' 전체 기획 & 회고 및 트러블 슈팅 Notion Link** </a>
 
 </div>
