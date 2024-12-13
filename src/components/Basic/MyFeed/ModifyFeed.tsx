@@ -10,13 +10,13 @@ const ModifyFeed: React.FC = () => {
 
   const [centerName, setCenterName] = useState<string>(feedItem.centerName);
   const [fileDescribe, setFileDescribe] = useState<string>(feedItem.describe);
-  const [fileUrl, setFileUrl] = useState<string>(initialFileUrl || ''); // fileUrl 초기화
+  const [fileUrl, setFileUrl] = useState<string>(initialFileUrl || '');
   const [climbingLevel, setClimbingLevel] = useState<string>(feedItem.level);
 
   // 이미지 Blob Url 생성
   useEffect(() => {
     if (feedItem.file) {
-      const newFileUrl = URL.createObjectURL(feedItem.file); // file이 null이 아니면 URL 생성
+      const newFileUrl = URL.createObjectURL(feedItem.file);
       setFileUrl(newFileUrl);
 
       // 컴포넌트 언마운트 시 Blob URL 해제
@@ -34,7 +34,6 @@ const ModifyFeed: React.FC = () => {
   // DB 수정 함수 호출
   const handleUpdate = async () => {
     const updatedData = {
-      niceCount: feedItem.niceCount,
       describe: fileDescribe,
       level: climbingLevel,
       centerName: centerName,

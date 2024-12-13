@@ -216,7 +216,7 @@ export function getFileListFromDB(): Promise<FeedItem[]> {
 // DB 파일 수정 함수
 export function updateFileInDB(
   fileId: number,
-  updatedData: { niceCount: number; describe?: string; level?: string; centerName?: string; niceUser?: string[] }
+  updatedData: { niceCount?: number; describe?: string; level?: string; centerName?: string; niceUser?: string[] }
 ): Promise<void> {
   return getDB().then((db) => {
     if (!db) {
